@@ -25,5 +25,10 @@ namespace EXE201.BLL.Services
         {
             return await _addressRepository.GetAddressByUserIdAsync(userId);
         }
+
+        public async Task<IEnumerable<Address>> GetAllAddressAsync()
+        {
+            return await _addressRepository.GetAllAddressAsync();
+        }
     }
 }

@@ -21,5 +21,10 @@ namespace EXE201.DAL.Repository
         {
             return await _dbSet.Where(x => x.UserID == userId).ToListAsync();
         }
+
+        public async Task<IEnumerable<Address>> GetAllAddressAsync()
+        {
+            return await _dbSet.ToListAsync();
+        }
     }
 }
