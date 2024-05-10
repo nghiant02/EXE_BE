@@ -14,7 +14,7 @@ namespace EXE201.Controllers
             _addressServices = addressServices;
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("GetAddressByUserId")]
         public async Task<IActionResult> GetAddressByUserIdAsync(int userId)
         {
             var result = await _addressServices.GetAddressByUserIdAsync(userId);
