@@ -47,5 +47,8 @@ public partial class Product
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 
     [InverseProperty("Product")]
+    public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+
+    [InverseProperty("Product")]
     public virtual ICollection<RentalOrderDetail> RentalOrderDetails { get; set; } = new List<RentalOrderDetail>();
 }

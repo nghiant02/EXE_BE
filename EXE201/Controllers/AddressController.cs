@@ -20,5 +20,12 @@ namespace EXE201.Controllers
             var result = await _addressServices.GetAddressByUserIdAsync(userId);
             return Ok(result);
         }
+
+        [HttpGet("GetAllAddress")]
+        public async Task<IActionResult> GetAllAddressAsync()
+        {
+            var result = await _addressServices.GetAllAddressAsync();
+            return Ok(result);
+        }
     }
 }

@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace EXE201.DAL.Interfaces
 {
-    public interface IAddressRepository : IGenericRepository<Address>
+    public interface IRatingRepository : IGenericRepository<Rating>
     {
-        Task<IEnumerable<Address>> GetAddressByUserIdAsync(int userId);
-        Task<IEnumerable<Address>> GetAllAddressAsync();
     }
 }
