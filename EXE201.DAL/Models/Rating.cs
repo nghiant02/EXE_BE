@@ -8,35 +8,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EXE201.DAL.Models;
 
-[Table("Feedback")]
-public partial class Feedback
+[Table("Rating")]
+public partial class Rating
 {
     [Key]
-    public int FeedbackID { get; set; }
+    public int RatingID { get; set; }
 
     public int? UserID { get; set; }
 
     public int? ProductID { get; set; }
 
-    [Column(TypeName = "text")]
-    public string Comment { get; set; }
-
-    [StringLength(255)]
-    [Unicode(false)]
-    public string Image { get; set; }
-
-    [StringLength(255)]
-    [Unicode(false)]
-    public string Status { get; set; }
+    [Column("Rating")]
+    public int? Rating1 { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? DateGiven { get; set; }
 
     [ForeignKey("ProductID")]
-    [InverseProperty("Feedbacks")]
+    [InverseProperty("Ratings")]
     public virtual Product Product { get; set; }
 
     [ForeignKey("UserID")]
-    [InverseProperty("Feedbacks")]
+    [InverseProperty("Ratings")]
     public virtual User User { get; set; }
 }

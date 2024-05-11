@@ -55,6 +55,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Rating]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[RentalOrder]",
          "ObjectType": 0
       },
@@ -77,6 +81,7 @@
    ],
    "UiHint": null,
    "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
    "UseDateOnlyTimeOnly": true,

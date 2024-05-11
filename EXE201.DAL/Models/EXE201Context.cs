@@ -37,6 +37,8 @@ public partial class EXE201Context : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<Rating> Ratings { get; set; }
+
     public virtual DbSet<RentalOrder> RentalOrders { get; set; }
 
     public virtual DbSet<RentalOrderDetail> RentalOrderDetails { get; set; }
@@ -143,6 +145,15 @@ public partial class EXE201Context : DbContext
             entity.Property(e => e.ProductID).ValueGeneratedNever();
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products).HasConstraintName("FK__Product__Categor__66603565");
+        });
+
+        modelBuilder.Entity<Rating>(entity =>
+        {
+            entity.HasKey(e => e.RatingID).HasName("PK__Rating__FCCDF85CFA38D5BD");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.Ratings).HasConstraintName("FK__Rating__ProductI__03F0984C");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Ratings).HasConstraintName("FK__Rating__UserID__02FC7413");
         });
 
         modelBuilder.Entity<RentalOrder>(entity =>
