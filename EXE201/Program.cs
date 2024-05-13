@@ -1,4 +1,5 @@
-﻿using EXE201.BLL.Interfaces;
+﻿using EXE201.BLL.DTOs;
+using EXE201.BLL.Interfaces;
 using EXE201.BLL.Services;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
@@ -33,7 +34,7 @@ builder.Services.AddDbContext<EXE201Context>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add AutoMapper
-builder.Services.AddAutoMapper(typeof(StartupBase));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
