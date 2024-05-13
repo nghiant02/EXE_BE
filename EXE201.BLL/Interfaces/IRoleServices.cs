@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EXE201.BLL.Interfaces
 {
-    public class IRoleServices
+    public interface IRoleServices
     {
     }
 }
