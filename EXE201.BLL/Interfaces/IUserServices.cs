@@ -9,5 +9,6 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IUserServices
     {
+        Task<User> Login(string username, string password);
     }
 }

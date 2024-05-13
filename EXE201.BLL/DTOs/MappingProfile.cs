@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using EXE201.DAL.Models;
 
 namespace EXE201.BLL.DTOs
 {
     public class MappingProfile : Profile
     {
+        public MappingProfile()
+        {
+            UserMappingProfile();
+        }
+
+        private void UserMappingProfile()
+        {
+        }
     }
 }

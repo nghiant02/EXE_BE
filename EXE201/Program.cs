@@ -25,9 +25,11 @@ builder.Services.AddCors(options =>
 // Add Repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add services
 builder.Services.AddScoped<IAddressServices, AddressServices>();
+builder.Services.AddScoped<IUserServices, UserServices>();
 
 // Add services to the container.
 builder.Services.AddDbContext<EXE201Context>(opts =>

@@ -10,5 +10,6 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        Task<User> GetUserByUsername(string username);
     }
 }

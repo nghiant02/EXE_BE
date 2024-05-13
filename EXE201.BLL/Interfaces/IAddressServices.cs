@@ -9,7 +9,5 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IAddressServices
     {
-        Task<IEnumerable<Address>> GetAddressByUserIdAsync(int userId);
-        Task<IEnumerable<Address>> GetAllAddressAsync();
     }
 }
