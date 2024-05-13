@@ -20,15 +20,5 @@ namespace EXE201.BLL.Services
             _addressRepository = addressRepository;
             _mapper = mapper;
         }
-
-        public async Task<IEnumerable<Address>> GetAddressByUserIdAsync(int userId)
-        {
-            return await _addressRepository.GetAddressByUserIdAsync(userId);
-        }
-
-        public async Task<IEnumerable<Address>> GetAllAddressAsync()
-        {
-            return await _addressRepository.GetAllAddressAsync();
-        }
     }
 }

@@ -12,9 +12,11 @@ namespace EXE201.DAL.Models;
 public partial class Notification
 {
     [Key]
-    public int NotificationID { get; set; }
+    [Column("NotificationID")]
+    public int NotificationId { get; set; }
 
-    public int? UserID { get; set; }
+    [Column("UserID")]
+    public int? UserId { get; set; }
 
     [Column(TypeName = "text")]
     public string Message { get; set; }
@@ -22,7 +24,7 @@ public partial class Notification
     [Column(TypeName = "datetime")]
     public DateTime? DateSent { get; set; }
 
-    [ForeignKey("UserID")]
+    [ForeignKey("UserId")]
     [InverseProperty("Notifications")]
     public virtual User User { get; set; }
 }

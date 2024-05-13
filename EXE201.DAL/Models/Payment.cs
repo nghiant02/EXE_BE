@@ -12,11 +12,14 @@ namespace EXE201.DAL.Models;
 public partial class Payment
 {
     [Key]
-    public int PaymentID { get; set; }
+    [Column("PaymentID")]
+    public int PaymentId { get; set; }
 
-    public int? OrderID { get; set; }
+    [Column("OrderID")]
+    public int? OrderId { get; set; }
 
-    public int? PaymentUserID { get; set; }
+    [Column("PaymentUserID")]
+    public int? PaymentUserId { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? Amount { get; set; }
@@ -29,11 +32,11 @@ public partial class Payment
     [Unicode(false)]
     public string PaymentStatus { get; set; }
 
-    [ForeignKey("OrderID")]
+    [ForeignKey("OrderId")]
     [InverseProperty("Payments")]
     public virtual RentalOrder Order { get; set; }
 
-    [ForeignKey("PaymentUserID")]
+    [ForeignKey("PaymentUserId")]
     [InverseProperty("Payments")]
     public virtual User PaymentUser { get; set; }
 }

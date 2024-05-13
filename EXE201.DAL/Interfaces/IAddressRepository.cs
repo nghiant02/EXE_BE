@@ -10,7 +10,5 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IAddressRepository : IGenericRepository<Address>
     {
-        Task<IEnumerable<Address>> GetAddressByUserIdAsync(int userId);
-        Task<IEnumerable<Address>> GetAllAddressAsync();
     }
 }

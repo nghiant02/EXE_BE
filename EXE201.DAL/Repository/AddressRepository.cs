@@ -16,15 +16,5 @@ namespace EXE201.DAL.Repository
         public AddressRepository(EXE201Context context) : base(context)
         {
         }
-
-        public async Task<IEnumerable<Address>> GetAddressByUserIdAsync(int userId)
-        {
-            return await _dbSet.Where(x => x.UserID == userId).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Address>> GetAllAddressAsync()
-        {
-            return await _dbSet.ToListAsync();
-        }
     }
 }

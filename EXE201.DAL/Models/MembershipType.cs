@@ -12,7 +12,8 @@ namespace EXE201.DAL.Models;
 public partial class MembershipType
 {
     [Key]
-    public int MembershipTypeID { get; set; }
+    [Column("MembershipTypeID")]
+    public int MembershipTypeId { get; set; }
 
     [StringLength(255)]
     [Unicode(false)]
