@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.Models;
+﻿using EXE201.BLL.DTOs.UserDTOs;
+using EXE201.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IUserServices
     {
-        Task<User> Login(string username, string password);
+        Task<GetUserDTOs> Login(string username, string password);
     }
 }

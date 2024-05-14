@@ -24,20 +24,9 @@ namespace EXE201.Controllers
                 var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
                 return Ok(result);
             }
-            catch (ArgumentException ex)
-            {
-                // Log the error message here if needed
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                // Use BadRequest for business rules violations as well
-                return BadRequest(ex.Message);
-            }
             catch (Exception ex)
             {
-                // For any other unhandled exceptions, use a generic error message
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred processing your request.");
+                return BadRequest(ex.Message);
             }
         }
     }
