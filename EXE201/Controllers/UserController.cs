@@ -1,4 +1,5 @@
 ﻿using EXE201.BLL.Interfaces;
+using EXE201.ViewModel.UserViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -16,11 +17,11 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync(string username, string password)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginUserViewModel loginUserViewModel)
         {
             try
             {
-                var result = await _userServices.Login(username, password);
+                var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
                 return Ok(result);
             }
             catch (ArgumentException ex)
