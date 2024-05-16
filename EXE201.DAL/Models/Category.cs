@@ -15,7 +15,7 @@ public partial class Category
     [Column("CategoryID")]
     public int CategoryId { get; set; }
 
-    [StringLength(255)]
+    [StringLength(100)]
     [Unicode(false)]
     public string Name { get; set; }
 

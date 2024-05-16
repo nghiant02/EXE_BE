@@ -15,7 +15,7 @@ public partial class MembershipType
     [Column("MembershipTypeID")]
     public int MembershipTypeId { get; set; }
 
-    [StringLength(255)]
+    [StringLength(50)]
     [Unicode(false)]
     public string TypeName { get; set; }
 

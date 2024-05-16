@@ -15,7 +15,7 @@ public partial class Product
     [Column("ProductID")]
     public int ProductId { get; set; }
 
-    [StringLength(255)]
+    [StringLength(100)]
     [Unicode(false)]
     public string Name { get; set; }
 
@@ -26,7 +26,7 @@ public partial class Product
     [Unicode(false)]
     public string Image { get; set; }
 
-    [StringLength(255)]
+    [StringLength(15)]
     [Unicode(false)]
     public string Status { get; set; }
 

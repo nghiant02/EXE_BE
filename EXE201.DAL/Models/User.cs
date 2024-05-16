@@ -15,11 +15,11 @@ public partial class User
     [Column("UserID")]
     public int UserId { get; set; }
 
-    [StringLength(255)]
+    [StringLength(50)]
     [Unicode(false)]
     public string UserName { get; set; }
 
-    [StringLength(255)]
+    [StringLength(100)]
     [Unicode(false)]
     public string FullName { get; set; }
 
@@ -27,7 +27,7 @@ public partial class User
     [Unicode(false)]
     public string Password { get; set; }
 
-    [StringLength(255)]
+    [StringLength(15)]
     [Unicode(false)]
     public string Phone { get; set; }
 
@@ -35,7 +35,7 @@ public partial class User
 
     public DateOnly? DateOfBirth { get; set; }
 
-    [StringLength(255)]
+    [StringLength(100)]
     [Unicode(false)]
     public string Email { get; set; }
 
@@ -43,7 +43,7 @@ public partial class User
     [Unicode(false)]
     public string Image { get; set; }
 
-    [StringLength(255)]
+    [StringLength(10)]
     [Unicode(false)]
     public string Status { get; set; }
 

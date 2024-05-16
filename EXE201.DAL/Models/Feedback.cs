@@ -28,7 +28,7 @@ public partial class Feedback
     [Unicode(false)]
     public string Image { get; set; }
 
-    [StringLength(255)]
+    [StringLength(10)]
     [Unicode(false)]
     public string Status { get; set; }
 
