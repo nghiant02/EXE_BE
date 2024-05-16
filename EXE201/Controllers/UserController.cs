@@ -16,6 +16,19 @@ namespace EXE201.Controllers
             _userServices = userServices;
         }
 
+        [HttpGet("GetAllProfileUsers")]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var result = await _userServices.GetAllProfileUser();
+                return Ok(result);
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginUserViewModel loginUserViewModel)
         {
@@ -25,6 +38,19 @@ namespace EXE201.Controllers
                 return Ok(result);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("BlockUser")]
+        public async Task<IActionResult> BlockUser(int userId)
+        {
+            try
+            {
+                var result = await _userServices.ChangeStatusUserToNotActive(userId);
+                return Ok(result);
+            }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
