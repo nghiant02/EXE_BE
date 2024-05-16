@@ -18,7 +18,7 @@ public partial class RentalOrder
     [Column("UserID")]
     public int? UserId { get; set; }
 
-    [StringLength(255)]
+    [StringLength(15)]
     [Unicode(false)]
     public string OrderStatus { get; set; }
 

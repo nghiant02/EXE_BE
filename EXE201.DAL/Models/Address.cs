@@ -22,19 +22,19 @@ public partial class Address
     [Unicode(false)]
     public string Street { get; set; }
 
-    [StringLength(255)]
+    [StringLength(100)]
     [Unicode(false)]
     public string City { get; set; }
 
-    [StringLength(255)]
+    [StringLength(100)]
     [Unicode(false)]
     public string State { get; set; }
 
-    [StringLength(255)]
+    [StringLength(20)]
     [Unicode(false)]
     public string PostalCode { get; set; }
 
-    [StringLength(255)]
+    [StringLength(100)]
     [Unicode(false)]
     public string Country { get; set; }
 

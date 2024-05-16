@@ -27,7 +27,7 @@ public partial class Membership
     [Column(TypeName = "datetime")]
     public DateTime? EndDate { get; set; }
 
-    [StringLength(255)]
+    [StringLength(10)]
     [Unicode(false)]
     public string Status { get; set; }
 
