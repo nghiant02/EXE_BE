@@ -21,7 +21,7 @@ namespace EXE201.DAL.Repository
             var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
             if (checkUser != null)
             {
-                checkUser.Status = "Not active";
+                checkUser.Status = "Inactive";
 
                 _context.Users.Update(checkUser);
                 await _context.SaveChangesAsync();
