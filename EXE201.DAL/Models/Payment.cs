@@ -24,11 +24,11 @@ public partial class Payment
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? Amount { get; set; }
 
-    [StringLength(255)]
+    [StringLength(50)]
     [Unicode(false)]
     public string PaymentMethod { get; set; }
 
-    [StringLength(255)]
+    [StringLength(15)]
     [Unicode(false)]
     public string PaymentStatus { get; set; }
 

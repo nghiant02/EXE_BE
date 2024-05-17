@@ -15,7 +15,7 @@ public partial class Role
     [Column("RoleID")]
     public int RoleId { get; set; }
 
-    [StringLength(255)]
+    [StringLength(50)]
     [Unicode(false)]
     public string RoleName { get; set; }
 
