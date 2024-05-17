@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs;
 using EXE201.DAL.Interfaces;
