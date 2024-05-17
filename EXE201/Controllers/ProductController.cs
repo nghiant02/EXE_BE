@@ -1,4 +1,5 @@
-﻿using EXE201.BLL.Interfaces;
+﻿using EXE201.BLL.DTOs.UserDTOs;
+using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs;
 using EXE201.DAL.Models;
 using EXE201.ViewModel.UserViewModel;
