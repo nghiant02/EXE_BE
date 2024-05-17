@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,8 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IProductServices
     {
+        Task<ResponeModel> AddProduct(AddProductDTO addProduct);
+        Task<IEnumerable<Product>> GetAll();
+
     }
 }
