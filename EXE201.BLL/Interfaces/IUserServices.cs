@@ -13,6 +13,8 @@ namespace EXE201.BLL.Interfaces
         Task<GetUserDTOs> Login(string username, string password);
         Task<IEnumerable<User>> GetAllProfileUser();
         Task<bool> ChangeStatusUserToNotActive(int userId);
+        Task<User> AddUserForStaff(User user);
+
         
     }
 }

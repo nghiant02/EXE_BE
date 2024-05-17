@@ -2,6 +2,7 @@
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,13 @@ namespace EXE201.DAL.Repository
     {
         public UserRepository(EXE201Context context) : base(context)
         {
+        }
+
+        public async Task<User> AddNewUser(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task<User> ChangeStatusUserToNotActive(int id)

@@ -3,12 +3,7 @@ using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace EXE201.BLL.Services
 {
@@ -23,6 +18,18 @@ namespace EXE201.BLL.Services
             _mapper = mapper;
         }
 
+        public async Task<User> AddUserForStaff(User user)
+        {
+            var checkUser = await _userRepository.GetUserById(user.UserId);
+            if (checkUser != null)
+            {
+                throw new ArgumentException($"User with ID {checkUser.UserId} already exists.");
+            }
+            
+            await _userRepository.AddNewUser(user);
+            return user;
+        }
+
         public async Task<bool> ChangeStatusUserToNotActive(int userId)
         {
             var existUser = await _userRepository.GetUserById(userId);
@@ -34,9 +41,9 @@ namespace EXE201.BLL.Services
             return true;
         }
 
-        public Task<IEnumerable<User>> GetAllProfileUser()
+        public async Task<IEnumerable<User>> GetAllProfileUser()
         {
-            var allUser = _userRepository.GetAllUsers();
+            var allUser = await _userRepository.GetAllUsers();
             if (allUser == null)
             {
                 throw new ArgumentException("Do not exist User");
