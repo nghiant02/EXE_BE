@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace LMSystem.Repository.Data
+namespace EXE201.DAL.DTOs
 {
     public class ResponeModel
     {
@@ -16,7 +16,7 @@ namespace LMSystem.Repository.Data
 
         [IgnoreDataMember]
         [JsonIgnore]
-        public System.Threading.Tasks.Task<String>? ConfirmEmailToken { get; set; }
+        public Task<string>? ConfirmEmailToken { get; set; }
         public object DataObject { get; set; } = null;
     }
 }
