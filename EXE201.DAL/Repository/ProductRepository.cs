@@ -1,7 +1,7 @@
 ﻿using EXE201.BLL.DTOs.UserDTOs;
+using EXE201.DAL.DTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
-using LMSystem.Repository.Data;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
 using System;

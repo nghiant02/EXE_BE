@@ -1,5 +1,6 @@
 ﻿using EXE201.BLL.Interfaces;
 using EXE201.DAL.Models;
+using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.ViewModel.UserViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,8 @@ namespace EXE201.Controllers
             {
                 var result = await _userServices.GetAllProfileUser();
                 return Ok(result);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -44,11 +46,25 @@ namespace EXE201.Controllers
             }
         }
         [HttpPost("AddNewUserForStaff")]
-        public async Task<IActionResult> AddNewUser(User user)
+        public async Task<IActionResult> AddNewUser(AddNewUserDTO addNewUserDTO)
         {
             try
             {
-                var result = await _userServices.AddUserForStaff(user);
+                var result = await _userServices.AddUserForStaff(addNewUserDTO);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserDTOs registerUserDTOs)
+        {
+            try
+            {
+                var result = await _userServices.Register(registerUserDTOs);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -64,7 +80,8 @@ namespace EXE201.Controllers
             {
                 var result = await _userServices.ChangeStatusUserToNotActive(userId);
                 return Ok(result);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

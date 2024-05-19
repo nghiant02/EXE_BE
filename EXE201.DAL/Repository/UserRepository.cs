@@ -26,9 +26,7 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> GetLatestUser()
         {
-            return await _context.Users
-                                 .OrderByDescending(x => x.UserId)
-                                 .FirstOrDefaultAsync();
+            return await _context.Users.OrderByDescending(x => x.UserId).FirstOrDefaultAsync();
         }
 
         public async Task<User> ChangeStatusUserToNotActive(int id)
@@ -64,14 +62,14 @@ namespace EXE201.DAL.Repository
         {
             var existUser = await _context.Users.Where(x => x.UserId.Equals(user.UserId)).FirstOrDefaultAsync();
             if (existUser != null)
-            {   
+            {
                 existUser.UserId = user.UserId;
                 existUser.UserName = user.UserName;
                 existUser.Password = user.Password;
                 existUser.FullName = user.FullName;
                 existUser.Phone = user.Phone;
                 existUser.Gender = user.Gender;
-                existUser.Email = user.Email;   
+                existUser.Email = user.Email;
                 existUser.DateOfBirth = user.DateOfBirth;
                 existUser.Image = user.Image;
                 existUser.Status = user.Status;
@@ -81,6 +79,11 @@ namespace EXE201.DAL.Repository
                 return existUser;
             }
             return null;
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
         }
     }
 }
