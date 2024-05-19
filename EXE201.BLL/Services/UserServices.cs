@@ -65,7 +65,10 @@ namespace EXE201.BLL.Services
             if (user.Status != "Active")
                 throw new InvalidOperationException("User account is not active.");
 
-            return _mapper.Map<GetUserDTOs>(user);
+            var userDto = _mapper.Map<GetUserDTOs>(user);
+            userDto.Roles = user.Roles.Select(r => r.RoleName).ToList();
+
+            return userDto;
         }
 
         public async Task<GetUserDTOs> Register(RegisterUserDTOs registerUserDTOs)
