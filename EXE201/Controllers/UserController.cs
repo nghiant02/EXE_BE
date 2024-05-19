@@ -1,4 +1,5 @@
 ﻿using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.ViewModel.UserViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,20 @@ namespace EXE201.Controllers
             try
             {
                 var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserDTOs registerUserDTOs)
+        {
+            try
+            {
+                var result = await _userServices.Register(registerUserDTOs);
                 return Ok(result);
             }
             catch (Exception ex)
