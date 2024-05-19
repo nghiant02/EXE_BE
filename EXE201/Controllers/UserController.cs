@@ -31,7 +31,7 @@ namespace EXE201.Controllers
             }
         }
 
-        [HttpPost("Register")]
+        [HttpPost("RegisterUser")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserDTOs registerUserDTOs)
         {
             try
