@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿// EXE201.BLL.Services.UserServices.cs
+using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using System;
@@ -15,11 +17,42 @@ namespace EXE201.BLL.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IRoleRepository _roleRepository;
 
-        public UserServices(IUserRepository userRepository, IMapper mapper)
+        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _roleRepository = roleRepository;
+        }
+
+        public async Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO)
+        {
+            var mapUser = _mapper.Map<User>(addNewUserDTO);
+
+            await _userRepository.AddNewUser(mapUser);
+            return mapUser;
+        }
+
+        public async Task<bool> ChangeStatusUserToNotActive(int userId)
+        {
+            var existUser = await _userRepository.GetUserById(userId);
+            if (existUser == null)
+            {
+                throw new ArgumentException("Id does not exist!!");
+            }
+            await _userRepository.ChangeStatusUserToNotActive(existUser.UserId);
+            return true;
+        }
+
+        public async Task<IEnumerable<User>> GetAllProfileUser()
+        {
+            var allUser = await _userRepository.GetAllUsers();
+            if (allUser == null)
+            {
+                throw new ArgumentException("Do not exist User");
+            }
+            return allUser;
         }
 
         public async Task<GetUserDTOs> Login(string username, string password)
@@ -35,5 +68,38 @@ namespace EXE201.BLL.Services
             return _mapper.Map<GetUserDTOs>(user);
         }
 
+        public async Task<GetUserDTOs> Register(RegisterUserDTOs registerUserDTOs)
+        {
+            if (registerUserDTOs.Password != registerUserDTOs.ConfirmPassword)
+                throw new ArgumentException("Password and confirm password do not match.");
+
+            var existingUserByUsername = await _userRepository.GetUserByUsername(registerUserDTOs.Username);
+            if (existingUserByUsername != null)
+                throw new ArgumentException("Username already exists.");
+
+            var existingUserByEmail = await _userRepository.GetUserByEmail(registerUserDTOs.Email);
+            if (existingUserByEmail != null)
+                throw new ArgumentException("Email already exists.");
+
+            var user = _mapper.Map<User>(registerUserDTOs);
+            user.Status = "Inactive";
+
+            if (user.Roles == null)
+            {
+                user.Roles = new List<Role>();
+            }
+
+            var customerRole = await _roleRepository.GetRoleById(3);
+            if (customerRole == null)
+            {
+                throw new InvalidOperationException("Role with RoleId = 3 does not exist.");
+            }
+            user.Roles.Add(customerRole);
+
+            await _userRepository.AddAsync(user);
+            await _userRepository.SaveChangesAsync();
+
+            return _mapper.Map<GetUserDTOs>(user);
+        }
     }
 }

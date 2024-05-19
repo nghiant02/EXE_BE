@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.Interfaces;
+using EXE201.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,12 @@ namespace EXE201.BLL.Services
         {
             _inventoryRepository = inventoryRepository;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<Inventory>> GetInventories()
+        {
+            var listInventories = await _inventoryRepository.inventories();
+            return listInventories;
         }
     }
 }
