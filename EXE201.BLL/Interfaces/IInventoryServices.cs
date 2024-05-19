@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EXE201.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IInventoryServices
     {
+        Task<IEnumerable<Inventory>> GetInventories();
     }
 }
