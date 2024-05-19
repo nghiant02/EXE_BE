@@ -10,5 +10,6 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IInventoryRepository : IGenericRepository<Inventory>
     {
+        Task<IEnumerable<Inventory>> inventories();
     }
 }
