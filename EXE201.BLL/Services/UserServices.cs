@@ -6,6 +6,9 @@ using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EXE201.BLL.Services
@@ -21,6 +24,35 @@ namespace EXE201.BLL.Services
             _userRepository = userRepository;
             _mapper = mapper;
             _context = context;
+        }
+
+        public async Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO)
+        {
+            var mapUser = _mapper.Map<User>(addNewUserDTO);
+
+            await _userRepository.AddNewUser(mapUser);
+            return mapUser;
+        }
+
+        public async Task<bool> ChangeStatusUserToNotActive(int userId)
+        {
+            var existUser = await _userRepository.GetUserById(userId);
+            if (existUser == null)
+            {
+                throw new ArgumentException("Id does not exist!!");
+            }
+            await _userRepository.ChangeStatusUserToNotActive(existUser.UserId);
+            return true;
+        }
+
+        public async Task<IEnumerable<User>> GetAllProfileUser()
+        {
+            var allUser = await _userRepository.GetAllUsers();
+            if (allUser == null)
+            {
+                throw new ArgumentException("Do not exist User");
+            }
+            return allUser;
         }
 
         public async Task<GetUserDTOs> Login(string username, string password)
