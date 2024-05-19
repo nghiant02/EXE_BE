@@ -24,6 +24,13 @@ namespace EXE201.DAL.Repository
             return user;
         }
 
+        public async Task<User> GetLatestUser()
+        {
+            return await _context.Users
+                                 .OrderByDescending(x => x.UserId)
+                                 .FirstOrDefaultAsync();
+        }
+
         public async Task<User> ChangeStatusUserToNotActive(int id)
         {
             var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();

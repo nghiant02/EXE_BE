@@ -25,7 +25,11 @@ namespace EXE201.BLL.Services
             {
                 throw new ArgumentException($"User with ID {checkUser.UserId} already exists.");
             }
-            
+            var latestUser = await _userRepository.GetLatestUser();
+            int newUserId = (latestUser != null) ? latestUser.UserId + 1 : 1;
+
+            user.UserId = newUserId;
+
             await _userRepository.AddNewUser(user);
             return user;
         }
