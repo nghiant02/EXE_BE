@@ -10,5 +10,6 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IRoleRepository : IGenericRepository<Role>
     {
+        Task<Role> GetRoleById(int roleId);
     }
 }

@@ -1,4 +1,4 @@
-﻿using EXE201.BLL.DTOs;
+using EXE201.BLL.DTOs;
 using EXE201.BLL.Interfaces;
 using EXE201.BLL.Services;
 using EXE201.DAL.Interfaces;
@@ -29,15 +29,15 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
-
 
 // Add services
 builder.Services.AddScoped<IAddressServices, AddressServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IProductServices, ProductServices>();
+builder.Services.AddScoped<IRoleServices, RoleServices>();
 builder.Services.AddScoped<IInventoryServices, InventoryServices>();
-
 
 // Add services to the container.
 builder.Services.AddDbContext<EXE201Context>(opts =>

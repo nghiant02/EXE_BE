@@ -17,13 +17,13 @@ namespace EXE201.BLL.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        private readonly EXE201Context _context;
+        private readonly IRoleRepository _roleRepository;
 
-        public UserServices(IUserRepository userRepository, IMapper mapper, EXE201Context context)
+        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
-            _context = context;
+            _roleRepository = roleRepository;
         }
 
         public async Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO)
@@ -82,16 +82,14 @@ namespace EXE201.BLL.Services
                 throw new ArgumentException("Email already exists.");
 
             var user = _mapper.Map<User>(registerUserDTOs);
-            user.Status = "Inactive"; // Set the default status to inactive
+            user.Status = "Inactive";
 
-            // Ensure the Roles collection is initialized
             if (user.Roles == null)
             {
                 user.Roles = new List<Role>();
             }
 
-            // Assign the Customer role
-            var customerRole = await _context.Roles.FindAsync(3);
+            var customerRole = await _roleRepository.GetRoleById(3);
             if (customerRole == null)
             {
                 throw new InvalidOperationException("Role with RoleId = 3 does not exist.");
