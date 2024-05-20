@@ -1,5 +1,5 @@
-﻿using EXE201.BLL.DTOs.UserDTOs;
-using EXE201.DAL.DTOs;
+﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Interface;
 using System;
@@ -15,7 +15,9 @@ namespace EXE201.DAL.Interfaces
         Task<IEnumerable<Product>> GetAll();
         Task<Product> GetById(int id);
         Task<ResponeModel> AddProduct(AddProductDTO addProduct);
-        Task<ResponeModel> UpdateProduct(Product product);
+        Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
         Task<ResponeModel> DeleteProduct(int id);
+        Task<ResponeModel> RecoverProduct(int id);
+
     }
 }
