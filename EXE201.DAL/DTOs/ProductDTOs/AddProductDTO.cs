@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EXE201.BLL.DTOs.UserDTOs
+namespace EXE201.DAL.DTOs.ProductDTOs
 {
     public class AddProductDTO
     {
@@ -24,6 +24,6 @@ namespace EXE201.BLL.DTOs.UserDTOs
         public double? Price { get; set; }
 
         [Required(ErrorMessage = "Category is required!")]
-        public int?  CategoryId { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

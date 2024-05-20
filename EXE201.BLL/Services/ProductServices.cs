@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using System;
@@ -28,9 +28,29 @@ namespace EXE201.BLL.Services
             return await _productRepository.AddProduct(addProduct);
         }
 
+        public async Task<ResponeModel> DeleteProduct(int id)
+        {
+            return await _productRepository.DeleteProduct(id);
+        }
+
         public async Task<IEnumerable<Product>> GetAll()
         {
             return await _productRepository.GetAll();
+        }
+
+        public async Task<Product> GetById(int id)
+        {
+            return await _productRepository.GetById(id);
+        }
+
+        public async Task<ResponeModel> RecoverProduct(int id)
+        {
+            return await _productRepository.RecoverProduct(id);
+        }
+
+        public async Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO)
+        {
+            return await _productRepository.UpdateProduct(updateProductDTO);
         }
     }
 }
