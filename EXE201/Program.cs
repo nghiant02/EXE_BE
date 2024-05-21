@@ -38,6 +38,11 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IRoleServices, RoleServices>();
 builder.Services.AddScoped<IInventoryServices, InventoryServices>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+
+//Add EmailSetting
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
 
 // Add services to the container.
 builder.Services.AddDbContext<EXE201Context>(opts =>
