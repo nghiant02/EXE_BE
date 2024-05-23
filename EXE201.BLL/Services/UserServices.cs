@@ -66,7 +66,7 @@ namespace EXE201.BLL.Services
                 throw new InvalidOperationException("User account is not active.");
 
             var userDto = _mapper.Map<GetUserDTOs>(user);
-            userDto.Roles = user.Roles.Select(r => r.RoleName).ToList();
+            //userDto.Roles = user.Roles.Select(r => r.RoleName).ToList();
 
             return userDto;
         }
