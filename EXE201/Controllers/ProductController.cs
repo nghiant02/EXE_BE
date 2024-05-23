@@ -27,7 +27,7 @@ namespace EXE201.Controllers
         public async Task<IActionResult> GetProductById([FromQuery] int id)
         {
             var response = await _productServices.GetById(id);
-            if (response.Status == "Error")
+            if (response.ProductStatus == "Error")
             {
                 return Conflict(response);
             }

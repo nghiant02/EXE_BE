@@ -26,11 +26,11 @@ namespace EXE201.DAL.Repository
             {
                 var product = new Product
                 {
-                    Name = addProduct.Name,
-                    Description = addProduct.Description,
-                    Image = addProduct.Image,
-                    Status = "Available",
-                    Price = addProduct.Price,
+                    ProductName = addProduct.Name,
+                    ProductDescription = addProduct.Description,
+                    ProductImage = addProduct.Image,
+                    ProductStatus = "Available",
+                    ProductPrice = addProduct.Price,
                     CategoryId = addProduct.CategoryId
                 };
 
@@ -48,15 +48,15 @@ namespace EXE201.DAL.Repository
         public async Task<ResponeModel> DeleteProduct(int id)
         {
             var product = await GetByIdAsync(id);
-            if (product != null && product.Status == "Available")
+            if (product != null && product.ProductStatus == "Available")
             {
-                product.Status = "Not Available";
+                product.ProductStatus = "Not Available";
                 Update(product);
                 await SaveChangesAsync();
                 return new ResponeModel { Status = "Success", Message = "Product delete successfully" };
             }
 
-            if (product.Status == "Not Available")
+            if (product.ProductStatus == "Not Available")
             {
                 return new ResponeModel { Status = "Error", Message = "Product already delete" };
             }
@@ -66,14 +66,14 @@ namespace EXE201.DAL.Repository
         public async Task<ResponeModel> RecoverProduct(int id)
         {
             var product = await GetByIdAsync(id);
-            if (product != null && product.Status == "Not Available")
+            if (product != null && product.ProductStatus == "Not Available")
             {
-                product.Status = "Available";
+                product.ProductStatus = "Available";
                 Update(product);
                 await SaveChangesAsync();
                 return new ResponeModel { Status = "Success", Message = "Product recover successfully" };
             }
-            if (product.Status == "Available")
+            if (product.ProductStatus == "Available")
             {
                 return new ResponeModel { Status = "Error", Message = "Product already Available" };
             }
@@ -96,10 +96,10 @@ namespace EXE201.DAL.Repository
             {
                 var product = new Product
                 {
-                    Name = updateProductDTO.Name,
-                    Description = updateProductDTO.Description,
-                    Image = updateProductDTO.Image,
-                    Price = updateProductDTO.Price,
+                    ProductName = updateProductDTO.Name,
+                    ProductDescription = updateProductDTO.Description,
+                    ProductImage = updateProductDTO.Image,
+                    ProductPrice = updateProductDTO.Price,
                     CategoryId = updateProductDTO.CategoryId
                 };
 

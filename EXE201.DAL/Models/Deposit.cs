@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EXE201.DAL.Models;
 
-[Table("Payment")]
-public partial class Payment
+[Table("Deposit")]
+public partial class Deposit
 {
     [Key]
-    [Column("PaymentID")]
-    public int PaymentId { get; set; }
+    [Column("DepositID")]
+    public int DepositId { get; set; }
 
     [Column("OrderID")]
     public int? OrderId { get; set; }
@@ -22,21 +22,20 @@ public partial class Payment
     public int? UserId { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
-    public decimal? PaymentAmount { get; set; }
+    public decimal? DepositAmount { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
-    public string PaymentMethod { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? DateDeposited { get; set; }
 
     [StringLength(15)]
     [Unicode(false)]
-    public string PaymentStatus { get; set; }
+    public string DepositStatus { get; set; }
 
     [ForeignKey("OrderId")]
-    [InverseProperty("Payments")]
+    [InverseProperty("Deposits")]
     public virtual RentalOrder Order { get; set; }
 
     [ForeignKey("UserId")]
-    [InverseProperty("Payments")]
+    [InverseProperty("Deposits")]
     public virtual User User { get; set; }
 }

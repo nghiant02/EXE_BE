@@ -32,7 +32,10 @@ public partial class RentalOrder
     public DateTime? ReturnDate { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
-    public decimal? Total { get; set; }
+    public decimal? OrderTotal { get; set; }
+
+    [InverseProperty("Order")]
+    public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();
 
     [InverseProperty("Order")]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
