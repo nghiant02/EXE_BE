@@ -29,7 +29,7 @@ public partial class Membership
 
     [StringLength(10)]
     [Unicode(false)]
-    public string Status { get; set; }
+    public string MembershipStatus { get; set; }
 
     [ForeignKey("MembershipTypeId")]
     [InverseProperty("Memberships")]

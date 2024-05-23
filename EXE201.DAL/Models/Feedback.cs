@@ -22,15 +22,15 @@ public partial class Feedback
     public int? ProductId { get; set; }
 
     [Column(TypeName = "text")]
-    public string Comment { get; set; }
+    public string FeedbackComment { get; set; }
 
     [StringLength(255)]
     [Unicode(false)]
-    public string Image { get; set; }
+    public string FeedbackImage { get; set; }
 
     [StringLength(10)]
     [Unicode(false)]
-    public string Status { get; set; }
+    public string FeedbackStatus { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? DateGiven { get; set; }

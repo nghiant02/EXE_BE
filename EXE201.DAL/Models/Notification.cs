@@ -19,7 +19,7 @@ public partial class Notification
     public int? UserId { get; set; }
 
     [Column(TypeName = "text")]
-    public string Message { get; set; }
+    public string NotificationMessage { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? DateSent { get; set; }

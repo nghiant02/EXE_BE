@@ -17,13 +17,13 @@ public partial class MembershipType
 
     [StringLength(50)]
     [Unicode(false)]
-    public string TypeName { get; set; }
+    public string MembershipTypeName { get; set; }
 
     [Column(TypeName = "text")]
-    public string Description { get; set; }
+    public string MembershipDescription { get; set; }
 
     [Column(TypeName = "text")]
-    public string Benefits { get; set; }
+    public string MembershipBenefits { get; set; }
 
     [InverseProperty("MembershipType")]
     public virtual ICollection<Membership> Memberships { get; set; } = new List<Membership>();

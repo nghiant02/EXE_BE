@@ -34,7 +34,7 @@ namespace EXE201.DAL.Repository
             var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
             if (checkUser != null)
             {
-                checkUser.Status = "Inactive";
+                checkUser.AccountStatus = "Inactive";
 
                 _context.Users.Update(checkUser);
                 await _context.SaveChangesAsync();
@@ -73,8 +73,8 @@ namespace EXE201.DAL.Repository
                 existUser.Gender = user.Gender;
                 existUser.Email = user.Email;
                 existUser.DateOfBirth = user.DateOfBirth;
-                existUser.Image = user.Image;
-                existUser.Status = user.Status;
+                existUser.ProfileImage = user.ProfileImage;
+                existUser.AccountStatus = user.AccountStatus;
 
                 _context.Users.Update(existUser);
                 await _context.SaveChangesAsync();

@@ -21,8 +21,7 @@ public partial class Rating
     [Column("ProductID")]
     public int? ProductId { get; set; }
 
-    [Column("Rating")]
-    public int? Rating1 { get; set; }
+    public int? RatingValue { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? DateGiven { get; set; }

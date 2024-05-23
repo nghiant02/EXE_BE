@@ -25,7 +25,7 @@ namespace EXE201.DAL.Repository
                 var payment = new Payment
                 {
                     OrderId = paymentDetails.OrderId,
-                    Amount = paymentDetails.Amount,
+                    PaymentAmount = paymentDetails.Amount,
                     PaymentMethod = "Pending",
                     PaymentStatus = "Pending"
                 };
@@ -65,13 +65,13 @@ namespace EXE201.DAL.Repository
         public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)
         {
             return await _dbSet
-                .Where(p => p.PaymentUserId == userId)
+                .Where(p => p.PaymentId == userId)
                 .Select(p => new Payment
                 {
                     PaymentId = p.PaymentId,
                     OrderId = p.OrderId,
-                    PaymentUserId = p.PaymentUserId,
-                    Amount = p.Amount,
+                    UserId = p.UserId,
+                    PaymentAmount = p.PaymentAmount,
                     PaymentMethod = p.PaymentMethod,
                     PaymentStatus = p.PaymentStatus
                 })

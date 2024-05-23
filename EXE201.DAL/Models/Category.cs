@@ -17,10 +17,10 @@ public partial class Category
 
     [StringLength(100)]
     [Unicode(false)]
-    public string Name { get; set; }
+    public string CategoryName { get; set; }
 
     [Column(TypeName = "text")]
-    public string Description { get; set; }
+    public string CategoryDescription { get; set; }
 
     [InverseProperty("Category")]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
