@@ -21,7 +21,7 @@ public partial class Role
 
     [StringLength(255)]
     [Unicode(false)]
-    public string Description { get; set; }
+    public string RoleDescription { get; set; }
 
     [ForeignKey("RoleId")]
     [InverseProperty("Roles")]

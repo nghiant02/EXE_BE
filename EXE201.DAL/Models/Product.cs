@@ -17,20 +17,20 @@ public partial class Product
 
     [StringLength(100)]
     [Unicode(false)]
-    public string Name { get; set; }
+    public string ProductName { get; set; }
 
     [Column(TypeName = "text")]
-    public string Description { get; set; }
+    public string ProductDescription { get; set; }
 
     [StringLength(255)]
     [Unicode(false)]
-    public string Image { get; set; }
+    public string ProductImage { get; set; }
 
     [StringLength(15)]
     [Unicode(false)]
-    public string Status { get; set; }
+    public string ProductStatus { get; set; }
 
-    public double? Price { get; set; }
+    public double? ProductPrice { get; set; }
 
     [Column("CategoryID")]
     public int? CategoryId { get; set; }

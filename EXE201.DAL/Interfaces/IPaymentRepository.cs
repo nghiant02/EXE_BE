@@ -1,4 +1,6 @@
-﻿using EXE201.DAL.Models;
+﻿using EXE201.DAL.DTOs.PaymentDTOs;
+using EXE201.DAL.DTOs;
+using EXE201.DAL.Models;
 using MCC.DAL.Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -10,5 +12,8 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IPaymentRepository : IGenericRepository<Payment>
     {
+        Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails);
+        Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment);
+        Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId);
     }
 }

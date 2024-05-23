@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.Interfaces;
+﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
 using System;
@@ -13,6 +14,34 @@ namespace EXE201.DAL.Repository
     {
         public RentalOrderRepository(EXE201Context context) : base(context)
         {
+
+        }
+        public async Task<ResponeModel> CancelOrderAsync(int orderId)
+        {
+            var order = await GetByIdAsync(orderId);
+            if (order != null && order.OrderStatus != "Cancelled")
+            {
+                order.OrderStatus = "Cancelled";
+                Update(order);
+                await SaveChangesAsync();
+                return new ResponeModel { Status = "Success", Message = "Order cancelled successfully", DataObject = order };
+            }
+            return new ResponeModel { Status = "Error", Message = "Order not found or already cancelled" };
+        }
+
+        public async Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason)
+        {
+            var order = await GetByIdAsync(orderId);
+            if (order != null && order.OrderStatus != "Returned")
+            {
+                order.OrderStatus = "Returned";
+                order.ReturnDate = DateTime.Now;
+                // Add returnReason to a new field if necessary
+                Update(order);
+                await SaveChangesAsync();
+                return new ResponeModel { Status = "Success", Message = "Order returned successfully", DataObject = order };
+            }
+            return new ResponeModel { Status = "Error", Message = "Order not found or already returned" };
         }
     }
 }

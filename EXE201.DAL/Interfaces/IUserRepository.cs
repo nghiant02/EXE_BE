@@ -18,6 +18,7 @@ namespace EXE201.DAL.Interfaces
         Task<User> AddNewUser(User user);
         Task<User> GetLatestUser();
         Task<User> GetUserByEmail(string email);
+        Task<Role> GetRoleById(int roleId);
     }
 
 }

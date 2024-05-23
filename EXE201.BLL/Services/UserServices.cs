@@ -62,10 +62,13 @@ namespace EXE201.BLL.Services
             if (user == null || user.Password != password)
                 throw new ArgumentException("Invalid username or password.");
 
-            if (user.Status != "Active")
+            if (user.AccountStatus != "Active")
                 throw new InvalidOperationException("User account is not active.");
 
-            return _mapper.Map<GetUserDTOs>(user);
+            var userDto = _mapper.Map<GetUserDTOs>(user);
+            //userDto.Roles = user.Roles.Select(r => r.RoleName).ToList();
+
+            return userDto;
         }
 
         public async Task<GetUserDTOs> Register(RegisterUserDTOs registerUserDTOs)
@@ -82,7 +85,7 @@ namespace EXE201.BLL.Services
                 throw new ArgumentException("Email already exists.");
 
             var user = _mapper.Map<User>(registerUserDTOs);
-            user.Status = "Inactive";
+            user.AccountStatus = "Inactive";
 
             if (user.Roles == null)
             {

@@ -34,7 +34,7 @@ namespace EXE201.DAL.Repository
             var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
             if (checkUser != null)
             {
-                checkUser.Status = "Inactive";
+                checkUser.AccountStatus = "Inactive";
 
                 _context.Users.Update(checkUser);
                 await _context.SaveChangesAsync();
@@ -55,7 +55,9 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> GetUserByUsername(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+            return await _context.Users
+                .Include(x => x.Roles)
+                .FirstOrDefaultAsync(x => x.UserName == username);
         }
 
         public async Task<User> UpdateUser(User user)
@@ -71,8 +73,8 @@ namespace EXE201.DAL.Repository
                 existUser.Gender = user.Gender;
                 existUser.Email = user.Email;
                 existUser.DateOfBirth = user.DateOfBirth;
-                existUser.Image = user.Image;
-                existUser.Status = user.Status;
+                existUser.ProfileImage = user.ProfileImage;
+                existUser.AccountStatus = user.AccountStatus;
 
                 _context.Users.Update(existUser);
                 await _context.SaveChangesAsync();
@@ -83,7 +85,14 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> GetUserByEmail(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
+            return await _context.Users
+                .Include(x => x.Roles)
+                .FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<Role> GetRoleById(int roleId)
+        {
+            return await _context.Roles.FindAsync(roleId);
         }
     }
 }
