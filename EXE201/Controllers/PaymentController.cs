@@ -36,5 +36,12 @@ namespace EXE201.Controllers
             }
             return BadRequest(result);
         }
+
+        [HttpGet("ViewHistoryPayment")]
+        public async Task<IActionResult> GetPaymentsByUserId(int userId)
+        {
+            var result = await _paymentService.GetPaymentsByUserIdAsync(userId);
+            return Ok(result);
+        }
     }
 }

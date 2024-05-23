@@ -61,5 +61,21 @@ namespace EXE201.DAL.Repository
             }
             return new ResponeModel { Status = "Error", Message = "Pending payment not found" };
         }
+
+        public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)
+        {
+            return await _dbSet
+                .Where(p => p.PaymentUserId == userId)
+                .Select(p => new Payment
+                {
+                    PaymentId = p.PaymentId,
+                    OrderId = p.OrderId,
+                    PaymentUserId = p.PaymentUserId,
+                    Amount = p.Amount,
+                    PaymentMethod = p.PaymentMethod,
+                    PaymentStatus = p.PaymentStatus
+                })
+                .ToListAsync();
+        }
     }
 }

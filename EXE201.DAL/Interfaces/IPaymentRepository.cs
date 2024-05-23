@@ -14,5 +14,6 @@ namespace EXE201.DAL.Interfaces
     {
         Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails);
         Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment);
+        Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId);
     }
 }
