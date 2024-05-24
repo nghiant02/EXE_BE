@@ -41,17 +41,20 @@ public partial class User
 
     [StringLength(255)]
     [Unicode(false)]
-    public string Image { get; set; }
+    public string ProfileImage { get; set; }
 
     [StringLength(10)]
     [Unicode(false)]
-    public string Status { get; set; }
+    public string AccountStatus { get; set; }
 
     [InverseProperty("User")]
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
     [InverseProperty("User")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();
 
     [InverseProperty("User")]
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
@@ -62,7 +65,7 @@ public partial class User
     [InverseProperty("User")]
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
-    [InverseProperty("PaymentUser")]
+    [InverseProperty("User")]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     [InverseProperty("User")]
