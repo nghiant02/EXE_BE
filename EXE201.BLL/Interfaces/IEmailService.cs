@@ -1,4 +1,4 @@
-﻿using EXE201.DAL.Models;
+﻿using EXE201.DAL.DTOs.EmailDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

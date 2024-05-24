@@ -1,5 +1,5 @@
 ﻿using EXE201.BLL.Interfaces;
-using EXE201.DAL.Models;
+using EXE201.DAL.DTOs.EmailDTOs;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;

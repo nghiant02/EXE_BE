@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using EXE201.DAL.DTOs.EmailDTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 //Add EmailSetting
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
 
-// Add services to the container.
+//Add services to the container.
 builder.Services.AddDbContext<EXE201Context>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

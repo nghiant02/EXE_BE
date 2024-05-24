@@ -1,5 +1,4 @@
 ﻿using EXE201.BLL.Interfaces;
-using EXE201.DAL.Models;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.ViewModel.UserViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +12,6 @@ namespace EXE201.Controllers
 
     public class UserController : Controller
     {
-        private static readonly string AllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        private static readonly string AllowedCode = "0123456789";
-        private static readonly Random Random = new();
         private readonly IUserServices _userServices;
         private readonly IEmailService _emailService;
 
@@ -121,24 +117,12 @@ namespace EXE201.Controllers
             Response += "<h1 style=\"color:#f57f0e\">Dear " + name + "</h1>";
             Response +=
                 "<button style=\"background-color: #f57f0e; color: white; padding: 14px 20px; margin: 8px 0; border: none; cursor: pointer; border-radius: 4px;\">";
-            Response += "<a href=\" " + GenerateRandomVerifyCode() +
+            Response += "<a href=\" " + name +
                         "\" style=\"text-decoration: none; color: white;\">Activate the account</a>";
             Response += "</button>";
             Response += "<div><h1>Contact us: lammjnhphong4560@gmail.com</h1></div>";
             Response += "</div>";
             return Response;
-        }
-
-        private static string GenerateRandomVerifyCode()
-        {
-            var sb = new StringBuilder();
-            sb.Append((char)(Random.Next(1, 10) + '0'));
-            for (int i = 1; i < 6; i++)
-            {
-                int index = Random.Next(10);
-                sb.Append(AllowedCode[index]);
-            }
-            return sb.ToString();
         }
     }
 }

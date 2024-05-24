@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EXE201.DAL.Models
+namespace EXE201.DAL.DTOs.EmailDTOs
 {
     public class EmailSetting
     {
