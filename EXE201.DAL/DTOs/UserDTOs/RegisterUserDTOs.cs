@@ -12,5 +12,6 @@ namespace EXE201.DAL.DTOs.UserDTOs
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string Email { get; set; }
+        public string FullName { get; set; }
     }
 }
