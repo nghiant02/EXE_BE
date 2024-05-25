@@ -12,8 +12,7 @@ namespace EXE201.DAL.Models;
 public partial class User
 {
     [Key]
-    [Column("UserID")]
-    public int UserId { get; set; }
+    public int UserID { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]
@@ -74,7 +73,7 @@ public partial class User
     [InverseProperty("User")]
     public virtual ICollection<RentalOrder> RentalOrders { get; set; } = new List<RentalOrder>();
 
-    [ForeignKey("UserId")]
+    [ForeignKey("UserID")]
     [InverseProperty("Users")]
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 }

@@ -41,7 +41,7 @@ namespace EXE201.BLL.Services
             {
                 throw new ArgumentException("Id does not exist!!");
             }
-            await _userRepository.ChangeStatusUserToNotActive(existUser.UserId);
+            await _userRepository.ChangeStatusUserToNotActive(existUser.UserID);
             return true;
         }
 

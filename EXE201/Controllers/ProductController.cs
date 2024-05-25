@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductController : Controller
     {
         private readonly IProductServices _productServices;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,11 @@ namespace EXE201.BLL.Services
         public async Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason)
         {
             return await _rentalOrderRepository.ReturnOrderAsync(orderId, returnReason);
+        }
+
+        public async Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem)
+        {
+            return await _rentalOrderRepository.ReturnItem(returnItem);
         }
     }
 }

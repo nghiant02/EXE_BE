@@ -12,25 +12,22 @@ namespace EXE201.DAL.Models;
 public partial class Rating
 {
     [Key]
-    [Column("RatingID")]
-    public int RatingId { get; set; }
+    public int RatingID { get; set; }
 
-    [Column("UserID")]
-    public int? UserId { get; set; }
+    public int? UserID { get; set; }
 
-    [Column("ProductID")]
-    public int? ProductId { get; set; }
+    public int? ProductID { get; set; }
 
     public int? RatingValue { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? DateGiven { get; set; }
 
-    [ForeignKey("ProductId")]
+    [ForeignKey("ProductID")]
     [InverseProperty("Ratings")]
     public virtual Product Product { get; set; }
 
-    [ForeignKey("UserId")]
+    [ForeignKey("UserID")]
     [InverseProperty("Ratings")]
     public virtual User User { get; set; }
 }

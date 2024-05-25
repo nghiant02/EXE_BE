@@ -12,15 +12,13 @@ namespace EXE201.DAL.Models;
 public partial class Inventory
 {
     [Key]
-    [Column("InventoryID")]
-    public int InventoryId { get; set; }
+    public int InventoryID { get; set; }
 
-    [Column("ProductID")]
-    public int? ProductId { get; set; }
+    public int? ProductID { get; set; }
 
     public int? QuantityAvailable { get; set; }
 
-    [ForeignKey("ProductId")]
+    [ForeignKey("ProductID")]
     [InverseProperty("Inventories")]
     public virtual Product Product { get; set; }
 }
