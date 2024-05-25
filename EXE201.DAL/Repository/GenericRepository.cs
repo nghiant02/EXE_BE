@@ -2,6 +2,7 @@ using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace MCC.DAL.Repository.Implements;
 
@@ -20,9 +21,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         await _dbSet.AddAsync(entity);
     }
 
-    public void Delete(T entity)
+    public async Task Delete(T entity)
     {
         _dbSet.Remove(entity);
+        await SaveChangesAsync();
     }
 
     public DbSet<T> Entities()
@@ -39,10 +41,15 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return await _dbSet.FindAsync(id);
     }
-
     public void Update(T entity)
     {
-        _dbSet.Update(entity);
+        _dbSet.Attach(entity);
+        _context.Entry(entity).State = EntityState.Modified;
+    }
+
+    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).ToListAsync();
     }
     public async Task SaveChangesAsync()
     {

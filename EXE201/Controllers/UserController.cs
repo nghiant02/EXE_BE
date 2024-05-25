@@ -4,6 +4,8 @@ using EXE201.ViewModel.UserViewModel;
 using Microsoft.AspNetCore.Mvc;
 using EXE201.DAL.DTOs.EmailDTOs;
 using System.Text;
+using EXE201.BLL.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace EXE201.Controllers
 {
@@ -105,6 +107,24 @@ namespace EXE201.Controllers
                 return BadRequest(ex.Message);
             }
             return Ok();
+        }
+
+        [HttpPut("Change-Password")]
+        public async Task<IActionResult> UpdatePassword(int id, ChangePasswordDTO changePassword)
+        {
+            var user = await _userServices.ChangePasword(id,changePassword);
+            return Ok(user);
+        }
+
+        [HttpPut("Update-Profile")]
+        public async Task<IActionResult> UpdateUser([FromQuery][Required] int id, UpdateProfileUserDTO userView)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await _userServices.UserUpdateUser(id, userView);
+            return Ok(user);
         }
 
         private string GetHtmlcontent(string name)

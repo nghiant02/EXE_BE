@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace EXE201.DAL.Repository
 {
-    public class VerifyCodeRepository : GenericRepository<VerifyCode>, IVerifyCodeRepository
-    {
+    public class VerifyCodeRepository : GenericRepository<VerifyCode>, IVerifyCodeRepository 
+    { 
         public VerifyCodeRepository(EXE201Context context) : base(context)
         {
         }
+        
     }
 }
