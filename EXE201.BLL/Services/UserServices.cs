@@ -18,12 +18,14 @@ namespace EXE201.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IRoleRepository _roleRepository;
+        private readonly IVerifyCodeRepository _verifyCodeRepository;
 
-        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository)
+        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository, IVerifyCodeRepository verifyCodeRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _roleRepository = roleRepository;
+            _verifyCodeRepository = verifyCodeRepository;
         }
 
         public async Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO)
@@ -32,6 +34,18 @@ namespace EXE201.BLL.Services
 
             await _userRepository.AddNewUser(mapUser);
             return mapUser;
+        }
+
+        public async Task<User> ChangePasword(int id, ChangePasswordDTO changePasswordDTO)
+        {
+            var users = await _userRepository.FindAsync(x => x.UserId == id && x.Password == changePasswordDTO.CurrentPassword);
+            if (!users.Any())
+            {
+                throw new ArgumentException("Wrong Password!");
+            }
+            var user = users.First();
+            user.Password = changePasswordDTO.NewPassword;
+            return await _userRepository.UpdateUser(user);
         }
 
         public async Task<bool> ChangeStatusUserToNotActive(int userId)
@@ -43,6 +57,16 @@ namespace EXE201.BLL.Services
             }
             await _userRepository.ChangeStatusUserToNotActive(existUser.UserId);
             return true;
+        }
+
+        public async Task<User> FindUserByEmail(string email)
+        {
+            var user = await _userRepository.FindAsync(x => x.Email == email);
+            if (!user.Any())
+            {
+                return null;
+            }
+            return user.First();
         }
 
         public async Task<IEnumerable<User>> GetAllProfileUser()
@@ -103,6 +127,39 @@ namespace EXE201.BLL.Services
             await _userRepository.SaveChangesAsync();
 
             return _mapper.Map<GetUserDTOs>(user);
+        }
+
+        public async Task<User> UpdatePassword(string email, string password, int id)
+        {
+            var checkCode = await _verifyCodeRepository.FindAsync(x => x.Email == email);
+            var user = await _userRepository.FindAsync(x => x.Email == email && x.UserId == id);
+            if (!user.Any() || !checkCode.Any())
+            {
+                throw new Exception("Invalid Request");
+            }
+            var existUser = user.First();
+            var verifyCode = checkCode.First();
+
+            var updateUser = await _userRepository.UpdateUser(existUser);
+            await _verifyCodeRepository.Delete(verifyCode);
+            return updateUser;
+        }
+
+        public async Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView)
+        {
+            var oldUser = await _userRepository.FindAsync(x => x.UserId == id);
+            if (!oldUser.Any())
+            {
+                throw new ArgumentException($"User with ID {id} not found");
+            }
+            var updatingUser = _mapper.Map<User>(userView);
+            updatingUser.UserId = id;
+            updatingUser.Phone = oldUser.First().Phone;
+            updatingUser.Email = oldUser.First().Email;
+            updatingUser.AccountStatus = oldUser.First().AccountStatus;
+            updatingUser.Password = oldUser.First().Password;
+
+            return await _userRepository.UpdateUser(updatingUser);
         }
     }
 }

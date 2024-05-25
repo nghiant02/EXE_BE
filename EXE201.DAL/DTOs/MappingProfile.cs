@@ -17,7 +17,7 @@ namespace EXE201.BLL.DTOs
             CreateMap<User, GetUserDTOs>();
             CreateMap<RegisterUserDTOs, User>();
             CreateMap<AddNewUserDTO, User>();
-            
+            CreateMap<UpdateProfileUserDTO, User>();    
         }
     }
 }
