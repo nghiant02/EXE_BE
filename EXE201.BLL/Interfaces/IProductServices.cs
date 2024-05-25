@@ -17,5 +17,7 @@ namespace EXE201.BLL.Interfaces
         Task<ResponeModel> DeleteProduct(int id);
         Task<ResponeModel> RecoverProduct(int id);
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
+        Task<IEnumerable<Product>> SearchProduct(string keyword);
+        Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Models;
 
