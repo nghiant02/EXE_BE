@@ -38,7 +38,7 @@ namespace EXE201.BLL.Services
 
         public async Task<User> ChangePasword(int id, ChangePasswordDTO changePasswordDTO)
         {
-            var users = await _userRepository.FindAsync(x => x.UserId == id && x.Password == changePasswordDTO.CurrentPassword);
+            var users = await _userRepository.FindAsync(x => x.UserID == id && x.Password == changePasswordDTO.CurrentPassword);
             if (!users.Any())
             {
                 throw new ArgumentException("Wrong Password!");
@@ -132,7 +132,7 @@ namespace EXE201.BLL.Services
         public async Task<User> UpdatePassword(string email, string password, int id)
         {
             var checkCode = await _verifyCodeRepository.FindAsync(x => x.Email == email);
-            var user = await _userRepository.FindAsync(x => x.Email == email && x.UserId == id);
+            var user = await _userRepository.FindAsync(x => x.Email == email && x.UserID == id);
             if (!user.Any() || !checkCode.Any())
             {
                 throw new Exception("Invalid Request");
@@ -147,13 +147,13 @@ namespace EXE201.BLL.Services
 
         public async Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView)
         {
-            var oldUser = await _userRepository.FindAsync(x => x.UserId == id);
+            var oldUser = await _userRepository.FindAsync(x => x.UserID == id);
             if (!oldUser.Any())
             {
                 throw new ArgumentException($"User with ID {id} not found");
             }
             var updatingUser = _mapper.Map<User>(userView);
-            updatingUser.UserId = id;
+            updatingUser.UserID = id;
             updatingUser.Phone = oldUser.First().Phone;
             updatingUser.Email = oldUser.First().Email;
             updatingUser.AccountStatus = oldUser.First().AccountStatus;
