@@ -12,14 +12,11 @@ namespace EXE201.DAL.Models;
 public partial class Membership
 {
     [Key]
-    [Column("MembershipID")]
-    public int MembershipId { get; set; }
+    public int MembershipID { get; set; }
 
-    [Column("UserID")]
-    public int? UserId { get; set; }
+    public int? UserID { get; set; }
 
-    [Column("MembershipTypeID")]
-    public int? MembershipTypeId { get; set; }
+    public int? MembershipTypeID { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? StartDate { get; set; }
@@ -31,11 +28,11 @@ public partial class Membership
     [Unicode(false)]
     public string MembershipStatus { get; set; }
 
-    [ForeignKey("MembershipTypeId")]
+    [ForeignKey("MembershipTypeID")]
     [InverseProperty("Memberships")]
     public virtual MembershipType MembershipType { get; set; }
 
-    [ForeignKey("UserId")]
+    [ForeignKey("UserID")]
     [InverseProperty("Memberships")]
     public virtual User User { get; set; }
 }

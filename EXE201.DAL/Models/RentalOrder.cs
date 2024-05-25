@@ -12,11 +12,9 @@ namespace EXE201.DAL.Models;
 public partial class RentalOrder
 {
     [Key]
-    [Column("OrderID")]
-    public int OrderId { get; set; }
+    public int OrderID { get; set; }
 
-    [Column("UserID")]
-    public int? UserId { get; set; }
+    public int? UserID { get; set; }
 
     [StringLength(15)]
     [Unicode(false)]
@@ -27,6 +25,10 @@ public partial class RentalOrder
 
     [Column(TypeName = "datetime")]
     public DateTime? DueDate { get; set; }
+
+    [StringLength(100)]
+    [Unicode(false)]
+    public string ReturnReason { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? ReturnDate { get; set; }
@@ -43,7 +45,7 @@ public partial class RentalOrder
     [InverseProperty("Order")]
     public virtual ICollection<RentalOrderDetail> RentalOrderDetails { get; set; } = new List<RentalOrderDetail>();
 
-    [ForeignKey("UserId")]
+    [ForeignKey("UserID")]
     [InverseProperty("RentalOrders")]
     public virtual User User { get; set; }
 }

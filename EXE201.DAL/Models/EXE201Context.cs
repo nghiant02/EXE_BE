@@ -55,6 +55,7 @@ public partial class EXE201Context : DbContext
     {
         modelBuilder.Entity<Address>(entity =>
         {
+
             entity.HasKey(e => e.AddressId).HasName("PK__Address__091C2A1BF7B1ED9B");
 
             entity.ToTable("Address");
@@ -140,6 +141,7 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
+
             entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF69FDA649B");
 
             entity.ToTable("Feedback");
@@ -167,6 +169,7 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Inventory>(entity =>
         {
+
             entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D348F220C9");
 
             entity.ToTable("Inventory");
@@ -205,6 +208,7 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<MembershipType>(entity =>
         {
+
             entity.HasKey(e => e.MembershipTypeId).HasName("PK__Membersh__F35A3E59823ED399");
 
             entity.ToTable("MembershipType");
@@ -219,6 +223,7 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
+
             entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32002451C9");
 
             entity.ToTable("Notification");
@@ -333,7 +338,6 @@ public partial class EXE201Context : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.RentalEnd).HasColumnType("datetime");
             entity.Property(e => e.RentalStart).HasColumnType("datetime");
-
             entity.HasOne(d => d.Order).WithMany(p => p.RentalOrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .HasConstraintName("FK__RentalOrd__Order__66603565");
@@ -386,24 +390,22 @@ public partial class EXE201Context : DbContext
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-
+                
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
                     "UserRole",
                     r => r.HasOne<Role>().WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK__UserRole__RoleID__68487DD7"),
                     l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK__UserRole__UserID__693CA210"),
                     j =>
                     {
                         j.HasKey("UserId", "RoleId").HasName("PK__UserRole__AF27604FCD7E2BD8");
                         j.ToTable("UserRole");
-                        j.IndexerProperty<int>("UserId").HasColumnName("UserID");
-                        j.IndexerProperty<int>("RoleId").HasColumnName("RoleID");
                     });
         });
 

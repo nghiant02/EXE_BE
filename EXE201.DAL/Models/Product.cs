@@ -12,8 +12,7 @@ namespace EXE201.DAL.Models;
 public partial class Product
 {
     [Key]
-    [Column("ProductID")]
-    public int ProductId { get; set; }
+    public int ProductID { get; set; }
 
     [StringLength(100)]
     [Unicode(false)]
@@ -32,13 +31,12 @@ public partial class Product
 
     public double? ProductPrice { get; set; }
 
-    [Column("CategoryID")]
-    public int? CategoryId { get; set; }
+    public int? CategoryID { get; set; }
 
     [InverseProperty("Product")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
-    [ForeignKey("CategoryId")]
+    [ForeignKey("CategoryID")]
     [InverseProperty("Products")]
     public virtual Category Category { get; set; }
 

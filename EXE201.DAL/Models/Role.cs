@@ -12,8 +12,7 @@ namespace EXE201.DAL.Models;
 public partial class Role
 {
     [Key]
-    [Column("RoleID")]
-    public int RoleId { get; set; }
+    public int RoleID { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]
@@ -23,7 +22,7 @@ public partial class Role
     [Unicode(false)]
     public string RoleDescription { get; set; }
 
-    [ForeignKey("RoleId")]
+    [ForeignKey("RoleID")]
     [InverseProperty("Roles")]
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

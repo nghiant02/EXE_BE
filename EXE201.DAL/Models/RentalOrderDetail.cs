@@ -11,14 +11,11 @@ namespace EXE201.DAL.Models;
 public partial class RentalOrderDetail
 {
     [Key]
-    [Column("OrderDetailsID")]
-    public int OrderDetailsId { get; set; }
+    public int OrderDetailsID { get; set; }
 
-    [Column("OrderID")]
-    public int? OrderId { get; set; }
+    public int? OrderID { get; set; }
 
-    [Column("ProductID")]
-    public int? ProductId { get; set; }
+    public int? ProductID { get; set; }
 
     public int? Quantity { get; set; }
 
@@ -28,11 +25,11 @@ public partial class RentalOrderDetail
     [Column(TypeName = "datetime")]
     public DateTime? RentalEnd { get; set; }
 
-    [ForeignKey("OrderId")]
+    [ForeignKey("OrderID")]
     [InverseProperty("RentalOrderDetails")]
     public virtual RentalOrder Order { get; set; }
 
-    [ForeignKey("ProductId")]
+    [ForeignKey("ProductID")]
     [InverseProperty("RentalOrderDetails")]
     public virtual Product Product { get; set; }
 }

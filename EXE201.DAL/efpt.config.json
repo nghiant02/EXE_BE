@@ -2,6 +2,7 @@
    "CodeGenerationMode": 4,
    "ContextClassName": "EXE201Context",
    "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
    "FilterSchemas": false,
    "IncludeConnectionString": true,
    "ModelNamespace": null,
@@ -83,11 +84,10 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": null,
+   "UiHint": "thangnguyen\\thangnguyen.EXE201.dbo",
    "UncountableWords": null,
-   "UseAsyncStoredProcedureCalls": true,
    "UseBoolPropertiesWithoutDefaultSql": false,
-   "UseDatabaseNames": false,
+   "UseDatabaseNames": true,
    "UseDateOnlyTimeOnly": true,
    "UseDbContextSplitting": false,
    "UseDecimalDataAnnotationForSprocResult": true,
