@@ -16,14 +16,14 @@ namespace EXE201.Controllers
             _productServices = productServices;
         }
 
-        [HttpPost("GetAll")]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var product = await _productServices.GetAll();
             return Ok(product);
         }
 
-        [HttpPost("GetProductById")]
+        [HttpGet("GetProductById")]
         public async Task<IActionResult> GetProductById([FromQuery] int id)
         {
             var response = await _productServices.GetById(id);
@@ -35,7 +35,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("AddProduct")]
-        public async Task<IActionResult> AddProduct([FromQuery] AddProductDTO addProductDTO)
+        public async Task<IActionResult> AddProduct([FromBody] AddProductDTO addProductDTO)
         {
             var response = await _productServices.AddProduct(addProductDTO);
             if (response.Status == "Error")
@@ -68,7 +68,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductDTO updateProductDTO)
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO updateProductDTO)
         {
             var response = await _productServices.UpdateProduct(updateProductDTO);
             if (response.Status == "Error")
