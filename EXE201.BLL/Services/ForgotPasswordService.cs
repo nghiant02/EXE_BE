@@ -1,33 +1,90 @@
 ﻿using EXE201.BLL.Interfaces;
+using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tools.Tools;
 
 namespace EXE201.BLL.Services
 {
     public class ForgotPasswordService : IForgotPawwordService
     {
-        public Task<VerifyCode> AddCode(string code, string email)
+        private readonly IVerifyCodeRepository _verifyCodeRepository;
+        private readonly IUserRepository _userRepository;
+        public ForgotPasswordService(IVerifyCodeRepository verifyCodeRepository, IUserRepository userRepository)
         {
-            throw new NotImplementedException();
+            _verifyCodeRepository = verifyCodeRepository;
+            _userRepository = userRepository;
+        }
+        public async Task<VerifyCode> AddCode(string code, string email)
+        {
+            var verifyCode = new VerifyCode
+            {
+                Id = IdGenerator.GenerateId(),
+                Email = email,
+                Code = code,
+                CreateAt = DateTime.Now,
+            }; 
+            await _verifyCodeRepository.AddAsync(verifyCode);
+            await _verifyCodeRepository.SaveChangesAsync();
+            return verifyCode;
         }
 
-        public Task<bool> Delete(string email)
+        public async Task<bool> Delete(string email)
         {
-            throw new NotImplementedException();
+            IEnumerable<VerifyCode> verifyCodes = await _verifyCodeRepository.FindAsync(x => x.Email == email);
+            var id  = verifyCodes.FirstOrDefault();
+            if (id == null)
+            {
+                return false;
+            }
+            _verifyCodeRepository.Delete(id);
+            return true;
+
         }
 
-        public Task<bool> IsCodeExist(string email)
+        public async Task<bool> IsCodeExist(string email)
         {
-            throw new NotImplementedException();
+            IEnumerable<VerifyCode> verifyCodes = await _verifyCodeRepository.FindAsync(x => x.Email == email);
+            if (!verifyCodes.Any())
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Task<User> VerifyCode(string code, string email)
+        public async Task<User> VerifyCode(string code, string email)
         {
-            throw new NotImplementedException();
+            var users = await _userRepository.FindAsync(x => x.Email == email);
+            
+            if (!users.Any())
+            {
+                throw new ArgumentException("Email is invalid");
+            }
+
+            var verifyCode = await _verifyCodeRepository.FindAsync(x => x.Email == email && x.Code == code);
+            if (!verifyCode.Any())
+            {
+                throw new ArgumentException("Verify code is invalid");
+            }
+
+            var createAt = verifyCode.First().CreateAt;
+
+            DateTime now = DateTime.UtcNow;
+            TimeSpan timeDifferent = now - createAt;
+
+            if(timeDifferent.TotalSeconds < 60)
+            {
+                return users.First();
+            }
+            else
+            {
+                throw new ArgumentException("Verify code expired");
+            }
         }
+
     }
 }

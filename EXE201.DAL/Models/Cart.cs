@@ -12,22 +12,19 @@ namespace EXE201.DAL.Models;
 public partial class Cart
 {
     [Key]
-    [Column("CartID")]
-    public int CartId { get; set; }
+    public int CartID { get; set; }
 
-    [Column("UserID")]
-    public int? UserId { get; set; }
+    public int? UserID { get; set; }
 
-    [Column("ProductID")]
-    public int? ProductId { get; set; }
+    public int? ProductID { get; set; }
 
     public int? Quantity { get; set; }
 
-    [ForeignKey("ProductId")]
+    [ForeignKey("ProductID")]
     [InverseProperty("Carts")]
     public virtual Product Product { get; set; }
 
-    [ForeignKey("UserId")]
+    [ForeignKey("UserID")]
     [InverseProperty("Carts")]
     public virtual User User { get; set; }
 }

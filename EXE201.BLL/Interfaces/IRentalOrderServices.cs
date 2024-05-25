@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace EXE201.BLL.Interfaces
     {
         Task<ResponeModel> CancelOrderAsync(int orderId);
         Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason);
+        Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem);
     }
 }

@@ -31,7 +31,7 @@ namespace EXE201.DAL.Repository
                     ProductImage = addProduct.Image,
                     ProductStatus = "Available",
                     ProductPrice = addProduct.Price,
-                    CategoryId = addProduct.CategoryId
+                    CategoryID = addProduct.CategoryId
                 };
 
                 _context.Products.Add(product);
@@ -100,7 +100,7 @@ namespace EXE201.DAL.Repository
                     ProductDescription = updateProductDTO.Description,
                     ProductImage = updateProductDTO.Image,
                     ProductPrice = updateProductDTO.Price,
-                    CategoryId = updateProductDTO.CategoryId
+                    CategoryID = updateProductDTO.CategoryId
                 };
 
                 Update(product);

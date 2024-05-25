@@ -16,5 +16,9 @@ namespace EXE201.BLL.Interfaces
         Task<bool> ChangeStatusUserToNotActive(int userId);
         Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO);
         Task<GetUserDTOs> Register(RegisterUserDTOs registerUserDTOs);
+        Task<User> ChangePasword(int id, ChangePasswordDTO changePasswordDTO);
+        Task<User> FindUserByEmail(string email);
+        Task<User> UpdatePassword(string email, string password, int id);
+        Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView);
     }
 }

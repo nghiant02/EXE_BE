@@ -24,7 +24,7 @@ namespace EXE201.DAL.Repository
             {
                 var payment = new Payment
                 {
-                    OrderId = paymentDetails.OrderId,
+                    OrderID = paymentDetails.OrderId,
                     PaymentAmount = paymentDetails.Amount,
                     PaymentMethod = "Pending",
                     PaymentStatus = "Pending"
@@ -39,7 +39,7 @@ namespace EXE201.DAL.Repository
         public async Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment)
         {
             var payment = await _context.Payments
-                .FirstOrDefaultAsync(p => p.OrderId == processPayment.OrderId && p.PaymentStatus == "Pending");
+                .FirstOrDefaultAsync(p => p.OrderID == processPayment.OrderId && p.PaymentStatus == "Pending");
             if (payment != null)
             {
                 payment.PaymentMethod = processPayment.PaymentMethod;
@@ -65,12 +65,12 @@ namespace EXE201.DAL.Repository
         public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)
         {
             return await _dbSet
-                .Where(p => p.PaymentId == userId)
+                .Where(p => p.PaymentID == userId)
                 .Select(p => new Payment
                 {
-                    PaymentId = p.PaymentId,
-                    OrderId = p.OrderId,
-                    UserId = p.UserId,
+                    PaymentID = p.PaymentID,
+                    OrderID = p.OrderID,
+                    UserID = p.UserID,
                     PaymentAmount = p.PaymentAmount,
                     PaymentMethod = p.PaymentMethod,
                     PaymentStatus = p.PaymentStatus
