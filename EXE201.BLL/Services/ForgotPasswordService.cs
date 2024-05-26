@@ -41,7 +41,7 @@ namespace EXE201.BLL.Services
             {
                 return false;
             }
-            _verifyCodeRepository.Delete(id);
+            await _verifyCodeRepository.Delete(id);
             return true;
 
         }

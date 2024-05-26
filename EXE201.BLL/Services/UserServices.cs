@@ -140,6 +140,7 @@ namespace EXE201.BLL.Services
             var existUser = user.First();
             var verifyCode = checkCode.First();
 
+            existUser.Password = password;
             var updateUser = await _userRepository.UpdateUser(existUser);
             await _verifyCodeRepository.Delete(verifyCode);
             return updateUser;
