@@ -26,12 +26,12 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> GetLatestUser()
         {
-            return await _context.Users.OrderByDescending(x => x.UserID).FirstOrDefaultAsync();
+            return await _context.Users.OrderByDescending(x => x.UserId).FirstOrDefaultAsync();
         }
 
         public async Task<User> ChangeStatusUserToNotActive(int id)
         {
-            var checkUser = await _context.Users.Where(x => x.UserID == id).FirstOrDefaultAsync();
+            var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
             if (checkUser != null)
             {
                 checkUser.AccountStatus = "Inactive";
@@ -50,7 +50,7 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> GetUserById(int userId)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.UserID == userId);
+            return await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task<User> GetUserByUsername(string username)
@@ -62,10 +62,10 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> UpdateUser(User user)
         {
-            var existUser = await _context.Users.Where(x => x.UserID.Equals(user.UserID)).FirstOrDefaultAsync();
+            var existUser = await _context.Users.Where(x => x.UserId.Equals(user.UserId)).FirstOrDefaultAsync();
             if (existUser != null)
             {
-                existUser.UserID = user.UserID;
+                existUser.UserId = user.UserId;
                 existUser.UserName = user.UserName;
                 existUser.Password = user.Password;
                 existUser.FullName = user.FullName;

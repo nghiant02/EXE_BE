@@ -12,11 +12,14 @@ namespace EXE201.DAL.Models;
 public partial class Feedback
 {
     [Key]
-    public int FeedbackID { get; set; }
+    [Column("FeedbackID")]
+    public int FeedbackId { get; set; }
 
-    public int? UserID { get; set; }
+    [Column("UserID")]
+    public int? UserId { get; set; }
 
-    public int? ProductID { get; set; }
+    [Column("ProductID")]
+    public int? ProductId { get; set; }
 
     [Column(TypeName = "text")]
     public string FeedbackComment { get; set; }
@@ -32,11 +35,11 @@ public partial class Feedback
     [Column(TypeName = "datetime")]
     public DateTime? DateGiven { get; set; }
 
-    [ForeignKey("ProductID")]
+    [ForeignKey("ProductId")]
     [InverseProperty("Feedbacks")]
     public virtual Product Product { get; set; }
 
-    [ForeignKey("UserID")]
+    [ForeignKey("UserId")]
     [InverseProperty("Feedbacks")]
     public virtual User User { get; set; }
 }
