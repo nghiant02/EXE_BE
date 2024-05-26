@@ -12,9 +12,11 @@ namespace EXE201.DAL.Models;
 public partial class Address
 {
     [Key]
-    public int AddressID { get; set; }
+    [Column("AddressID")]
+    public int AddressId { get; set; }
 
-    public int? UserID { get; set; }
+    [Column("UserID")]
+    public int? UserId { get; set; }
 
     [StringLength(255)]
     [Unicode(false)]
@@ -36,7 +38,7 @@ public partial class Address
     [Unicode(false)]
     public string Country { get; set; }
 
-    [ForeignKey("UserID")]
+    [ForeignKey("UserId")]
     [InverseProperty("Addresses")]
     public virtual User User { get; set; }
 }

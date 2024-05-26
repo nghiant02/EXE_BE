@@ -2,7 +2,6 @@
    "CodeGenerationMode": 4,
    "ContextClassName": "EXE201Context",
    "ContextNamespace": null,
-   "DefaultDacpacSchema": null,
    "FilterSchemas": false,
    "IncludeConnectionString": true,
    "ModelNamespace": null,
@@ -82,12 +81,17 @@
       {
          "Name": "[dbo].[UserRole]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[VerifyCode]",
+         "ObjectType": 0
       }
    ],
-   "UiHint": "thangnguyen\\thangnguyen.EXE201.dbo",
+   "UiHint": null,
    "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
    "UseBoolPropertiesWithoutDefaultSql": false,
-   "UseDatabaseNames": true,
+   "UseDatabaseNames": false,
    "UseDateOnlyTimeOnly": true,
    "UseDbContextSplitting": false,
    "UseDecimalDataAnnotationForSprocResult": true,

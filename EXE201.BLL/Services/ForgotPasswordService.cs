@@ -26,7 +26,7 @@ namespace EXE201.BLL.Services
                 Id = IdGenerator.GenerateId(),
                 Email = email,
                 Code = code,
-                CreateAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
             }; 
             await _verifyCodeRepository.AddAsync(verifyCode);
             await _verifyCodeRepository.SaveChangesAsync();
@@ -59,7 +59,7 @@ namespace EXE201.BLL.Services
         public async Task<User> VerifyCode(string code, string email)
         {
             var users = await _userRepository.FindAsync(x => x.Email == email);
-            
+
             if (!users.Any())
             {
                 throw new ArgumentException("Email is invalid");
@@ -71,12 +71,12 @@ namespace EXE201.BLL.Services
                 throw new ArgumentException("Verify code is invalid");
             }
 
-            var createAt = verifyCode.First().CreateAt;
+            var createAt = verifyCode.First().CreatedAt;
 
             DateTime now = DateTime.UtcNow;
-            TimeSpan timeDifferent = now - createAt;
+            TimeSpan? timeDifference = now - createAt;
 
-            if(timeDifferent.TotalSeconds < 60)
+            if (timeDifference.HasValue && timeDifference.Value.TotalSeconds < 60)
             {
                 return users.First();
             }

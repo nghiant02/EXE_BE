@@ -12,7 +12,8 @@ namespace EXE201.DAL.Models;
 public partial class Category
 {
     [Key]
-    public int CategoryID { get; set; }
+    [Column("CategoryID")]
+    public int CategoryId { get; set; }
 
     [StringLength(100)]
     [Unicode(false)]

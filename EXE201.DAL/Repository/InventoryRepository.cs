@@ -23,7 +23,7 @@ namespace EXE201.DAL.Repository
             {
                 var check = await _context.Inventories.Include(x => x.Product)
                     .ThenInclude(p => p.Category)
-                    .OrderByDescending(x => x.InventoryID)
+                    .OrderByDescending(x => x.InventoryId)
                     .ToListAsync();
                 if (check != null)
                 {
