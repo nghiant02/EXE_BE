@@ -35,6 +35,14 @@ public partial class Product
     [Column("CategoryID")]
     public int? CategoryId { get; set; }
 
+    [StringLength(50)]
+    [Unicode(false)]
+    public string ProductSize { get; set; }
+
+    [StringLength(50)]
+    [Unicode(false)]
+    public string ProductColor { get; set; }
+
     [InverseProperty("Product")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
