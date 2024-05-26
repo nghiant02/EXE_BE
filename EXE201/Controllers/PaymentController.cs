@@ -38,7 +38,7 @@ namespace EXE201.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("ViewHistoryPayment")]
+        [HttpGet("ViewHistoryPaymentByUserId")]
         public async Task<IActionResult> GetPaymentsByUserId(int userId)
         {
             try

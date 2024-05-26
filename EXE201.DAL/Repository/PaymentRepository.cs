@@ -65,7 +65,7 @@ namespace EXE201.DAL.Repository
         public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)
         {
             return await _dbSet
-                .Where(p => p.PaymentId == userId)
+                .Where(p => p.UserId == userId)
                 .Select(p => new Payment
                 {
                     PaymentId = p.PaymentId,
