@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductController : Controller
     {
         private readonly IProductServices _productServices;
@@ -16,14 +18,14 @@ namespace EXE201.Controllers
             _productServices = productServices;
         }
 
-        [HttpPost("GetAll")]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var product = await _productServices.GetAll();
             return Ok(product);
         }
 
-        [HttpPost("GetProductById")]
+        [HttpGet("GetProductById")]
         public async Task<IActionResult> GetProductById([FromQuery] int id)
         {
             var response = await _productServices.GetById(id);
@@ -35,7 +37,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("AddProduct")]
-        public async Task<IActionResult> AddProduct([FromQuery] AddProductDTO addProductDTO)
+        public async Task<IActionResult> AddProduct([FromBody] AddProductDTO addProductDTO)
         {
             var response = await _productServices.AddProduct(addProductDTO);
             if (response.Status == "Error")
@@ -68,7 +70,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductDTO updateProductDTO)
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO updateProductDTO)
         {
             var response = await _productServices.UpdateProduct(updateProductDTO);
             if (response.Status == "Error")
@@ -78,5 +80,18 @@ namespace EXE201.Controllers
             return Ok(response);
         }
 
+        [HttpGet("SearchProduct")]
+        public async Task<IActionResult> SearchProduct([FromQuery] string keyword)
+        {
+            var products = await _productServices.SearchProduct(keyword);
+            return Ok(products);
+        }
+
+        [HttpGet("FilterProduct")]
+        public async Task<IActionResult> FilterProduct([FromQuery] string category, [FromQuery] double? minPrice, [FromQuery] double? maxPrice)
+        {
+            var products = await _productServices.FilterProduct(category, minPrice, maxPrice);
+            return Ok(products);
+        }
     }
 }

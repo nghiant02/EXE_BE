@@ -31,6 +31,10 @@ public partial class RentalOrder
     [Column(TypeName = "datetime")]
     public DateTime? ReturnDate { get; set; }
 
+    [StringLength(255)]
+    [Unicode(false)]
+    public string ReturnReason { get; set; }
+
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? OrderTotal { get; set; }
 

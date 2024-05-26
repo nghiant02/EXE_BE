@@ -113,5 +113,32 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "An error occurred while updating the product" };
             }
         }
+
+        public async Task<IEnumerable<Product>> SearchProduct(string keyword)
+        {
+            return await _dbSet.Where(p => p.ProductName.Contains(keyword) || p.ProductDescription.Contains(keyword)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice)
+        {
+            var query = _dbSet.AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(p => p.Category.CategoryName == category);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.ProductPrice >= minPrice);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.ProductPrice <= maxPrice);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

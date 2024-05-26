@@ -81,6 +81,10 @@
       {
          "Name": "[dbo].[UserRole]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[VerifyCode]",
+         "ObjectType": 0
       }
    ],
    "UiHint": null,

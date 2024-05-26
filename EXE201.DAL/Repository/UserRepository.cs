@@ -75,6 +75,16 @@ namespace EXE201.DAL.Repository
                 existUser.DateOfBirth = user.DateOfBirth;
                 existUser.ProfileImage = user.ProfileImage;
                 existUser.AccountStatus = user.AccountStatus;
+                existUser.Deposits = user.Deposits;
+                existUser.Addresses = user.Addresses;
+                existUser.Carts = user.Carts;
+                existUser.Feedbacks = user.Feedbacks;
+                existUser.Memberships = user.Memberships;
+                existUser.Roles = user.Roles;
+                existUser.Notifications = user.Notifications;
+                existUser.Payments = user.Payments;
+                existUser.Ratings = user.Ratings;
+                existUser.RentalOrders = user.RentalOrders;
 
                 _context.Users.Update(existUser);
                 await _context.SaveChangesAsync();
