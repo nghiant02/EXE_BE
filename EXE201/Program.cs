@@ -35,7 +35,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IDepositRepository, DepositRepository>();
-builder.Services.AddScoped<IVerifyCodeRepository, VerifyCodeRepository>();
+
 // Add services
 builder.Services.AddScoped<IAddressServices, AddressServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
@@ -45,7 +45,7 @@ builder.Services.AddScoped<IInventoryServices, InventoryServices>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IDepositServices, DepositServices>();
-builder.Services.AddScoped<IForgotPawwordService, ForgotPasswordService>();
+
 
 //Add EmailSetting
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
@@ -66,7 +66,7 @@ var app = builder.Build();
 //Get swagger.json follwing root directory 
 app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
 //Load swagger.json follwing root directory 
-app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Your API V1"); c.RoutePrefix = string.Empty; });
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
 
 app.UseHttpsRedirection();
 
