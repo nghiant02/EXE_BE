@@ -1,6 +1,7 @@
 ﻿using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
+using LMSystem.Repository.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,8 @@ namespace EXE201.BLL.Interfaces
         Task<ResponeModel> DeleteProduct(int id);
         Task<ResponeModel> RecoverProduct(int id);
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
+        //Task<IEnumerable<Product>> SearchProduct(string keyword);
+        //Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice);
+        Task<PagedList<Product>> GetFilteredProducts(ProductFilterDTO filter);
     }
 }
