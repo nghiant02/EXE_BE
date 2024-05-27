@@ -2,6 +2,7 @@
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
+using LMSystem.Repository.Helpers;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -114,31 +115,65 @@ namespace EXE201.DAL.Repository
             }
         }
 
-        public async Task<IEnumerable<Product>> SearchProduct(string keyword)
+        //public async Task<IEnumerable<Product>> SearchProduct(string keyword)
+        //{
+        //    return await _dbSet.Where(p => p.ProductName.Contains(keyword) || p.ProductDescription.Contains(keyword)).ToListAsync();
+        //}
+
+        //public async Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice)
+        //{
+        //    var query = _dbSet.AsQueryable();
+
+        //    if (!string.IsNullOrEmpty(category))
+        //    {
+        //        query = query.Where(p => p.Category.CategoryName == category);
+        //    }
+
+        //    if (minPrice.HasValue)
+        //    {
+        //        query = query.Where(p => p.ProductPrice >= minPrice);
+        //    }
+
+        //    if (maxPrice.HasValue)
+        //    {
+        //        query = query.Where(p => p.ProductPrice <= maxPrice);
+        //    }
+
+        //    return await query.ToListAsync();
+        //}
+
+        public async Task<PagedList<Product>> GetFilteredProducts(ProductFilterDTO filter)
         {
-            return await _dbSet.Where(p => p.ProductName.Contains(keyword) || p.ProductDescription.Contains(keyword)).ToListAsync();
-        }
+            var query = _context.Products.AsQueryable();
 
-        public async Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice)
-        {
-            var query = _dbSet.AsQueryable();
-
-            if (!string.IsNullOrEmpty(category))
+            if (!string.IsNullOrEmpty(filter.Search))
             {
-                query = query.Where(p => p.Category.CategoryName == category);
+                query = query.Where(p => p.ProductName.Contains(filter.Search) || p.ProductDescription.Contains(filter.Search));
             }
 
-            if (minPrice.HasValue)
+            if (!string.IsNullOrEmpty(filter.Color))
             {
-                query = query.Where(p => p.ProductPrice >= minPrice);
+                query = query.Where(p => p.ProductColor == filter.Color);
             }
 
-            if (maxPrice.HasValue)
+            if (!string.IsNullOrEmpty(filter.Size))
             {
-                query = query.Where(p => p.ProductPrice <= maxPrice);
+                query = query.Where(p => p.ProductSize == filter.Size);
             }
 
-            return await query.ToListAsync();
+            if (filter.MinPrice.HasValue)
+            {
+                query = query.Where(p => p.ProductPrice >= filter.MinPrice);
+            }
+
+            if (filter.MaxPrice.HasValue)
+            {
+                query = query.Where(p => p.ProductPrice <= filter.MaxPrice);
+            }
+
+            var products = await query.ToListAsync();
+            return PagedList<Product>.ToPagedList(products, filter.PageNumber, filter.PageSize);
+
         }
     }
 }

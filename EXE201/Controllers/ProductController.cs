@@ -1,4 +1,5 @@
 ﻿using EXE201.BLL.Interfaces;
+using EXE201.BLL.Services;
 using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
@@ -80,17 +81,24 @@ namespace EXE201.Controllers
             return Ok(response);
         }
 
-        [HttpGet("SearchProduct")]
-        public async Task<IActionResult> SearchProduct([FromQuery] string keyword)
-        {
-            var products = await _productServices.SearchProduct(keyword);
-            return Ok(products);
-        }
+        //[HttpGet("SearchProduct")]
+        //public async Task<IActionResult> SearchProduct([FromQuery] string keyword)
+        //{
+        //    var products = await _productServices.SearchProduct(keyword);
+        //    return Ok(products);
+        //}
 
-        [HttpGet("FilterProduct")]
-        public async Task<IActionResult> FilterProduct([FromQuery] string category, [FromQuery] double? minPrice, [FromQuery] double? maxPrice)
+        //[HttpGet("FilterProduct")]
+        //public async Task<IActionResult> FilterProduct([FromQuery] string category, [FromQuery] double? minPrice, [FromQuery] double? maxPrice)
+        //{
+        //    var products = await _productServices.FilterProduct(category, minPrice, maxPrice);
+        //    return Ok(products);
+        //}
+
+        [HttpGet("PagingAndFilteredProducts")]
+        public async Task<IActionResult> GetFilteredProducts([FromQuery] ProductFilterDTO filter)
         {
-            var products = await _productServices.FilterProduct(category, minPrice, maxPrice);
+            var products = await _productServices.GetFilteredProducts(filter);
             return Ok(products);
         }
     }
