@@ -171,9 +171,28 @@ namespace EXE201.DAL.Repository
                 query = query.Where(p => p.ProductPrice <= filter.MaxPrice);
             }
 
+            if (!string.IsNullOrEmpty(filter.SortBy))
+            {
+                switch (filter.SortBy.ToLower())// true for descending, false for ascending
+                {
+                    case "price":
+                        query = filter.Sort ? query.OrderByDescending(p => p.ProductPrice) : query.OrderBy(p => p.ProductPrice);
+                        break;
+                    case "name":
+                        query = filter.Sort ? query.OrderByDescending(p => p.ProductName) : query.OrderBy(p => p.ProductName);
+                        break;
+                    default:
+                        query = query.OrderBy(p => p.ProductId); 
+                        break;
+                }
+            }
+            else
+            {
+                query = query.OrderBy(p => p.ProductId); 
+            }
+
             var products = await query.ToListAsync();
             return PagedList<Product>.ToPagedList(products, filter.PageNumber, filter.PageSize);
-
         }
     }
 }
