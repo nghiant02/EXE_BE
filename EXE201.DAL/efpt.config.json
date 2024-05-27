@@ -27,6 +27,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Deposit]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Feedback]",
          "ObjectType": 0
       },
@@ -76,6 +80,10 @@
       },
       {
          "Name": "[dbo].[UserRole]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[VerifyCode]",
          "ObjectType": 0
       }
    ],

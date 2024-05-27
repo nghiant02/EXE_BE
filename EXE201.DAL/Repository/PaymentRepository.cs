@@ -25,7 +25,7 @@ namespace EXE201.DAL.Repository
                 var payment = new Payment
                 {
                     OrderId = paymentDetails.OrderId,
-                    Amount = paymentDetails.Amount,
+                    PaymentAmount = paymentDetails.Amount,
                     PaymentMethod = "Pending",
                     PaymentStatus = "Pending"
                 };
@@ -60,6 +60,22 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Success", Message = "Payment processed successfully", DataObject = payment };
             }
             return new ResponeModel { Status = "Error", Message = "Pending payment not found" };
+        }
+
+        public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)
+        {
+            return await _dbSet
+                .Where(p => p.UserId == userId)
+                .Select(p => new Payment
+                {
+                    PaymentId = p.PaymentId,
+                    OrderId = p.OrderId,
+                    UserId = p.UserId,
+                    PaymentAmount = p.PaymentAmount,
+                    PaymentMethod = p.PaymentMethod,
+                    PaymentStatus = p.PaymentStatus
+                })
+                .ToListAsync();
         }
     }
 }

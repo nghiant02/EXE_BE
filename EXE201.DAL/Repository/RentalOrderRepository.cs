@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
@@ -40,6 +41,22 @@ namespace EXE201.DAL.Repository
                 Update(order);
                 await SaveChangesAsync();
                 return new ResponeModel { Status = "Success", Message = "Order returned successfully", DataObject = order };
+            }
+            return new ResponeModel { Status = "Error", Message = "Order not found or already returned" };
+        }
+
+        public async Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem)
+        {
+            var order = await _context.RentalOrders.FindAsync(returnItem.OrderId);
+            if (order != null && order.OrderStatus != "Returned")
+            {
+                order.OrderStatus = "Returned";
+                order.ReturnDate = DateTime.Now;
+                // Assuming there is a field for ReturnReason
+                order.ReturnReason = returnItem.ReturnReason; 
+                _context.RentalOrders.Update(order);
+                await SaveChangesAsync();
+                return new ResponeModel { Status = "Success", Message = "Item returned successfully", DataObject = order };
             }
             return new ResponeModel { Status = "Error", Message = "Order not found or already returned" };
         }

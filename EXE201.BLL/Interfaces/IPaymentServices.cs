@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EXE201.DAL.Models;
 
 namespace EXE201.BLL.Interfaces
 {
@@ -12,5 +13,6 @@ namespace EXE201.BLL.Interfaces
     {
         Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails);
         Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment);
+        Task< IEnumerable<Payment>> GetPaymentsByUserIdAsync(int userId);
     }
 }

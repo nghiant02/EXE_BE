@@ -18,11 +18,11 @@ public partial class Payment
     [Column("OrderID")]
     public int? OrderId { get; set; }
 
-    [Column("PaymentUserID")]
-    public int? PaymentUserId { get; set; }
+    [Column("UserID")]
+    public int? UserId { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
-    public decimal? Amount { get; set; }
+    public decimal? PaymentAmount { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]
@@ -36,7 +36,7 @@ public partial class Payment
     [InverseProperty("Payments")]
     public virtual RentalOrder Order { get; set; }
 
-    [ForeignKey("PaymentUserId")]
+    [ForeignKey("UserId")]
     [InverseProperty("Payments")]
-    public virtual User PaymentUser { get; set; }
+    public virtual User User { get; set; }
 }

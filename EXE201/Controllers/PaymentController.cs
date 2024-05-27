@@ -1,4 +1,5 @@
 ﻿using EXE201.BLL.Interfaces;
+using EXE201.BLL.Services;
 using EXE201.DAL.DTOs.PaymentDTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,24 @@ namespace EXE201.Controllers
                 return Ok(result);
             }
             return BadRequest(result);
+        }
+
+        [HttpGet("ViewHistoryPaymentByUserId")]
+        public async Task<IActionResult> GetPaymentsByUserId(int userId)
+        {
+            try
+            {
+                var result = await _paymentService.GetPaymentsByUserIdAsync(userId);
+                if (result == null || !result.Any())
+                {
+                    return BadRequest("No payment history found for the specified user.");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

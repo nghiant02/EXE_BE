@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EXE201.DAL.Models;
 
 namespace EXE201.BLL.Services
 {
@@ -30,6 +31,11 @@ namespace EXE201.BLL.Services
         public async Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment)
         {
             return await _paymentRepository.ProcessPayment(processPayment);
+        }
+
+        public async Task<IEnumerable<Payment>> GetPaymentsByUserIdAsync(int userId)
+        {
+            return await _paymentRepository.GetPaymentHistoryByUserIdAsync(userId);
         }
     }
 }

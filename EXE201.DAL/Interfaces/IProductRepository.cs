@@ -22,5 +22,6 @@ namespace EXE201.DAL.Interfaces
         //Task<IEnumerable<Product>> SearchProduct(string keyword);
         //Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice);
         Task<PagedList<Product>> GetFilteredProducts(ProductFilterDTO filter);
+
     }
 }
