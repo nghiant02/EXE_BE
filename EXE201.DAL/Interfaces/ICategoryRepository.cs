@@ -10,5 +10,7 @@ namespace EXE201.DAL.Interfaces
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
+        Task<IEnumerable<Category>> GetCategoriesByStatusAsync(string status);
+        Task<Category> GetByNameAsync(string categoryName);
     }
 }
