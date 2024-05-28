@@ -37,7 +37,7 @@ builder.Services.AddScoped<IDepositRepository, DepositRepository>();
 builder.Services.AddScoped<IVerifyCodeRepository, VerifyCodeRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IRentalOrderRepository, RentalOrderRepository>();
-
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 // Add services
 builder.Services.AddScoped<IAddressServices, AddressServices>();
@@ -51,7 +51,7 @@ builder.Services.AddScoped<IDepositServices, DepositServices>();
 builder.Services.AddScoped<IForgotPawwordService, ForgotPasswordService>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
 builder.Services.AddScoped<IRentalOrderServices, RentalOrderServices>();
-
+builder.Services.AddScoped<INotificationServices, NotificationServices>();
 
 //Add EmailSetting
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));

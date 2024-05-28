@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace EXE201.BLL.Services
 {
-    public class NotifcationServices : INotificationServices
+    public class NotificationServices : INotificationServices
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IMapper _mapper;
 
-        public NotifcationServices(INotificationRepository notificationRepository, IMapper mapper)
+        public NotificationServices(INotificationRepository notificationRepository, IMapper mapper)
         {
             _notificationRepository = notificationRepository;
             _mapper = mapper;
