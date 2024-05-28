@@ -155,11 +155,33 @@ namespace EXE201.BLL.Services
             }
             var updatingUser = _mapper.Map<User>(userView);
             updatingUser.UserId = id;
-            updatingUser.Phone = oldUser.First().Phone;
-            updatingUser.Email = oldUser.First().Email;
+            updatingUser.UserName = oldUser.First().UserName;
             updatingUser.AccountStatus = oldUser.First().AccountStatus;
             updatingUser.Password = oldUser.First().Password;
+            updatingUser.ProfileImage = oldUser.First().ProfileImage;
 
+            var address = oldUser.First().Addresses.FirstOrDefault();
+            if (address != null)
+            {
+                address.Street = userView.Street;
+                address.City = userView.City;
+                address.State = userView.State;
+                address.PostalCode = userView.PostalCode;
+                address.Country = userView.Country;
+            }
+            else
+            {
+                address = new Address
+                {
+                    UserId = id,
+                    Street = userView.Street,
+                    City = userView.City,
+                    State = userView.State,
+                    PostalCode = userView.PostalCode,
+                    Country = userView.Country
+                };
+                updatingUser.Addresses.Add(address);
+            }
             return await _userRepository.UpdateUser(updatingUser);
         }
     }

@@ -10,5 +10,10 @@ namespace EXE201.DAL.Interfaces
 {
     public interface ICartRepository : IGenericRepository<Cart>
     {
+        Task<IEnumerable<Cart>> GetAll();
+        Task<Cart> GetCartById(int id);
+        Task<Cart> UpdateCart(Cart cart); 
+        Task<bool> DeleteCartById(int id);
+        Task<Cart> AddNewCart(Cart cart);
     }
 }
