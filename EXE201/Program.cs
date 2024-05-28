@@ -37,6 +37,7 @@ builder.Services.AddScoped<IDepositRepository, DepositRepository>();
 builder.Services.AddScoped<IVerifyCodeRepository, VerifyCodeRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IRentalOrderRepository, RentalOrderRepository>();
+builder.Services.AddScoped<IRentalOrderDetailRepository, RentalOrderDetailRepository>();
 
 
 // Add services
@@ -51,6 +52,7 @@ builder.Services.AddScoped<IDepositServices, DepositServices>();
 builder.Services.AddScoped<IForgotPawwordService, ForgotPasswordService>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
 builder.Services.AddScoped<IRentalOrderServices, RentalOrderServices>();
+builder.Services.AddScoped<IRentalOrderDetailServices, RentalOrderDetailServices>();
 
 
 //Add EmailSetting
