@@ -38,6 +38,7 @@ builder.Services.AddScoped<IVerifyCodeRepository, VerifyCodeRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IRentalOrderRepository, RentalOrderRepository>();
 builder.Services.AddScoped<IRentalOrderDetailRepository, RentalOrderDetailRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepostiory>();
 
 
 // Add services
@@ -53,6 +54,7 @@ builder.Services.AddScoped<IForgotPawwordService, ForgotPasswordService>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
 builder.Services.AddScoped<IRentalOrderServices, RentalOrderServices>();
 builder.Services.AddScoped<IRentalOrderDetailServices, RentalOrderDetailServices>();
+builder.Services.AddScoped<ICartServices, CartServices>();
 
 
 //Add EmailSetting

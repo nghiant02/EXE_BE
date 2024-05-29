@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
+using EXE201.DAL.DTOs.CartDTOs;
 using EXE201.DAL.DTOs.CategoryDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.UserDTOs;
@@ -22,6 +23,8 @@ namespace EXE201.BLL.DTOs
             CreateMap<UpdateProfileUserDTO, User>();
             CreateMap<UpdateCategoryDTOs, Category>();
             CreateMap<AddCategoryDTOs, Category>();
+            CreateMap<AddNewCartDTO, Cart>();
+            
         }
     }
 }
