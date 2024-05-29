@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace EXE201.DAL.DTOs.CartDTOs
 {
-    public class UpdateCartDTO
+    public class AddNewCartDTO
     {
-
+        public int UserId { get; set; }
+        public int ProductId { get; set; }
+        public int Quantity {  get; set; }
     }
 }

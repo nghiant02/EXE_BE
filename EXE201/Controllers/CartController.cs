@@ -1,4 +1,5 @@
 ﻿using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.CartDTOs;
 using EXE201.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,13 @@ namespace EXE201.Controllers
         public async Task<IActionResult> GetCartById(int id)
         {
             var result = await _cartService.GetCartById(id);
+            return Ok(result);
+        }
+
+        [HttpPost("AddNewCart")]
+        public async Task<IActionResult> AddCart(AddNewCartDTO cart)
+        {
+            var result = await _cartService.AddNewCart(cart);
             return Ok(result);
         }
 

@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.Interfaces;
+﻿using EXE201.DAL.DTOs.CartDTOs;
+using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,17 @@ namespace EXE201.DAL.Repository
         {
         }
 
-        public Task<Cart> AddNewCart(Cart cart)
+        public async Task<Cart> AddNewCart(Cart cart)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Carts.AddAsync(cart);
+                await _context.SaveChangesAsync();  
+                return cart;
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> DeleteCartById(int id)

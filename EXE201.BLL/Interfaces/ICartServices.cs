@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.Models;
+﻿using EXE201.DAL.DTOs.CartDTOs;
+using EXE201.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace EXE201.BLL.Interfaces
         Task<Cart> GetCartById(int id);
         Task<Cart> UpdateCart(Cart cart);
         Task<bool> DeleteCart(int id);
+        Task<Cart> AddNewCart(AddNewCartDTO cart);
     }
 }

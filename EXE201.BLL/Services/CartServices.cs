@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.CartDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using System;
@@ -19,6 +20,13 @@ namespace EXE201.BLL.Services
         {
             _cartRepository = cartRepository;
             _mapper = mapper;
+        }
+
+        public async Task<Cart> AddNewCart(AddNewCartDTO cart)
+        {
+            var mapCart = _mapper.Map<Cart>(cart);
+            await _cartRepository.AddNewCart(mapCart);
+            return mapCart;
         }
 
         public async Task<bool> DeleteCart(int id)

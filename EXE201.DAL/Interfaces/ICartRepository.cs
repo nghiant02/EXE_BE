@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.Models;
+﻿using EXE201.DAL.DTOs.CartDTOs;
+using EXE201.DAL.Models;
 using MCC.DAL.Repository.Interface;
 using System;
 using System.Collections.Generic;

@@ -19,7 +19,7 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> AddNewUser(User user)
         {
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
         }
