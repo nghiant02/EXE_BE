@@ -22,6 +22,10 @@ public partial class Category
     [Column(TypeName = "text")]
     public string CategoryDescription { get; set; }
 
+    [StringLength(10)]
+    [Unicode(false)]
+    public string CategoryStatus { get; set; }
+
     [InverseProperty("Category")]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

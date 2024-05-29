@@ -10,5 +10,6 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IRentalOrderDetailRepository : IGenericRepository<RentalOrderDetail>
     {
+        Task<RentalOrderDetail> GetRentalOrderDetail(int id);
     }
 }

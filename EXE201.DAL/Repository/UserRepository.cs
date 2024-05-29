@@ -19,7 +19,7 @@ namespace EXE201.DAL.Repository
 
         public async Task<User> AddNewUser(User user)
         {
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
         }
@@ -45,7 +45,18 @@ namespace EXE201.DAL.Repository
 
         public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .Include(x => x.Addresses)
+                .Include(x => x.Carts)
+                .Include(x => x.Deposits)
+                .Include(x => x.Feedbacks)
+                .Include(x => x.Memberships)
+                .Include(x => x.Notifications)
+                .Include(x => x.Payments)
+                .Include(x => x.RentalOrders)
+                .Include(x => x.Ratings)
+                .OrderByDescending(x => x.UserId)
+                .ToListAsync();
         }
 
         public async Task<User> GetUserById(int userId)

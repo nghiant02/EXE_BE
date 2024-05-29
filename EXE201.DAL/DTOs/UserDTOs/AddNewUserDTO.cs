@@ -16,5 +16,6 @@ namespace EXE201.DAL.DTOs.UserDTOs
         public string Email { get; set; }
         public string Image { get; set; }
         public string Status { get; set; }
+        public int Role { get; set; }
     }
 }

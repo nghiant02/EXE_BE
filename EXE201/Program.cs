@@ -36,6 +36,12 @@ builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IDepositRepository, DepositRepository>();
 builder.Services.AddScoped<IVerifyCodeRepository, VerifyCodeRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IRentalOrderRepository, RentalOrderRepository>();
+builder.Services.AddScoped<IRentalOrderDetailRepository, RentalOrderDetailRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepostiory>();
+
+
 // Add services
 builder.Services.AddScoped<IAddressServices, AddressServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
@@ -46,6 +52,11 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IDepositServices, DepositServices>();
 builder.Services.AddScoped<IForgotPawwordService, ForgotPasswordService>();
+builder.Services.AddScoped<ICategoryServices, CategoryServices>();
+builder.Services.AddScoped<IRentalOrderServices, RentalOrderServices>();
+builder.Services.AddScoped<IRentalOrderDetailServices, RentalOrderDetailServices>();
+builder.Services.AddScoped<ICartServices, CartServices>();
+
 
 
 //Add EmailSetting

@@ -8,10 +8,19 @@ namespace EXE201.DAL.DTOs.UserDTOs
 {
     public class UpdateProfileUserDTO
     {
-        public required string UserName { get; set; }
+        public required string Email { get; set; }
         public required string FullName { get; set; }
-        public DateOnly DateOfBirth { get; set; }
-        public int Gender { get; set; }
-        public string? ProfileImage { get; set; }
+        public required int Gender { get; set; }
+        public required DateOnly DateOfBirth { get; set; }
+        public required string Phone { get; set; }
+        public required string Address { get; set; }
+
+
+        // Address fields
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string PostalCode { get; set; }
+        public string Country { get; set; }
     }
 }
