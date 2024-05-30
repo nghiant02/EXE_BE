@@ -63,7 +63,7 @@ namespace EXE201.BLL.Services
         //{
         //    return await _productRepository.FilterProduct(category, minPrice, maxPrice);
         //}
-        public async Task<PagedList<Product>> GetFilteredProducts(ProductFilterDTO filter)
+        public async Task<PagedList<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter)
         {
             return await _productRepository.GetFilteredProducts(filter);
         }
