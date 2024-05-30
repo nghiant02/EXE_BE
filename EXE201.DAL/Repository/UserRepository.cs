@@ -189,5 +189,32 @@ namespace EXE201.DAL.Repository
             var users = await query.ToListAsync();
             return PagedList<UserListDTO>.ToPagedList(users, filter.PageNumber, filter.PageSize);
         }
+
+
+        public async Task<UserProfileDTO> GetUserProfile(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.Roles)
+                .Include(u => u.Memberships)
+                    .ThenInclude(m => m.MembershipType)
+                .Where(u => u.UserId == userId)
+                .Select(u => new UserProfileDTO
+                {
+                    UserId = u.UserId,
+                    UserName = u.UserName,
+                    FullName = u.FullName,
+                    Phone = u.Phone,
+                    Gender = u.Gender,
+                    DateOfBirth = u.DateOfBirth,
+                    Email = u.Email,
+                    ProfileImage = u.ProfileImage,
+                    AccountStatus = u.AccountStatus,
+                    Roles = u.Roles.Select(r => r.RoleName),
+                    MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
+                })
+                .FirstOrDefaultAsync();
+
+            return user;
+        }
     }
 }

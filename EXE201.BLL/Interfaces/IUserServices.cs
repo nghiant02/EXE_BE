@@ -22,5 +22,6 @@ namespace EXE201.BLL.Interfaces
         Task<User> UpdatePassword(string email, string password, int id);
         Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView);
         Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
+        Task<UserProfileDTO> GetUserProfile(int userId);
     }
 }
