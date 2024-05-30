@@ -144,5 +144,12 @@ namespace EXE201.Controllers
             Response += "</div>";
             return Response;
         }
+
+        [HttpGet("GetFilteredUser")]
+        public async Task<IActionResult> GetFilteredUser([FromQuery] UserFilterDTO filter)
+        {
+            var users = await _userServices.GetFilteredUser(filter);
+            return Ok(users);
+        }
     }
 }
