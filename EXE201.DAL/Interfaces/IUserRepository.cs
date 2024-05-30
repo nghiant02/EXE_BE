@@ -22,6 +22,7 @@ namespace EXE201.DAL.Interfaces
         Task<User> GetUserByEmail(string email);
         Task<Role> GetRoleById(int roleId);
         Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
+        Task<UserProfileDTO> GetUserProfile(int userId);
     }
 
 }

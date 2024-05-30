@@ -85,6 +85,11 @@ namespace EXE201.BLL.Services
             return await _userRepository.GetFilteredUser(filter);
         }
 
+        public async Task<UserProfileDTO> GetUserProfile(int userId)
+        {
+            return await _userRepository.GetUserProfile(userId);
+        }
+
         public async Task<GetUserDTOs> Login(string username, string password)
         {
             var user = await _userRepository.GetUserByUsername(username);

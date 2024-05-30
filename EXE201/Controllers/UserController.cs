@@ -151,5 +151,16 @@ namespace EXE201.Controllers
             var users = await _userServices.GetFilteredUser(filter);
             return Ok(users);
         }
+
+        [HttpGet("ViewProfile/{userId}")]
+        public async Task<IActionResult> ViewProfile(int userId)
+        {
+            var userProfile = await _userServices.GetUserProfile(userId);
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+            return Ok(userProfile);
+        }
     }
 }
