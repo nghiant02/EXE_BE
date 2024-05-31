@@ -1,8 +1,11 @@
-﻿using EXE201.DAL.Interfaces;
+﻿using EXE201.DAL.DTOs.UserDTOs;
+using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
+using LMSystem.Repository.Helpers;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,6 +117,104 @@ namespace EXE201.DAL.Repository
         public async Task<Role> GetRoleById(int roleId)
         {
             return await _context.Roles.FindAsync(roleId);
+        }
+
+        public async Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
+        {
+            var query = _context.Users
+                .Include(u => u.Memberships)
+                .ThenInclude(m => m.MembershipType)
+                .Select(u => new UserListDTO
+                {
+                    UserId = u.UserId,
+                    UserName = u.UserName,
+                    FullName = u.FullName,
+                    Password = u.Password,
+                    Phone = u.Phone,
+                    Gender = u.Gender,
+                    DateOfBirth = u.DateOfBirth,
+                    Email = u.Email,
+                    ProfileImage = u.ProfileImage,
+                    AccountStatus = u.AccountStatus,
+                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
+                })
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Search))
+            {
+                query = query.Where(u => u.UserName.Contains(filter.Search) || u.FullName.Contains(filter.Search));
+            }
+
+            if (filter.DateOfBirth.HasValue)
+            {
+                query = query.Where(u => u.DateOfBirth == filter.DateOfBirth);
+            }
+
+            if (filter.Gender.HasValue)
+            {
+                query = query.Where(u => u.Gender == filter.Gender);
+            }
+
+            if (!string.IsNullOrEmpty(filter.MembershipTypeName))
+            {
+                query = query.Where(u => u.MembershipTypeName == filter.MembershipTypeName);
+            }
+
+            if (!string.IsNullOrEmpty(filter.SortBy))
+            {
+                switch (filter.SortBy.ToLower())
+                {
+                    case "username":
+                        query = filter.Sort ? query.OrderByDescending(u => u.UserName) : query.OrderBy(u => u.UserName);
+                        break;
+                    case "fullname":
+                        query = filter.Sort ? query.OrderByDescending(u => u.FullName) : query.OrderBy(u => u.FullName);
+                        break;
+                    case "dateofbirth":
+                        query = filter.Sort ? query.OrderByDescending(u => u.DateOfBirth) : query.OrderBy(u => u.DateOfBirth);
+                        break;
+                    case "membershiptypename":
+                        query = filter.Sort ? query.OrderByDescending(u => u.MembershipTypeName) : query.OrderBy(u => u.MembershipTypeName);
+                        break;
+                    default:
+                        query = query.OrderBy(u => u.UserId); // Default sort order
+                        break;
+                }
+            }
+            else
+            {
+                query = query.OrderBy(u => u.UserId); // Default sort order
+            }
+
+            var users = await query.ToListAsync();
+            return PagedList<UserListDTO>.ToPagedList(users, filter.PageNumber, filter.PageSize);
+        }
+
+
+        public async Task<UserProfileDTO> GetUserProfile(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.Roles)
+                .Include(u => u.Memberships)
+                    .ThenInclude(m => m.MembershipType)
+                .Where(u => u.UserId == userId)
+                .Select(u => new UserProfileDTO
+                {
+                    UserId = u.UserId,
+                    UserName = u.UserName,
+                    FullName = u.FullName,
+                    Phone = u.Phone,
+                    Gender = u.Gender,
+                    DateOfBirth = u.DateOfBirth,
+                    Email = u.Email,
+                    ProfileImage = u.ProfileImage,
+                    AccountStatus = u.AccountStatus,
+                    Roles = u.Roles.Select(r => r.RoleName),
+                    MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
+                })
+                .FirstOrDefaultAsync();
+
+            return user;
         }
     }
 }

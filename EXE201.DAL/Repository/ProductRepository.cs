@@ -142,9 +142,24 @@ namespace EXE201.DAL.Repository
         //    return await query.ToListAsync();
         //}
 
-        public async Task<PagedList<Product>> GetFilteredProducts(ProductFilterDTO filter)
+        public async Task<PagedList<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter)
         {
-            var query = _context.Products.AsQueryable();
+            var query = _context.Products
+                                .Include(p => p.Ratings)
+                                .Select(p => new ProductWithRatingDTO
+                                {
+                                    ProductId = p.ProductId,
+                                    ProductName = p.ProductName,
+                                    ProductDescription = p.ProductDescription,
+                                    ProductImage = p.ProductImage,
+                                    ProductStatus = p.ProductStatus,
+                                    ProductPrice = p.ProductPrice,
+                                    CategoryId = p.CategoryId,
+                                    ProductSize = p.ProductSize,
+                                    ProductColor = p.ProductColor,
+                                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
+                                })
+                                .AsQueryable();
 
             if (!string.IsNullOrEmpty(filter.Search))
             {
@@ -173,7 +188,7 @@ namespace EXE201.DAL.Repository
 
             if (!string.IsNullOrEmpty(filter.SortBy))
             {
-                switch (filter.SortBy.ToLower())// true for descending, false for ascending
+                switch (filter.SortBy.ToLower())
                 {
                     case "price":
                         query = filter.Sort ? query.OrderByDescending(p => p.ProductPrice) : query.OrderBy(p => p.ProductPrice);
@@ -181,18 +196,21 @@ namespace EXE201.DAL.Repository
                     case "name":
                         query = filter.Sort ? query.OrderByDescending(p => p.ProductName) : query.OrderBy(p => p.ProductName);
                         break;
+                    case "rating":
+                        query = filter.Sort ? query.OrderByDescending(p => p.AverageRating) : query.OrderBy(p => p.AverageRating);
+                        break;
                     default:
-                        query = query.OrderBy(p => p.ProductId); 
+                        query = query.OrderBy(p => p.ProductId);
                         break;
                 }
             }
             else
             {
-                query = query.OrderBy(p => p.ProductId); 
+                query = query.OrderBy(p => p.ProductId);
             }
 
             var products = await query.ToListAsync();
-            return PagedList<Product>.ToPagedList(products, filter.PageNumber, filter.PageSize);
+            return PagedList<ProductWithRatingDTO>.ToPagedList(products, filter.PageNumber, filter.PageSize);
         }
     }
 }

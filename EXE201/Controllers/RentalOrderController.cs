@@ -58,5 +58,16 @@ namespace EXE201.Controllers
             }
             return Ok(response);
         }
+
+        [HttpGet("ViewOrderStatus/{orderId}")]
+        public async Task<IActionResult> ViewOrderStatus(int orderId)
+        {
+            var orderStatus = await _rentalOrderServices.GetOrderStatus(orderId);
+            if (orderStatus == null)
+            {
+                return NotFound();
+            }
+            return Ok(orderStatus);
+        }
     }
 }

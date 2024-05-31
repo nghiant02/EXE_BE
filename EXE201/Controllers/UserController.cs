@@ -15,12 +15,10 @@ namespace EXE201.Controllers
     public class UserController : Controller
     {
         private readonly IUserServices _userServices;
-        private readonly IEmailService _emailService;
 
-        public UserController(IUserServices userServices, IEmailService emailService)
+        public UserController(IUserServices userServices)
         {
             _userServices = userServices;
-            _emailService = emailService;
         }
 
         [HttpGet("GetAllProfileUsers")]
@@ -92,23 +90,6 @@ namespace EXE201.Controllers
             }
         }
 
-        [HttpPost("SendMail")]
-        public async Task<IActionResult> SendMail(EmailView emailView)
-        {
-            try
-            {
-                EmailDTO emailDTO = new EmailDTO();
-                emailDTO.To = emailView.To;
-                emailDTO.Subject = "Confirm Account";
-                emailDTO.Body = GetHtmlcontent(emailView.Name);
-                await _emailService.SendEmail(emailDTO);
-            }catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
-        }
-
         [HttpPut("Change-Password")]
         public async Task<IActionResult> UpdatePassword(int id, ChangePasswordDTO changePassword)
         {
@@ -143,6 +124,24 @@ namespace EXE201.Controllers
             Response += "<div><h1>Contact us: lammjnhphong4560@gmail.com</h1></div>";
             Response += "</div>";
             return Response;
+        }
+
+        [HttpGet("GetFilteredUser")]
+        public async Task<IActionResult> GetFilteredUser([FromQuery] UserFilterDTO filter)
+        {
+            var users = await _userServices.GetFilteredUser(filter);
+            return Ok(users);
+        }
+
+        [HttpGet("ViewProfile/{userId}")]
+        public async Task<IActionResult> ViewProfile(int userId)
+        {
+            var userProfile = await _userServices.GetUserProfile(userId);
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+            return Ok(userProfile);
         }
     }
 }
