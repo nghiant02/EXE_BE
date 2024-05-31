@@ -35,5 +35,10 @@ namespace EXE201.BLL.Services
         {
             return await _rentalOrderRepository.ReturnItem(returnItem);
         }
+
+        public async Task<OrderStatusDTO> GetOrderStatus(int orderId)
+        {
+            return await _rentalOrderRepository.GetOrderStatus(orderId);
+        }
     }
 }

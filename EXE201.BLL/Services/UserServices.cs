@@ -5,6 +5,7 @@ using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
+using LMSystem.Repository.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +78,16 @@ namespace EXE201.BLL.Services
                 throw new ArgumentException("Do not exist User");
             }
             return allUser;
+        }
+
+        public async Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
+        {
+            return await _userRepository.GetFilteredUser(filter);
+        }
+
+        public async Task<UserProfileDTO> GetUserProfile(int userId)
+        {
+            return await _userRepository.GetUserProfile(userId);
         }
 
         public async Task<GetUserDTOs> Login(string username, string password)
