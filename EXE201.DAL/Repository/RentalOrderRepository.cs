@@ -3,6 +3,7 @@ using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,12 +54,29 @@ namespace EXE201.DAL.Repository
                 order.OrderStatus = "Returned";
                 order.ReturnDate = DateTime.Now;
                 // Assuming there is a field for ReturnReason
-                order.ReturnReason = returnItem.ReturnReason; 
+                order.ReturnReason = returnItem.ReturnReason;
                 _context.RentalOrders.Update(order);
                 await SaveChangesAsync();
                 return new ResponeModel { Status = "Success", Message = "Item returned successfully", DataObject = order };
             }
             return new ResponeModel { Status = "Error", Message = "Order not found or already returned" };
+        }
+
+        public async Task<OrderStatusDTO> GetOrderStatus(int orderId)
+        {
+            var order = await _context.RentalOrders
+                .Where(o => o.OrderId == orderId)
+                .Select(o => new OrderStatusDTO
+                {
+                    OrderId = o.OrderId,
+                    OrderStatus = o.OrderStatus,
+                    OrderDate = o.DueDate,
+                    ReturnDate = o.ReturnDate,
+                    ReturnReason = o.ReturnReason
+                })
+                .FirstOrDefaultAsync();
+
+            return order;
         }
     }
 }

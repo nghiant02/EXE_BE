@@ -15,5 +15,6 @@ namespace EXE201.DAL.Interfaces
         Task<ResponeModel> CancelOrderAsync(int orderId);
         Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason);
         Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem);
+        Task<OrderStatusDTO> GetOrderStatus(int orderId);
     }
 }
