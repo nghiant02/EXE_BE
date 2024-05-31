@@ -10,5 +10,6 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IRatingRepository : IGenericRepository<Rating>
     {
+        Task<IEnumerable<Rating>> GetRatings();
     }
 }

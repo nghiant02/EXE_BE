@@ -18,16 +18,18 @@ namespace Tools.Tools
             }
             return sb.ToString();
         }
-        public static string GeneratePassword()
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < 8; i++)
-            {
-                int index = Random.Next(AllowedCharacters.Length);
-                sb.Append(AllowedCharacters[index]);
-            }
-            return sb.ToString();
-        }
+
+        //public static string GeneratePassword()
+        //{
+        //    var sb = new StringBuilder();
+        //    for (int i = 0; i < 8; i++)
+        //    {
+        //        int index = Random.Next(AllowedCharacters.Length);
+        //        sb.Append(AllowedCharacters[index]);
+        //    }
+        //    return sb.ToString();
+        //}
+
         public static string GenerateRandomVerifyCode()
         {
             var sb = new StringBuilder();
