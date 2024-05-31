@@ -57,8 +57,6 @@ builder.Services.AddScoped<IRentalOrderServices, RentalOrderServices>();
 builder.Services.AddScoped<IRentalOrderDetailServices, RentalOrderDetailServices>();
 builder.Services.AddScoped<ICartServices, CartServices>();
 
-
-
 //Add EmailSetting
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
 
