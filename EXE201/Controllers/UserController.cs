@@ -15,12 +15,10 @@ namespace EXE201.Controllers
     public class UserController : Controller
     {
         private readonly IUserServices _userServices;
-        private readonly IEmailService _emailService;
 
-        public UserController(IUserServices userServices, IEmailService emailService)
+        public UserController(IUserServices userServices)
         {
             _userServices = userServices;
-            _emailService = emailService;
         }
 
         [HttpGet("GetAllProfileUsers")]
@@ -90,23 +88,6 @@ namespace EXE201.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        [HttpPost("SendMail")]
-        public async Task<IActionResult> SendMail(EmailView emailView)
-        {
-            try
-            {
-                EmailDTO emailDTO = new EmailDTO();
-                emailDTO.To = emailView.To;
-                emailDTO.Subject = "Confirm Account";
-                emailDTO.Body = GetHtmlcontent(emailView.Name);
-                await _emailService.SendEmail(emailDTO);
-            }catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
         }
 
         [HttpPut("Change-Password")]
