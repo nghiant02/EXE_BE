@@ -10,5 +10,6 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IMembershipRepository : IGenericRepository<Membership>
     {
+        Task<IEnumerable<Membership>> GetAll();
     }
 }
