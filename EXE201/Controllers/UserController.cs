@@ -6,6 +6,7 @@ using EXE201.DAL.DTOs.EmailDTOs;
 using System.Text;
 using EXE201.BLL.Services;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EXE201.Controllers
 {
@@ -15,10 +16,19 @@ namespace EXE201.Controllers
     public class UserController : Controller
     {
         private readonly IUserServices _userServices;
+        private readonly IEmailService _emailService;
+        private readonly IJwtService _jwtService;
+
+        public UserController(IUserServices userServices, IEmailService emailService, IJwtService jwtService)
+        {
+            _userServices = userServices;
+            _emailService = emailService;
+            _jwtService = jwtService;
 
         public UserController(IUserServices userServices)
         {
             _userServices = userServices;
+
         }
 
         [HttpGet("GetAllProfileUsers")]
@@ -41,13 +51,26 @@ namespace EXE201.Controllers
             try
             {
                 var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
-                return Ok(result);
+
+                if (result == null)
+                {
+                    return Unauthorized("Invalid username or password.");
+                }
+
+                var token = _jwtService.GenerateToken(result.UserID.ToString());
+
+                return Ok(new
+                {
+                    Token = token,
+                    User = result
+                });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost("AddNewUserForStaff")]
         public async Task<IActionResult> AddNewUser(AddNewUserDTO addNewUserDTO)
         {
