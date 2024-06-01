@@ -14,5 +14,7 @@ namespace EXE201.DAL.Repository
         public FeedbackRepository(EXE201Context context) : base(context)
         {
         }
+
+
     }
 }

@@ -14,7 +14,7 @@ namespace EXE201.DAL.Interfaces
     public interface IProductRepository : IGenericRepository<Product>
     {
         Task<IEnumerable<Product>> GetAll();
-        Task<Product> GetById(int id);
+        Task<ProductDetailDTO> GetById(int id);
         Task<ResponeModel> AddProduct(AddProductDTO addProduct);
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
         Task<ResponeModel> DeleteProduct(int id);
@@ -22,6 +22,9 @@ namespace EXE201.DAL.Interfaces
         //Task<IEnumerable<Product>> SearchProduct(string keyword);
         //Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice);
         Task<PagedList<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter);
+        Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN);
+        Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN);
+        Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
 
     }
 }

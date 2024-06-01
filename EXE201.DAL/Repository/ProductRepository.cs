@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.FeedbackDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
@@ -86,9 +87,41 @@ namespace EXE201.DAL.Repository
             return await GetAllAsync();
         }
 
-        public async Task<Product> GetById(int id)
+        public async Task<ProductDetailDTO> GetById(int id)
         {
-            return await GetByIdAsync(id);
+            var product = await _context.Products
+            .Include(p => p.Ratings)
+                .ThenInclude(r => r.User)
+            .Include(p => p.Ratings)
+                .ThenInclude(r => r.Feedback)
+            .Include(p => p.Category)
+            .Where(p => p.ProductId == id)
+            .Select(p => new ProductDetailDTO
+            {
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                ProductDescription = p.ProductDescription,
+                ProductImage = p.ProductImage,
+                ProductPrice = p.ProductPrice,
+                ProductSize = p.ProductSize,
+                ProductColor = p.ProductColor,
+                ProductStatus = p.ProductStatus,
+                CategoryName = p.Category.CategoryName,
+                AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
+                RatingsFeedback = p.Ratings.Select(r => new RatingFeedbackDTO
+                {
+                    RatingId = r.RatingId,
+                    UserId = r.User.UserId,
+                    UserName = r.User.UserName,
+                    RatingValue = r.RatingValue ?? 0,
+                    DateGiven = r.DateGiven,
+                    FeedbackComment = r.Feedback.FeedbackComment,
+                    FeedbackImage = r.Feedback.FeedbackImage
+                }).ToList()
+            })
+            .FirstOrDefaultAsync();
+
+            return product;
         }
 
         public async Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO)
@@ -211,6 +244,84 @@ namespace EXE201.DAL.Repository
 
             var products = await query.ToListAsync();
             return PagedList<ProductWithRatingDTO>.ToPagedList(products, filter.PageNumber, filter.PageSize);
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN)
+        {
+            var products = await _context.Products
+                .Include(p => p.RentalOrderDetails)
+                .Include(p => p.Category)
+                .Include(p => p.Ratings)
+                .Select(p => new ProductRecommendationDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImage,
+                    ProductPrice = p.ProductPrice,
+                    ProductSize = p.ProductSize,
+                    ProductColor = p.ProductColor,
+                    ProductStatus = p.ProductStatus,
+                    CategoryName = p.Category.CategoryName,
+                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
+                    NumberOfPurchases = p.RentalOrderDetails.Count
+                })
+                .OrderByDescending(p => p.NumberOfPurchases)
+                .Take(topN)
+                .ToListAsync();
+
+            return products;
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN)
+        {
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Ratings)
+                .Select(p => new ProductRecommendationDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImage,
+                    ProductPrice = p.ProductPrice,
+                    ProductSize = p.ProductSize,
+                    ProductColor = p.ProductColor,
+                    ProductStatus = p.ProductStatus,
+                    CategoryName = p.Category.CategoryName,
+                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
+                    CreatedAt = p.CreatedAt
+                })
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(topN)
+                .ToListAsync();
+
+            return products;
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN)
+        {
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Ratings)
+                .Select(p => new ProductRecommendationDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImage,
+                    ProductPrice = p.ProductPrice,
+                    ProductSize = p.ProductSize,
+                    ProductColor = p.ProductColor,
+                    ProductStatus = p.ProductStatus,
+                    CategoryName = p.Category.CategoryName,
+                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
+                })
+                .OrderByDescending(p => p.AverageRating)
+                .Take(topN)
+                .ToListAsync();
+
+            return products;
         }
     }
 }

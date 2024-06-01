@@ -24,6 +24,11 @@ namespace EXE201.Controllers
             _userServices = userServices;
             _emailService = emailService;
             _jwtService = jwtService;
+
+        public UserController(IUserServices userServices)
+        {
+            _userServices = userServices;
+
         }
 
         [HttpGet("GetAllProfileUsers")]
@@ -106,23 +111,6 @@ namespace EXE201.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        [HttpPost("SendMail")]
-        public async Task<IActionResult> SendMail(EmailView emailView)
-        {
-            try
-            {
-                EmailDTO emailDTO = new EmailDTO();
-                emailDTO.To = emailView.To;
-                emailDTO.Subject = "Confirm Account";
-                emailDTO.Body = GetHtmlcontent(emailView.Name);
-                await _emailService.SendEmail(emailDTO);
-            }catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
         }
 
         [HttpPut("Change-Password")]
