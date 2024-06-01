@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs.FeedbackDTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using EXE201.DAL.Repository;
@@ -54,7 +55,7 @@ namespace EXE201.BLL.Services
             return await _ratingRepository.GetUserRatingsAndFeedback(userId);
         }
 
-        public async Task<IEnumerable<ProductWithRatingsFeedbackDTO>> GetAllProductsWithRatingsFeedback()
+        public async Task<IEnumerable<ProductDetailDTO>> GetAllProductsWithRatingsFeedback()
         {
             return await _ratingRepository.GetAllProductsWithRatingsFeedback();
         }

@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs.FeedbackDTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
@@ -75,7 +76,7 @@ namespace EXE201.DAL.Repository
             return ratings;
         }
 
-        public async Task<IEnumerable<ProductWithRatingsFeedbackDTO>> GetAllProductsWithRatingsFeedback()
+        public async Task<IEnumerable<ProductDetailDTO>> GetAllProductsWithRatingsFeedback()
         {
             var products = await _context.Products
                 .Include(p => p.Ratings)
@@ -83,7 +84,7 @@ namespace EXE201.DAL.Repository
                 .Include(p => p.Ratings)
                     .ThenInclude(r => r.Feedback)
                 .Include(p => p.Category)
-                .Select(p => new ProductWithRatingsFeedbackDTO
+                .Select(p => new ProductDetailDTO
                 {
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,

@@ -39,7 +39,7 @@ namespace EXE201.BLL.Services
             return await _productRepository.GetAll();
         }
 
-        public async Task<Product> GetById(int id)
+        public async Task<ProductDetailDTO> GetById(int id)
         {
             return await _productRepository.GetById(id);
         }
