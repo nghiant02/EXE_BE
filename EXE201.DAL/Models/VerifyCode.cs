@@ -15,6 +15,9 @@ public partial class VerifyCode
     [StringLength(255)]
     public string Id { get; set; }
 
+    [Column("UserID")]
+    public int? UserId { get; set; }
+
     [StringLength(255)]
     public string Email { get; set; }
 
@@ -23,4 +26,8 @@ public partial class VerifyCode
 
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
+
+    [ForeignKey("UserId")]
+    [InverseProperty("VerifyCodes")]
+    public virtual User User { get; set; }
 }
