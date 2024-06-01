@@ -67,5 +67,20 @@ namespace EXE201.BLL.Services
         {
             return await _productRepository.GetFilteredProducts(filter);
         }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN)
+        {
+            return await _productRepository.GetHotProducts(topN);
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN)
+        {
+            return await _productRepository.GetNewProducts(topN);
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN)
+        {
+            return await _productRepository.GetHighlyRatedProducts(topN);
+        }
     }
 }
