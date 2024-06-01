@@ -74,6 +74,9 @@ public partial class User
     [InverseProperty("User")]
     public virtual ICollection<RentalOrder> RentalOrders { get; set; } = new List<RentalOrder>();
 
+    [InverseProperty("User")]
+    public virtual ICollection<VerifyCode> VerifyCodes { get; set; } = new List<VerifyCode>();
+
     [ForeignKey("UserId")]
     [InverseProperty("Users")]
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();

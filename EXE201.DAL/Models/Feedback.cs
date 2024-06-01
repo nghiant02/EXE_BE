@@ -39,6 +39,9 @@ public partial class Feedback
     [InverseProperty("Feedbacks")]
     public virtual Product Product { get; set; }
 
+    [InverseProperty("Feedback")]
+    public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+
     [ForeignKey("UserId")]
     [InverseProperty("Feedbacks")]
     public virtual User User { get; set; }

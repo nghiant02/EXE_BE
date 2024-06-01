@@ -21,10 +21,17 @@ public partial class Rating
     [Column("ProductID")]
     public int? ProductId { get; set; }
 
+    [Column("FeedbackID")]
+    public int? FeedbackId { get; set; }
+
     public int? RatingValue { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? DateGiven { get; set; }
+
+    [ForeignKey("FeedbackId")]
+    [InverseProperty("Ratings")]
+    public virtual Feedback Feedback { get; set; }
 
     [ForeignKey("ProductId")]
     [InverseProperty("Ratings")]
