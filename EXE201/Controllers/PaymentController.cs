@@ -55,5 +55,16 @@ namespace EXE201.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("ViewProfits")]
+        public async Task<IActionResult> ViewProfits([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var profits = await _paymentService.GetProfitData(startDate, endDate);
+            if (profits == null || !profits.Any())
+            {
+                return NotFound();
+            }
+            return Ok(profits);
+        }
     }
 }
