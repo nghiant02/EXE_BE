@@ -77,5 +77,20 @@ namespace EXE201.DAL.Repository
                 })
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate)
+        {
+            var profits = await _context.Payments
+                .Where(p => p.PaymentStatus == "Completed" && p.Order.DatePlaced >= startDate && p.Order.DatePlaced <= endDate)
+                .GroupBy(p => p.Order.DatePlaced.Value.Date)
+                .Select(g => new ProfitDTO
+                {
+                    Date = g.Key,
+                    TotalProfit = g.Sum(p => p.PaymentAmount ?? 0)
+                })
+                .ToListAsync();
+
+            return profits;
+        }
     }
 }
