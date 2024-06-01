@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs.FeedbackDTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Interface;
 using System;
@@ -14,6 +15,6 @@ namespace EXE201.DAL.Interfaces
         Task<IEnumerable<Rating>> GetRatings();
         Task<IEnumerable<UserRatingFeedbackDTO>> GetUserRatingsAndFeedback(int userId);
         Task<IEnumerable<ProductRatingFeedbackDTO>> GetProductRatingsAndFeedback(int productId);
-        Task<IEnumerable<ProductWithRatingsFeedbackDTO>> GetAllProductsWithRatingsFeedback();
+        Task<IEnumerable<ProductDetailDTO>> GetAllProductsWithRatingsFeedback();
     }
 }

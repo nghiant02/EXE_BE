@@ -1,23 +1,13 @@
-﻿using System;
+﻿using EXE201.DAL.DTOs.FeedbackDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EXE201.DAL.DTOs.FeedbackDTOs
+namespace EXE201.DAL.DTOs.ProductDTOs
 {
-    public class RatingFeedbackDTO
-    {
-        public int RatingId { get; set; }
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public int RatingValue { get; set; }
-        public DateTime? DateGiven { get; set; }
-        public string FeedbackComment { get; set; }
-        public string FeedbackImage { get; set; }
-    }
-
-    public class ProductWithRatingsFeedbackDTO
+    public class ProductDetailDTO
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }
