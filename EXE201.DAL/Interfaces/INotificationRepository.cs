@@ -10,5 +10,7 @@ namespace EXE201.DAL.Interfaces
 {
     public interface INotificationRepository : IGenericRepository<Notification>
     {
+        Task<IEnumerable<Notification>> GetAllAsync();
+        Task<Notification> GetByIdAsync(int id);
     }
 }
