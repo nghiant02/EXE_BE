@@ -175,7 +175,7 @@ namespace EXE201.DAL.Repository
         //    return await query.ToListAsync();
         //}
 
-        public async Task<PagedList<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter)
+        public async Task<PagedResponseDTO<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter)
         {
             var query = _context.Products
                                 .Include(p => p.Ratings)
@@ -242,8 +242,18 @@ namespace EXE201.DAL.Repository
                 query = query.OrderBy(p => p.ProductId);
             }
 
-            var products = await query.ToListAsync();
-            return PagedList<ProductWithRatingDTO>.ToPagedList(products, filter.PageNumber, filter.PageSize);
+            var totalCount = await query.CountAsync();
+            var products = await query.Skip((filter.PageNumber - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync();
+
+            var pagedResponse = new PagedResponseDTO<ProductWithRatingDTO>
+            {
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = totalCount,
+                Items = products
+            };
+
+            return pagedResponse;
         }
 
         public async Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN)

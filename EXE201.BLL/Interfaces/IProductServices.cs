@@ -20,7 +20,7 @@ namespace EXE201.BLL.Interfaces
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
         //Task<IEnumerable<Product>> SearchProduct(string keyword);
         //Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice);
-        Task<PagedList<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter);
+        Task<PagedResponseDTO<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter);
         Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
