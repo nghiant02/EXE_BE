@@ -45,15 +45,14 @@ namespace EXE201.Controllers
         {
             try
             {
-                var result = await _userServices.Login(loginUserViewModel.Username,
-                                                       loginUserViewModel.Password);
+                var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
 
                 if (result == null)
                 {
                     return Unauthorized("Invalid username or password.");
                 }
 
-                var token = _jwtService.GenerateToken(result.UserID.ToString());
+                var token = _jwtService.GenerateToken(result.UserId.ToString());
 
                 return Ok(new { Token = token, User = result });
             }
@@ -115,9 +114,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPut("Update-Profile")]
-        public async Task<IActionResult> UpdateUser([FromQuery]
-                                                [Required] int id,
-                                                    UpdateProfileUserDTO userView)
+        public async Task<IActionResult> UpdateUser([FromQuery] [Required] int id, UpdateProfileUserDTO userView)
         {
             if (!ModelState.IsValid)
             {
