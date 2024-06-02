@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs.FeedbackDTOs;
+using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,8 @@ namespace EXE201.BLL.Interfaces
     {
         Task<Rating> AddRating(AddRatingDTO addRatingDTO);
         Task<IEnumerable<Rating>> GetsApplicaition();
+        Task<IEnumerable<UserRatingFeedbackDTO>> GetUserRatingsAndFeedback(int userId);
+        Task<IEnumerable<ProductRatingFeedbackDTO>> GetProductRatingsAndFeedback(int productId);
+        Task<IEnumerable<ProductDetailDTO>> GetAllProductsWithRatingsFeedback();
     }
 }

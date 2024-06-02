@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.DTOs.UserDTOs;
+﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Models;
 using LMSystem.Repository.Helpers;
 using MCC.DAL.Repository.Interface;
@@ -21,7 +22,7 @@ namespace EXE201.DAL.Interfaces
         Task<User> GetLatestUser();
         Task<User> GetUserByEmail(string email);
         Task<Role> GetRoleById(int roleId);
-        Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
+        Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
         Task<UserProfileDTO> GetUserProfile(int userId);
     }
 

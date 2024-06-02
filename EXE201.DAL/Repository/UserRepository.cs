@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.DTOs.UserDTOs;
+﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using LMSystem.Repository.Helpers;
@@ -119,7 +120,7 @@ namespace EXE201.DAL.Repository
             return await _context.Roles.FindAsync(roleId);
         }
 
-        public async Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
+        public async Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
         {
             var query = _context.Users
                 .Include(u => u.Memberships)
@@ -186,8 +187,18 @@ namespace EXE201.DAL.Repository
                 query = query.OrderBy(u => u.UserId); // Default sort order
             }
 
-            var users = await query.ToListAsync();
-            return PagedList<UserListDTO>.ToPagedList(users, filter.PageNumber, filter.PageSize);
+            var totalCount = await query.CountAsync();
+            var users = await query.Skip((filter.PageNumber - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync();
+
+            var pagedResponse = new PagedResponseDTO<UserListDTO>
+            {
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = totalCount,
+                Items = users
+            };
+
+            return pagedResponse;
         }
 
 
@@ -209,8 +220,8 @@ namespace EXE201.DAL.Repository
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
                     AccountStatus = u.AccountStatus,
-                    Roles = u.Roles.Select(r => r.RoleName),
-                    MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
+                    Roles = u.Roles.FirstOrDefault().RoleName,
+                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .FirstOrDefaultAsync();
 

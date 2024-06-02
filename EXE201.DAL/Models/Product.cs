@@ -43,6 +43,13 @@ public partial class Product
     [Unicode(false)]
     public string ProductColor { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? CreatedAt { get; set; }
+
+    [StringLength(255)]
+    [Unicode(false)]
+    public string ProductColorImage { get; set; }
+
     [InverseProperty("Product")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 

@@ -37,5 +37,10 @@ namespace EXE201.BLL.Services
         {
             return await _paymentRepository.GetPaymentHistoryByUserIdAsync(userId);
         }
+
+        public async Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate)
+        {
+            return await _paymentRepository.GetProfitData(startDate, endDate);
+        }
     }
 }
