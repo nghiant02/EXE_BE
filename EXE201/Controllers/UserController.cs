@@ -19,16 +19,12 @@ namespace EXE201.Controllers
         private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
 
-        public UserController(IUserServices userServices, IEmailService emailService, IJwtService jwtService)
+        public UserController(IUserServices userServices,
+                              IEmailService emailService, IJwtService jwtService)
         {
             _userServices = userServices;
             _emailService = emailService;
             _jwtService = jwtService;
-
-        public UserController(IUserServices userServices)
-        {
-            _userServices = userServices;
-
         }
 
         [HttpGet("GetAllProfileUsers")]
@@ -46,11 +42,13 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginUserViewModel loginUserViewModel)
+        public async Task<IActionResult> LoginAsync(
+            [FromBody] LoginUserViewModel loginUserViewModel)
         {
             try
             {
-                var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
+                var result = await _userServices.Login(loginUserViewModel.Username,
+                                                       loginUserViewModel.Password);
 
                 if (result == null)
                 {
@@ -59,11 +57,7 @@ namespace EXE201.Controllers
 
                 var token = _jwtService.GenerateToken(result.UserID.ToString());
 
-                return Ok(new
-                {
-                    Token = token,
-                    User = result
-                });
+                return Ok(new { Token = token, User = result });
             }
             catch (Exception ex)
             {
@@ -86,7 +80,8 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserDTOs registerUserDTOs)
+        public async Task<IActionResult> RegisterAsync(
+            [FromBody] RegisterUserDTOs registerUserDTOs)
         {
             try
             {
@@ -114,14 +109,17 @@ namespace EXE201.Controllers
         }
 
         [HttpPut("Change-Password")]
-        public async Task<IActionResult> UpdatePassword(int id, ChangePasswordDTO changePassword)
+        public async Task<IActionResult> UpdatePassword(
+            int id, ChangePasswordDTO changePassword)
         {
-            var user = await _userServices.ChangePasword(id,changePassword);
+            var user = await _userServices.ChangePasword(id, changePassword);
             return Ok(user);
         }
 
         [HttpPut("Update-Profile")]
-        public async Task<IActionResult> UpdateUser([FromQuery][Required] int id, UpdateProfileUserDTO userView)
+        public async Task<IActionResult> UpdateUser([FromQuery]
+                                                [Required] int id,
+                                                    UpdateProfileUserDTO userView)
         {
             if (!ModelState.IsValid)
             {
@@ -131,26 +129,9 @@ namespace EXE201.Controllers
             return Ok(user);
         }
 
-        private string GetHtmlcontent(string name)
-        {
-            string Response = "<div style=\"wid" +
-                              "th:100%;text-align:center;margin:10px\">";
-            Response += "<h1>Welcome to Voguary</h1>";
-            Response +=
-                "<img style=\"width:10rem\" src=\"https://cdn-icons-png.flaticon.com/128/1145/1145941.png\" />";
-            Response += "<h1 style=\"color:#f57f0e\">Dear " + name + "</h1>";
-            Response +=
-                "<button style=\"background-color: #f57f0e; color: white; padding: 14px 20px; margin: 8px 0; border: none; cursor: pointer; border-radius: 4px;\">";
-            Response += "<a href=\" " + name +
-                        "\" style=\"text-decoration: none; color: white;\">Activate the account</a>";
-            Response += "</button>";
-            Response += "<div><h1>Contact us: lammjnhphong4560@gmail.com</h1></div>";
-            Response += "</div>";
-            return Response;
-        }
-
         [HttpGet("GetFilteredUser")]
-        public async Task<IActionResult> GetFilteredUser([FromQuery] UserFilterDTO filter)
+        public async Task<IActionResult> GetFilteredUser(
+            [FromQuery] UserFilterDTO filter)
         {
             var users = await _userServices.GetFilteredUser(filter);
             return Ok(users);
