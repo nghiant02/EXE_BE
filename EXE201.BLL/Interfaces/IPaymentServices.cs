@@ -14,5 +14,6 @@ namespace EXE201.BLL.Interfaces
         Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails);
         Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment);
         Task< IEnumerable<Payment>> GetPaymentsByUserIdAsync(int userId);
+        Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
     }
 }

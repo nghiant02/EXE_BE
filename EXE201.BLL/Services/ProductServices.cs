@@ -39,7 +39,7 @@ namespace EXE201.BLL.Services
             return await _productRepository.GetAll();
         }
 
-        public async Task<Product> GetById(int id)
+        public async Task<ProductDetailDTO> GetById(int id)
         {
             return await _productRepository.GetById(id);
         }
@@ -63,9 +63,24 @@ namespace EXE201.BLL.Services
         //{
         //    return await _productRepository.FilterProduct(category, minPrice, maxPrice);
         //}
-        public async Task<PagedList<Product>> GetFilteredProducts(ProductFilterDTO filter)
+        public async Task<PagedList<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter)
         {
             return await _productRepository.GetFilteredProducts(filter);
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN)
+        {
+            return await _productRepository.GetHotProducts(topN);
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN)
+        {
+            return await _productRepository.GetNewProducts(topN);
+        }
+
+        public async Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN)
+        {
+            return await _productRepository.GetHighlyRatedProducts(topN);
         }
     }
 }

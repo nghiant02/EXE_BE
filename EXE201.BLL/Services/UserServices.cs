@@ -5,6 +5,7 @@ using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
+using LMSystem.Repository.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +78,16 @@ namespace EXE201.BLL.Services
                 throw new ArgumentException("Do not exist User");
             }
             return allUser;
+        }
+
+        public async Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
+        {
+            return await _userRepository.GetFilteredUser(filter);
+        }
+
+        public async Task<UserProfileDTO> GetUserProfile(int userId)
+        {
+            return await _userRepository.GetUserProfile(userId);
         }
 
         public async Task<GetUserDTOs> Login(string username, string password)
@@ -155,11 +166,33 @@ namespace EXE201.BLL.Services
             }
             var updatingUser = _mapper.Map<User>(userView);
             updatingUser.UserId = id;
-            updatingUser.Phone = oldUser.First().Phone;
-            updatingUser.Email = oldUser.First().Email;
+            updatingUser.UserName = oldUser.First().UserName;
             updatingUser.AccountStatus = oldUser.First().AccountStatus;
             updatingUser.Password = oldUser.First().Password;
+            updatingUser.ProfileImage = oldUser.First().ProfileImage;
 
+            var address = oldUser.First().Addresses.FirstOrDefault();
+            if (address != null)
+            {
+                address.Street = userView.Street;
+                address.City = userView.City;
+                address.State = userView.State;
+                address.PostalCode = userView.PostalCode;
+                address.Country = userView.Country;
+            }
+            else
+            {
+                address = new Address
+                {
+                    UserId = id,
+                    Street = userView.Street,
+                    City = userView.City,
+                    State = userView.State,
+                    PostalCode = userView.PostalCode,
+                    Country = userView.Country
+                };
+                updatingUser.Addresses.Add(address);
+            }
             return await _userRepository.UpdateUser(updatingUser);
         }
     }

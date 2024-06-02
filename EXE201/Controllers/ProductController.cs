@@ -101,5 +101,26 @@ namespace EXE201.Controllers
             var products = await _productServices.GetFilteredProducts(filter);
             return Ok(products);
         }
+
+        [HttpGet("RecommendHot")]
+        public async Task<IActionResult> RecommendHot(int topN = 10)
+        {
+            var products = await _productServices.GetHotProducts(topN);
+            return Ok(products);
+        }
+
+        [HttpGet("RecommendNew")]
+        public async Task<IActionResult> RecommendNew(int topN = 10)
+        {
+            var products = await _productServices.GetNewProducts(topN);
+            return Ok(products);
+        }
+
+        [HttpGet("RecommendHighlyRated")]
+        public async Task<IActionResult> RecommendHighlyRated(int topN = 10)
+        {
+            var products = await _productServices.GetHighlyRatedProducts(topN);
+            return Ok(products);
+        }
     }
 }

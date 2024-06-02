@@ -11,10 +11,19 @@ namespace EXE201.Controllers
     {
 
         private readonly IRentalOrderServices _rentalOrderServices;
+        private readonly IRentalOrderDetailServices _rentalOrderDetailServices;
 
-        public RentalOrderController(IRentalOrderServices rentalOrderServices)
+        public RentalOrderController(IRentalOrderServices rentalOrderServices, IRentalOrderDetailServices rentalOrderDetailServices)
         {
             _rentalOrderServices = rentalOrderServices;
+            _rentalOrderDetailServices = rentalOrderDetailServices;
+        }
+
+        [HttpGet("GetRentalOrderDetail")]
+        public async Task<IActionResult> GetRentalOrderDetail(int id)
+        {
+            var result = await _rentalOrderDetailServices.GetRentalOrderDetailById(id);
+            return Ok(result);
         }
 
         [HttpPost("CancelOrder")]
@@ -48,6 +57,17 @@ namespace EXE201.Controllers
                 return Conflict(response);
             }
             return Ok(response);
+        }
+
+        [HttpGet("ViewOrderStatus/{orderId}")]
+        public async Task<IActionResult> ViewOrderStatus(int orderId)
+        {
+            var orderStatus = await _rentalOrderServices.GetOrderStatus(orderId);
+            if (orderStatus == null)
+            {
+                return NotFound();
+            }
+            return Ok(orderStatus);
         }
     }
 }
