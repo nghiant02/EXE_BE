@@ -143,12 +143,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//Get swagger.json follwing root directory 
+app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
+//Load swagger.json follwing root directory 
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
+
+app.UseCors(x => x.AllowAnyOrigin()
+                 .AllowAnyHeader()
+                 .AllowAnyMethod());
 
 app.UseHttpsRedirection();
 
