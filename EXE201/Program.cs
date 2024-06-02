@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using EXE201.DAL.DTOs.EmailDTOs;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,7 +63,6 @@ builder.Services.AddScoped<IMembershipServices, MembershipServices>();
 builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IFeedbackServices, FeedbackServices>();
 
-
 //Add EmailSetting
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSetting"));
 
@@ -75,16 +75,18 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+//Name the Swagger 
+builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" }); });
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//Get swagger.json follwing root directory 
+app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
+//Load swagger.json follwing root directory 
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
+
+app.UseCors(x => x.AllowAnyOrigin()
+                 .AllowAnyHeader()
+                 .AllowAnyMethod());
 
 app.UseHttpsRedirection();
 
