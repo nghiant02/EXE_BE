@@ -19,8 +19,7 @@ namespace EXE201.Controllers
         private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
 
-        public UserController(IUserServices userServices,
-                              IEmailService emailService, IJwtService jwtService)
+        public UserController(IUserServices userServices, IEmailService emailService, IJwtService jwtService)
         {
             _userServices = userServices;
             _emailService = emailService;
@@ -42,8 +41,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync(
-            [FromBody] LoginUserViewModel loginUserViewModel)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginUserViewModel loginUserViewModel)
         {
             try
             {
