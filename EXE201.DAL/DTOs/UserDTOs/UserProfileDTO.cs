@@ -17,8 +17,8 @@ namespace EXE201.DAL.DTOs.UserDTOs
         public string Email { get; set; }
         public string ProfileImage { get; set; }
         public string AccountStatus { get; set; }
-        public IEnumerable<string> Roles { get; set; }
-        public IEnumerable<string> MembershipTypes { get; set; }
+        public string Roles { get; set; }
+        public string MembershipTypeName { get; set; }
     }
 
 }

@@ -209,8 +209,8 @@ namespace EXE201.DAL.Repository
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
                     AccountStatus = u.AccountStatus,
-                    Roles = u.Roles.Select(r => r.RoleName),
-                    MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
+                    Roles = u.Roles.FirstOrDefault().RoleName,
+                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .FirstOrDefaultAsync();
 
