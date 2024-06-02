@@ -2,6 +2,7 @@
 using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
@@ -80,7 +81,7 @@ namespace EXE201.BLL.Services
             return allUser;
         }
 
-        public async Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
+        public async Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
         {
             return await _userRepository.GetFilteredUser(filter);
         }
