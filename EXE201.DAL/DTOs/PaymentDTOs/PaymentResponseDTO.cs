@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace EXE201.DAL.DTOs.PaymentDTOs
 {
-    public class ProcessPaymentDTO
+    public class PaymentResponseDTO
     {
         public int PaymentId { get; set; }
-        public bool Confirm { get; set; }
+        public string PaymentInformation { get; set; } // QR code link or bank transfer details
     }
-
 
 }

@@ -19,23 +19,23 @@ namespace EXE201.Controllers
         [HttpPost("EnterPaymentDetails")]
         public async Task<IActionResult> EnterPaymentDetails([FromBody] EnterPaymentDetailsDTO paymentDetails)
         {
-            var result = await _paymentService.EnterPaymentDetails(paymentDetails);
-            if (result.Status == "Success")
+            var response = await _paymentService.EnterPaymentDetails(paymentDetails);
+            if (response.Status == "Error")
             {
-                return Ok(result);
+                return BadRequest(response.Message);
             }
-            return BadRequest(result);
+            return Ok(response.DataObject);
         }
 
         [HttpPost("ProcessPayment")]
         public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentDTO processPayment)
         {
-            var result = await _paymentService.ProcessPayment(processPayment);
-            if (result.Status == "Success")
+            var response = await _paymentService.ProcessPayment(processPayment);
+            if (response.Status == "Error")
             {
-                return Ok(result);
+                return BadRequest(response.Message);
             }
-            return BadRequest(result);
+            return Ok(response);
         }
 
         [HttpGet("ViewHistoryPaymentByUserId")]
