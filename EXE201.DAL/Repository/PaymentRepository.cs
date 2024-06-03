@@ -1,9 +1,12 @@
 ﻿using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.PaymentDTOs;
+using EXE201.DAL.Helpers;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +20,17 @@ namespace EXE201.DAL.Repository
     {
         private readonly EXE201Context _context;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<PaymentRepository> _logger;
 
-        public PaymentRepository(EXE201Context context, IHttpClientFactory httpClientFactory) : base(context)
+
+
+        public PaymentRepository(EXE201Context context, IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<PaymentRepository> logger) : base(context)
         {
             _context = context;
             _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails)
@@ -44,7 +53,7 @@ namespace EXE201.DAL.Repository
             await _context.Payments.AddAsync(payment);
             await _context.SaveChangesAsync();
 
-            string paymentInformation = await GeneratePaymentInformationAsync(paymentDetails.PaymentMethod, payment.PaymentId);
+            string paymentInformation = await GeneratePaymentInformationAsync(paymentDetails.PaymentMethod, payment.PaymentId, paymentDetails.Amount);
 
             return new ResponeModel
             {
@@ -80,11 +89,15 @@ namespace EXE201.DAL.Repository
             return new ResponeModel { Status = "Success", Message = "Payment processed successfully", DataObject = payment };
         }
 
-        private async Task<string> GeneratePaymentInformationAsync(string paymentMethod, int paymentId)
+        private async Task<string> GeneratePaymentInformationAsync(string paymentMethod, int paymentId, decimal amount)
         {
             if (paymentMethod == "VNPay")
             {
-                return await GenerateVNPayInformationAsync(paymentId);
+                return GenerateVNPayInformation(paymentId, amount);
+            }
+            else if (paymentMethod == "MoMo")
+            {
+                return await GenerateMoMoInformationAsync(paymentId, amount);
             }
             else if (paymentMethod == "BankTransfer")
             {
@@ -94,38 +107,68 @@ namespace EXE201.DAL.Repository
             return string.Empty;
         }
 
-        private async Task<string> GenerateVNPayInformationAsync(int paymentId)
+        private string GenerateVNPayInformation(int paymentId, decimal amount)
         {
-            var httpClient = _httpClientFactory.CreateClient();
+            var vnPayLibrary = new VnPayLibrary();
+            var vnpUrl = _configuration["VNPay:BaseUrl"];
+            var vnpTmnCode = _configuration["VNPay:TmnCode"];
+            var vnpHashSecret = _configuration["VNPay:HashSecret"];
 
-            var requestUri = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-            var parameters = new Dictionary<string, string>
-        {
-            { "vnp_Version", "2.1.0" },
-            { "vnp_Command", "pay" },
-            { "vnp_TmnCode", "E2SEF40W" },
-            { "vnp_Amount", "100000" }, // Example amount
-            { "vnp_CurrCode", "VND" },
-            { "vnp_TxnRef", paymentId.ToString() },
-            { "vnp_OrderInfo", "Payment for Order #" + paymentId },
-            { "vnp_Locale", "vn" },
-            { "vnp_ReturnUrl", "https://voguary.id.vn/" },
-            { "vnp_IpAddr", "127.0.0.1" },
-            { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") }
-        };
+            vnPayLibrary.AddRequestData("vnp_Version", "2.1.0");
+            vnPayLibrary.AddRequestData("vnp_Command", "pay");
+            vnPayLibrary.AddRequestData("vnp_TmnCode", vnpTmnCode);
+            vnPayLibrary.AddRequestData("vnp_Amount", ((int)(amount * 100)).ToString());
+            vnPayLibrary.AddRequestData("vnp_CurrCode", "VND");
+            vnPayLibrary.AddRequestData("vnp_TxnRef", paymentId.ToString());
+            vnPayLibrary.AddRequestData("vnp_OrderInfo", "Payment for Order #" + paymentId);
+            vnPayLibrary.AddRequestData("vnp_Locale", "vn");
+            vnPayLibrary.AddRequestData("vnp_ReturnUrl", _configuration["VNPay:ReturnUrl"]);
+            vnPayLibrary.AddRequestData("vnp_IpAddr", "127.0.0.1");
+            vnPayLibrary.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnPayLibrary.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
 
-            var secureHash = GenerateVNPaySecureHash(parameters, "0NXFXNAGIO1DHF58X4J4RJQ3GMLZXN4H");
-            parameters.Add("vnp_SecureHash", secureHash);
-
-            var query = new FormUrlEncodedContent(parameters).ReadAsStringAsync().Result;
-            return $"{requestUri}?{query}";
+            return vnPayLibrary.CreateRequestUrl(vnpUrl, vnpHashSecret);
         }
 
-        private string GenerateVNPaySecureHash(Dictionary<string, string> parameters, string secretKey)
+
+        private async Task<string> GenerateMoMoInformationAsync(int paymentId, decimal amount)
         {
-            var sortedParameters = parameters.OrderBy(kvp => kvp.Key).ToList();
-            var data = string.Join("&", sortedParameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
-            var hash = new HMACSHA512(Encoding.UTF8.GetBytes(secretKey)).ComputeHash(Encoding.UTF8.GetBytes(data));
+            //var httpClient = _httpClientFactory.CreateClient();
+
+            //// MoMo API endpoint and required parameters
+            //var requestUri = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
+            //var parameters = new Dictionary<string, string>
+            //{
+            //    { "partnerCode", "YOUR_PARTNER_CODE" },
+            //    { "accessKey", "YOUR_ACCESS_KEY" },
+            //    { "requestId", Guid.NewGuid().ToString() },
+            //    { "amount", amount.ToString() },
+            //    { "orderId", paymentId.ToString() },
+            //    { "orderInfo", "Payment for Order #" + paymentId },
+            //    { "returnUrl", "https://your-return-url" },
+            //    { "notifyUrl", "https://your-notify-url" },
+            //    { "extraData", "" }
+            //};
+
+            //// Generate signature
+            //var rawData = $"partnerCode={parameters["partnerCode"]}&accessKey={parameters["accessKey"]}&requestId={parameters["requestId"]}&amount={parameters["amount"]}&orderId={parameters["orderId"]}&orderInfo={parameters["orderInfo"]}&returnUrl={parameters["returnUrl"]}&notifyUrl={parameters["notifyUrl"]}&extraData={parameters["extraData"]}";
+            //var signature = GenerateMoMoSignature(rawData, "YOUR_SECRET_KEY");
+            //parameters.Add("signature", signature);
+
+            //var content = new FormUrlEncodedContent(parameters);
+            //var response = await httpClient.PostAsync(requestUri, content);
+            //var responseContent = await response.Content.ReadAsStringAsync();
+
+            //// Extract the payUrl from the response
+            //var responseJson = Newtonsoft.Json.Linq.JObject.Parse(responseContent);
+            //return responseJson["payUrl"].ToString();
+            return null;
+        }
+
+        private string GenerateMoMoSignature(string rawData, string secretKey)
+        {
+            var hmacsha256 = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey));
+            var hash = hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
             return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
 

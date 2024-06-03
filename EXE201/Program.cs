@@ -167,6 +167,12 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+// Configure Content Security Policy
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;");
+    await next();
+});
 
 app.MapControllers();
 
