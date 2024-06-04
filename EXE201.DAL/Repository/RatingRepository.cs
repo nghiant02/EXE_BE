@@ -25,6 +25,7 @@ namespace EXE201.DAL.Repository
                 var ratingList = await _context.Ratings
                     .Include(x => x.User)
                     .Include(x => x.Product)
+                    .Include(x => x.Feedback)
                     .ToListAsync();
 
                 return ratingList;
