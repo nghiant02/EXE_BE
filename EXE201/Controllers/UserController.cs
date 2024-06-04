@@ -7,6 +7,7 @@ using System.Text;
 using EXE201.BLL.Services;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using EXE201.DAL.Models;
 
 namespace EXE201.Controllers
 {
@@ -62,13 +63,23 @@ namespace EXE201.Controllers
             }
         }
 
-        [HttpPost("AddNewUserForStaff")]
-        public async Task<IActionResult> AddNewUser(AddNewUserDTO addNewUserDTO)
+        [HttpPost("RegisterUser")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                var result = await _userServices.AddUserForStaff(addNewUserDTO);
-                return Ok(result);
+                var result = await _userServices.RegisterUserAsync(request);
+                if (result.Success)
+                {
+                    return Ok(new { Message = "Registration successful, please check your email to verify your account.", UserId = result.UserId });
+                }
+
+                return BadRequest("An error occurred while registering the user.");
             }
             catch (Exception ex)
             {
@@ -76,13 +87,31 @@ namespace EXE201.Controllers
             }
         }
 
-        [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterAsync(
-            [FromBody] RegisterUserDTOs registerUserDTOs)
+        [HttpPost("VerifyCode")]
+        public async Task<IActionResult> VerifyEmailWithCode(int userId, string code)
         {
             try
             {
-                var result = await _userServices.Register(registerUserDTOs);
+                var result = await _userServices.VerifyEmailWithCodeAsync(userId, code);
+                if (result)
+                {
+                    return Ok(new { Message = "Email verified successfully." });
+                }
+
+                return BadRequest("Email verification failed.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("AddNewUserForStaff")]
+        public async Task<IActionResult> AddNewUser(AddNewUserDTO addNewUserDTO)
+        {
+            try
+            {
+                var result = await _userServices.AddUserForStaff(addNewUserDTO);
                 return Ok(result);
             }
             catch (Exception ex)

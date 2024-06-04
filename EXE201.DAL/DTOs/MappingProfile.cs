@@ -20,7 +20,6 @@ namespace EXE201.BLL.DTOs
         private void UserMappingProfile()
         {
             CreateMap<User, GetUserDTOs>();
-            CreateMap<RegisterUserDTOs, User>();
             CreateMap<AddNewUserDTO, User>();
             CreateMap<UpdateProfileUserDTO, User>();
             CreateMap<UpdateCategoryDTOs, Category>();

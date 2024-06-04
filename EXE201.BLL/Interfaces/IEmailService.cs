@@ -10,5 +10,6 @@ namespace EXE201.BLL.Interfaces
     public interface IEmailService
     {
         Task SendEmail(EmailDTO request);
+        Task<bool> SendEmailAsync(EmailDTO emailDto);
     }
 }

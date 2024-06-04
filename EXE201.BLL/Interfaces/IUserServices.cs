@@ -16,12 +16,13 @@ namespace EXE201.BLL.Interfaces
         Task<IEnumerable<User>> GetAllProfileUser();
         Task<bool> ChangeStatusUserToNotActive(int userId);
         Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO);
-        Task<GetUserDTOs> Register(RegisterUserDTOs registerUserDTOs);
         Task<User> ChangePasword(int id, ChangePasswordDTO changePasswordDTO);
         Task<User> FindUserByEmail(string email);
         Task<User> UpdatePassword(string email, string password, int id);
         Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView);
         Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
         Task<UserProfileDTO> GetUserProfile(int userId);
+        Task<(bool Success, int UserId)> RegisterUserAsync(RegisterUserRequest request);
+        Task<bool> VerifyEmailWithCodeAsync(int userId, string code);
     }
 }

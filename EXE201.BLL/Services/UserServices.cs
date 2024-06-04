@@ -2,15 +2,20 @@
 using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.EmailDTOs;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
+using EXE201.DAL.Repository;
 using LMSystem.Repository.Helpers;
+using Org.BouncyCastle.Crypto.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tools.Tools;
+
 
 namespace EXE201.BLL.Services
 {
@@ -19,14 +24,16 @@ namespace EXE201.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IRoleRepository _roleRepository;
+        private readonly IEmailService _emailService;
         private readonly IVerifyCodeRepository _verifyCodeRepository;
 
-        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository, IVerifyCodeRepository verifyCodeRepository)
+        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository, IVerifyCodeRepository verifyCodeRepository, IEmailService emailService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _roleRepository = roleRepository;
             _verifyCodeRepository = verifyCodeRepository;
+            _emailService = emailService;
         }
 
         public async Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO)
@@ -106,38 +113,82 @@ namespace EXE201.BLL.Services
             return userDto;
         }
 
-        public async Task<GetUserDTOs> Register(RegisterUserDTOs registerUserDTOs)
+        public async Task<(bool Success, int UserId)> RegisterUserAsync(RegisterUserRequest request)
         {
-            if (registerUserDTOs.Password != registerUserDTOs.ConfirmPassword)
-                throw new ArgumentException("Password and confirm password do not match.");
-
-            var existingUserByUsername = await _userRepository.GetUserByUsername(registerUserDTOs.Username);
-            if (existingUserByUsername != null)
-                throw new ArgumentException("Username already exists.");
-
-            var existingUserByEmail = await _userRepository.GetUserByEmail(registerUserDTOs.Email);
-            if (existingUserByEmail != null)
-                throw new ArgumentException("Email already exists.");
-
-            var user = _mapper.Map<User>(registerUserDTOs);
-            user.AccountStatus = "Inactive";
-
-            if (user.Roles == null)
+            // Check if the username already exists
+            var existingUser = await _userRepository.GetUserByUsername(request.UserName);
+            if (existingUser != null)
             {
-                user.Roles = new List<Role>();
+                throw new ArgumentException("User Name already exists");
             }
 
+            // Check if the email already exists
+            var existingEmail = await _userRepository.FindAsync(x => x.Email == request.Email);
+            if (existingEmail.Any())
+            {
+                throw new ArgumentException("Email already exists");
+            }
+
+            var user = new User
+            {
+                UserName = request.UserName,
+                FullName = request.FullName,
+                Email = request.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                AccountStatus = "Inactive"
+            };
+
+            // Set default role for user
             var customerRole = await _roleRepository.GetRoleById(3);
-            if (customerRole == null)
+            if (customerRole != null)
             {
-                throw new InvalidOperationException("Role with RoleId = 3 does not exist.");
+                user.Roles.Add(customerRole);
             }
-            user.Roles.Add(customerRole);
 
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
 
-            return _mapper.Map<GetUserDTOs>(user);
+            var verificationCode = new Random().Next(100000, 999999).ToString();
+            var verifyCode = new VerifyCode
+            {
+                Id = IdGenerator.GenerateId(),
+                UserId = user.UserId,
+                Code = verificationCode
+            };
+
+            await _verifyCodeRepository.AddAsync(verifyCode);
+            await _verifyCodeRepository.SaveChangesAsync();
+
+            var emailSent = await _emailService.SendEmailAsync(new EmailDTO
+            {
+                ToEmail = user.Email,
+                Subject = "Verify your email",
+                Body = $"Please verify your email by entering this code in the app: {verificationCode}"
+            });
+
+            return (emailSent, user.UserId);
+        }
+
+        public async Task<bool> VerifyEmailWithCodeAsync(int userId, string code)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var verifyCode = await _verifyCodeRepository.FindAsync(v => v.UserId == userId && v.Code == code);
+            if (!verifyCode.Any())
+            {
+                return false;
+            }
+
+            user.AccountStatus = "Active";
+            await _userRepository.SaveChangesAsync();
+
+            await _verifyCodeRepository.Delete(verifyCode.First());
+
+            return true;
         }
 
         public async Task<User> UpdatePassword(string email, string password, int id)

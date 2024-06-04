@@ -40,7 +40,7 @@ builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IFeedbacksRepository, FeedbackRepository>();
 
-// Add services
+// Add Services
 builder.Services.AddScoped<IAddressServices, AddressServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IProductServices, ProductServices>();
@@ -60,7 +60,7 @@ builder.Services.AddScoped<IMembershipServices, MembershipServices>();
 builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IFeedbackServices, FeedbackServices>();
 
-// Add cors
+// Add Cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
