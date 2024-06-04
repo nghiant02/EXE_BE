@@ -22,10 +22,10 @@ namespace EXE201.Controllers
             return Ok(notifications);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetNotification(int id)
+        [HttpGet("{notificationId}")]
+        public async Task<IActionResult> GetNotification(int notificationId)
         {
-            var notification = await _notificationService.GetNotificationByIdAsync(id);
+            var notification = await _notificationService.GetNotificationByIdAsync(notificationId);
             if (notification == null)
             {
                 return NotFound();
@@ -52,9 +52,9 @@ namespace EXE201.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNotification(int id)
+        public async Task<IActionResult> DeleteNotification(int notificationId)
         {
-            await _notificationService.DeleteNotificationAsync(id);
+            await _notificationService.DeleteNotificationAsync(notificationId);
             return NoContent();
         }
     }

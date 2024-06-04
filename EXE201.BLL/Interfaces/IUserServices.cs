@@ -24,5 +24,6 @@ namespace EXE201.BLL.Interfaces
         Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView);
         Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
         Task<UserProfileDTO> GetUserProfile(int userId);
+        Task<User> UserUpdateAvartar(int id, UpdateAvatarUserDTO updateAvatarUserDTO);
     }
 }

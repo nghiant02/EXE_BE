@@ -19,7 +19,7 @@ namespace EXE201.Controllers
         [HttpGet("GetAllRatings")]
         public async Task<IActionResult> Get()
         {
-            var result = await _ratingServices.GetsApplicaition();
+            var result = await _ratingServices.GetRatings();
             return Ok(result);
         }
 

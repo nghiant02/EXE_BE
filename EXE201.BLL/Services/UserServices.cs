@@ -158,6 +158,23 @@ namespace EXE201.BLL.Services
             return updateUser;
         }
 
+        public async Task<User> UserUpdateAvartar(int id, UpdateAvatarUserDTO updateAvatarUserDTO)
+        {
+            var checkId = await _userRepository.FindAsync(x => x.UserId == id);
+            if (!checkId.Any())
+            {
+                throw new ArgumentException($"User with ID {id} not found");
+            }
+            var updateUser = _mapper.Map<User>(updateAvatarUserDTO);
+            updateUser.UserId = id;
+            updateUser.UserName = checkId.First().UserName;
+            updateUser.AccountStatus = checkId.First().AccountStatus;
+            updateUser.Password = checkId.First().Password;
+            updateUser.Addresses = checkId.First().Addresses;
+
+            return await _userRepository.UpdateUser(updateUser);
+        }
+
         public async Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView)
         {
             var oldUser = await _userRepository.FindAsync(x => x.UserId == id);
