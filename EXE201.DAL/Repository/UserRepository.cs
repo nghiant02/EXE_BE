@@ -219,15 +219,7 @@ namespace EXE201.DAL.Repository
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
-<<<<<<< ManageNotificaton
                     AccountStatus = u.UserStatus,
-                    Roles = u.Roles.Select(r => r.RoleName),
-                    MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
-=======
-                    AccountStatus = u.AccountStatus,
-                    Roles = u.Roles.FirstOrDefault().RoleName,
-                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
->>>>>>> main
                 })
                 .FirstOrDefaultAsync();
 
