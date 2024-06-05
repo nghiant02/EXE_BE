@@ -210,8 +210,6 @@ namespace EXE201.BLL.Services
             updateUser.UserName = checkId.First().UserName;
             updateUser.UserStatus = checkId.First().UserStatus;
             updateUser.Password = checkId.First().Password;
-            updateUser.Addresses = checkId.First().Addresses;
-
             return await _userRepository.UpdateUser(updateUser);
         }
 
@@ -228,29 +226,11 @@ namespace EXE201.BLL.Services
             updatingUser.UserStatus = oldUser.First().UserStatus;
             updatingUser.Password = oldUser.First().Password;
             updatingUser.ProfileImage = oldUser.First().ProfileImage;
+            updatingUser.HouseNumber = oldUser.First().HouseNumber;
+            updatingUser.StreetName = oldUser.First().StreetName;
+            updatingUser.District = oldUser.First().District;
+            updatingUser.CityProvince = oldUser.First().CityProvince;
 
-            var address = oldUser.First().Addresses.FirstOrDefault();
-            if (address != null)
-            {
-                address.Street = userView.Street;
-                address.City = userView.City;
-                address.State = userView.State;
-                address.PostalCode = userView.PostalCode;
-                address.Country = userView.Country;
-            }
-            else
-            {
-                address = new Address
-                {
-                    UserId = id,
-                    Street = userView.Street,
-                    City = userView.City,
-                    State = userView.State,
-                    PostalCode = userView.PostalCode,
-                    Country = userView.Country
-                };
-                updatingUser.Addresses.Add(address);
-            }
             return await _userRepository.UpdateUser(updatingUser);
         }
 

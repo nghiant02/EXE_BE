@@ -23,7 +23,6 @@ builder.Services.AddControllers().AddJsonOptions(
 
 // Add Repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -41,7 +40,6 @@ builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IFeedbacksRepository, FeedbackRepository>();
 
 // Add Services
-builder.Services.AddScoped<IAddressServices, AddressServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IRoleServices, RoleServices>();
