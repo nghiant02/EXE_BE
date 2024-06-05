@@ -121,7 +121,7 @@ namespace EXE201.BLL.Services
                 FullName = request.FullName,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                AccountStatus = "Inactive"
+                UserStatus = "Inactive"
             };
 
             // Set default role for user
@@ -171,7 +171,7 @@ namespace EXE201.BLL.Services
                 return false;
             }
 
-            user.AccountStatus = "Active";
+            user.UserStatus = "Active";
             await _userRepository.SaveChangesAsync();
 
             await _verifyCodeRepository.Delete(verifyCode.First());
@@ -206,7 +206,7 @@ namespace EXE201.BLL.Services
             var updatingUser = _mapper.Map<User>(userView);
             updatingUser.UserId = id;
             updatingUser.UserName = oldUser.First().UserName;
-            updatingUser.AccountStatus = oldUser.First().AccountStatus;
+            updatingUser.UserStatus = oldUser.First().UserStatus;
             updatingUser.Password = oldUser.First().Password;
             updatingUser.ProfileImage = oldUser.First().ProfileImage;
 
@@ -256,7 +256,7 @@ namespace EXE201.BLL.Services
             if (!passwordIsValid)
                 throw new ArgumentException("Invalid username or password.");
 
-            if (user.AccountStatus != "Active")
+            if (user.UserStatus != "Active")
                 throw new InvalidOperationException("User account is not active.");
 
             if (user.Password == password)

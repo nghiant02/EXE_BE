@@ -37,7 +37,7 @@ namespace EXE201.DAL.Repository
             var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
             if (checkUser != null)
             {
-                checkUser.AccountStatus = "Inactive";
+                checkUser.UserStatus = "Inactive";
 
                 _context.Users.Update(checkUser);
                 await _context.SaveChangesAsync();
@@ -88,7 +88,7 @@ namespace EXE201.DAL.Repository
                 existUser.Email = user.Email;
                 existUser.DateOfBirth = user.DateOfBirth;
                 existUser.ProfileImage = user.ProfileImage;
-                existUser.AccountStatus = user.AccountStatus;
+                existUser.UserStatus = user.UserStatus;
                 existUser.Deposits = user.Deposits;
                 existUser.Addresses = user.Addresses;
                 existUser.Carts = user.Carts;
@@ -135,7 +135,7 @@ namespace EXE201.DAL.Repository
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
-                    AccountStatus = u.AccountStatus,
+                    AccountStatus = u.UserStatus,
                     MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .AsQueryable();
@@ -208,7 +208,7 @@ namespace EXE201.DAL.Repository
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
-                    AccountStatus = u.AccountStatus,
+                    AccountStatus = u.UserStatus,
                     Roles = u.Roles.Select(r => r.RoleName),
                     MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
                 })
