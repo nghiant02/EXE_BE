@@ -50,7 +50,6 @@ namespace EXE201.DAL.Repository
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             return await _context.Users
-                .Include(x => x.Addresses)
                 .Include(x => x.Carts)
                 .Include(x => x.Deposits)
                 .Include(x => x.Feedbacks)
@@ -91,7 +90,6 @@ namespace EXE201.DAL.Repository
                 existUser.ProfileImage = user.ProfileImage;
                 existUser.UserStatus = user.UserStatus;
                 existUser.Deposits = user.Deposits;
-                existUser.Addresses = user.Addresses;
                 existUser.Carts = user.Carts;
                 existUser.Feedbacks = user.Feedbacks;
                 existUser.Memberships = user.Memberships;

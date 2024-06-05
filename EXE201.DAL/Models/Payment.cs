@@ -29,7 +29,6 @@ public partial class Payment
     public string PaymentMethod { get; set; }
 
     [StringLength(15)]
-    [Unicode(false)]
     public string PaymentStatus { get; set; }
 
     [ForeignKey("OrderId")]
