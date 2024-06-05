@@ -101,14 +101,13 @@ namespace EXE201.BLL.Services
         {
             var user = await _userRepository.GetUserByUsername(username);
 
-            if (user == null || user.Password != password)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
                 throw new ArgumentException("Invalid username or password.");
 
             if (user.AccountStatus != "Active")
                 throw new InvalidOperationException("User account is not active.");
 
             var userDto = _mapper.Map<GetUserDTOs>(user);
-            //userDto.Roles = user.Roles.Select(r => r.RoleName).ToList();
 
             return userDto;
         }

@@ -17,6 +17,5 @@ namespace EXE201.BLL.DTOs.UserDTOs
         public string Email { get; set; }
         public string Image { get; set; }
         public string Status { get; set; }
-        //public List<string> Roles { get; set; }
     }
 }

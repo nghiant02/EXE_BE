@@ -16,13 +16,12 @@ public partial class MembershipType
     public int MembershipTypeId { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string MembershipTypeName { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string MembershipDescription { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string MembershipBenefits { get; set; }
 
     [InverseProperty("MembershipType")]

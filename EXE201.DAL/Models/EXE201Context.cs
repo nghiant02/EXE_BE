@@ -59,14 +59,14 @@ public partial class EXE201Context : DbContext
     {
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasKey(e => e.AddressId).HasName("PK__Address__091C2A1BCA6BAFFA");
+            entity.HasKey(e => e.AddressId).HasName("PK__Address__091C2A1B686DC7AA");
 
             entity.HasOne(d => d.User).WithMany(p => p.Addresses).HasConstraintName("FK__Address__UserID__7B5B524B");
         });
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Cart__51BCD79700873C5A");
+            entity.HasKey(e => e.CartId).HasName("PK__Cart__51BCD797C6028C82");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Carts).HasConstraintName("FK__Cart__ProductID__787EE5A0");
 
@@ -75,12 +75,12 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A2B4BE98E6E");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A2B75F10BD4");
         });
 
         modelBuilder.Entity<Deposit>(entity =>
         {
-            entity.HasKey(e => e.DepositId).HasName("PK__Deposit__AB60DF514B50B0B6");
+            entity.HasKey(e => e.DepositId).HasName("PK__Deposit__AB60DF51B818C53D");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Deposits).HasConstraintName("FK__Deposit__OrderID__7D439ABD");
 
@@ -89,7 +89,7 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF67F8194B0");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF6D8FB991D");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Feedbacks).HasConstraintName("FK__Feedback__Produc__73BA3083");
 
@@ -98,14 +98,14 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Inventory>(entity =>
         {
-            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D33AAEAE1E");
+            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D3AB856BAC");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Inventories).HasConstraintName("FK__Inventory__Produ__6FE99F9F");
         });
 
         modelBuilder.Entity<Membership>(entity =>
         {
-            entity.HasKey(e => e.MembershipId).HasName("PK__Membersh__92A78599AA4C1A32");
+            entity.HasKey(e => e.MembershipId).HasName("PK__Membersh__92A78599FBE58D9A");
 
             entity.HasOne(d => d.MembershipType).WithMany(p => p.Memberships).HasConstraintName("FK__Membershi__Membe__7A672E12");
 
@@ -114,19 +114,19 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<MembershipType>(entity =>
         {
-            entity.HasKey(e => e.MembershipTypeId).HasName("PK__Membersh__F35A3E59A98BFD47");
+            entity.HasKey(e => e.MembershipTypeId).HasName("PK__Membersh__F35A3E59B608D020");
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32392FC554");
+            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32FE3A2BAA");
 
             entity.HasOne(d => d.User).WithMany(p => p.Notifications).HasConstraintName("FK__Notificat__UserI__71D1E811");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58E6EA9BBA");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58C10E3E36");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments).HasConstraintName("FK__Payment__OrderID__70DDC3D8");
 
@@ -135,14 +135,14 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Product__B40CC6ED3348DE92");
+            entity.HasKey(e => e.ProductId).HasName("PK__Product__B40CC6ED5453BBEA");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products).HasConstraintName("FK__Product__Categor__6C190EBB");
         });
 
         modelBuilder.Entity<Rating>(entity =>
         {
-            entity.HasKey(e => e.RatingId).HasName("PK__Rating__FCCDF85CF429E4E0");
+            entity.HasKey(e => e.RatingId).HasName("PK__Rating__FCCDF85C423EF953");
 
             entity.HasOne(d => d.Feedback).WithMany(p => p.Ratings).HasConstraintName("FK__Rating__Feedback__76969D2E");
 
@@ -153,14 +153,14 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<RentalOrder>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__RentalOr__C3905BAF45172F88");
+            entity.HasKey(e => e.OrderId).HasName("PK__RentalOr__C3905BAF2FAA30ED");
 
             entity.HasOne(d => d.User).WithMany(p => p.RentalOrders).HasConstraintName("FK__RentalOrd__UserI__6D0D32F4");
         });
 
         modelBuilder.Entity<RentalOrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailsId).HasName("PK__RentalOr__9DD74D9DACD341BD");
+            entity.HasKey(e => e.OrderDetailsId).HasName("PK__RentalOr__9DD74D9DD8768151");
 
             entity.HasOne(d => d.Order).WithMany(p => p.RentalOrderDetails).HasConstraintName("FK__RentalOrd__Order__6E01572D");
 
@@ -169,12 +169,12 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE3A21EFF44D");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE3AADA5E10F");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACBDA61EED");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCAC3EA217F7");
 
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
@@ -189,7 +189,7 @@ public partial class EXE201Context : DbContext
                         .HasConstraintName("FK__UserRole__UserID__6A30C649"),
                     j =>
                     {
-                        j.HasKey("UserId", "RoleId").HasName("PK__UserRole__AF27604F7DFAC1B0");
+                        j.HasKey("UserId", "RoleId").HasName("PK__UserRole__AF27604FB41D5988");
                         j.ToTable("UserRole");
                         j.IndexerProperty<int>("UserId").HasColumnName("UserID");
                         j.IndexerProperty<int>("RoleId").HasColumnName("RoleID");
@@ -198,7 +198,7 @@ public partial class EXE201Context : DbContext
 
         modelBuilder.Entity<VerifyCode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__VerifyCo__3214EC07382F4563");
+            entity.HasKey(e => e.Id).HasName("PK__VerifyCo__3214EC07241F7D68");
 
             entity.HasOne(d => d.User).WithMany(p => p.VerifyCodes).HasConstraintName("FK__VerifyCod__UserI__7F2BE32F");
         });

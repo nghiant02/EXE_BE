@@ -28,7 +28,6 @@ public partial class Membership
     public DateTime? EndDate { get; set; }
 
     [StringLength(10)]
-    [Unicode(false)]
     public string MembershipStatus { get; set; }
 
     [ForeignKey("MembershipTypeId")]

@@ -20,7 +20,6 @@ public partial class User
     public string UserName { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string FullName { get; set; }
 
     [StringLength(255)]
