@@ -153,7 +153,9 @@ namespace EXE201.BLL.Services
             {
                 Id = IdGenerator.GenerateId(),
                 UserId = user.UserId,
-                Code = verificationCode
+                Email = user.Email,
+                Code = verificationCode,
+                CreatedAt = DateTime.Now
             };
 
             await _verifyCodeRepository.AddAsync(verifyCode);
