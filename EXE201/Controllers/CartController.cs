@@ -23,10 +23,10 @@ namespace EXE201.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetCartById")]
-        public async Task<IActionResult> GetCartById(int cartId)
+        [HttpGet("GetCartByUserId")]
+        public async Task<IActionResult> GetCartById(int userId)
         {
-            var result = await _cartService.GetCartById(cartId);
+            var result = await _cartService.GetCartById(userId);
             return Ok(result);
         }
 

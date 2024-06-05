@@ -39,9 +39,9 @@ namespace EXE201.BLL.Services
             return await _cartRepository.GetAll();
         }
 
-        public async Task<Cart> GetCartById(int id)
+        public async Task<Cart> GetCartById(int userId)
         {
-            return await _cartRepository.GetCartById(id);
+            return await _cartRepository.GetCartById(userId);
         }
 
         public async Task<Cart> UpdateCart(Cart cart)
