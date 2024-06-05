@@ -67,11 +67,11 @@ namespace EXE201.DAL.Repository
             }
         }
 
-        public async Task<Cart> GetCartById(int id)
+        public async Task<Cart> GetCartById(int userId)
         {
             try
             {
-                var checkCart = await _context.Carts.Where(x => x.CartId == id)
+                var checkCart = await _context.Carts.Where(x => x.UserId == userId)
                     .Include(x => x.User)
                     .Include(x => x.Product)
                     .FirstOrDefaultAsync();
