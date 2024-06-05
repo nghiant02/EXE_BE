@@ -70,8 +70,8 @@ namespace EXE201.DAL.Repository
         public async Task<User> GetUserByUsername(string username)
         {
             return await _context.Users
-                .Include(x => x.Roles)
-                .FirstOrDefaultAsync(x => x.UserName == username);
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.UserName == username);
         }
 
         public async Task<User> UpdateUser(User user)

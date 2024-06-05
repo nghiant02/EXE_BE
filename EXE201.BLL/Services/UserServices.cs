@@ -26,14 +26,16 @@ namespace EXE201.BLL.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IEmailService _emailService;
         private readonly IVerifyCodeRepository _verifyCodeRepository;
+        private readonly IJwtService _jwtService;
 
-        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository, IVerifyCodeRepository verifyCodeRepository, IEmailService emailService)
+        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository, IEmailService emailService, IVerifyCodeRepository verifyCodeRepository, IJwtService jwtService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _roleRepository = roleRepository;
-            _verifyCodeRepository = verifyCodeRepository;
             _emailService = emailService;
+            _verifyCodeRepository = verifyCodeRepository;
+            _jwtService = jwtService;
         }
 
         public async Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO)
@@ -95,21 +97,6 @@ namespace EXE201.BLL.Services
         public async Task<UserProfileDTO> GetUserProfile(int userId)
         {
             return await _userRepository.GetUserProfile(userId);
-        }
-
-        public async Task<GetUserDTOs> Login(string username, string password)
-        {
-            var user = await _userRepository.GetUserByUsername(username);
-
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
-                throw new ArgumentException("Invalid username or password.");
-
-            if (user.AccountStatus != "Active")
-                throw new InvalidOperationException("User account is not active.");
-
-            var userDto = _mapper.Map<GetUserDTOs>(user);
-
-            return userDto;
         }
 
         public async Task<(bool Success, int UserId)> RegisterUserAsync(RegisterUserRequest request)
@@ -246,6 +233,51 @@ namespace EXE201.BLL.Services
                 updatingUser.Addresses.Add(address);
             }
             return await _userRepository.UpdateUser(updatingUser);
+        }
+
+        public async Task<LoginResponseDTOs> Login(string username, string password)
+        {
+            var user = await _userRepository.GetUserByUsername(username);
+
+            if (user == null)
+                throw new ArgumentException("Invalid username or password.");
+
+            bool passwordIsValid = false;
+
+            try
+            {
+                passwordIsValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
+            }
+            catch
+            {
+                passwordIsValid = user.Password == password;
+            }
+
+            if (!passwordIsValid)
+                throw new ArgumentException("Invalid username or password.");
+
+            if (user.AccountStatus != "Active")
+                throw new InvalidOperationException("User account is not active.");
+
+            if (user.Password == password)
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(password);
+                await _userRepository.UpdateUser(user);
+            }
+
+            var token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email);
+            var expirationDate = DateTime.UtcNow.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ssZ");
+
+            var response = new LoginResponseDTOs
+            {
+                Status = true,
+                Message = "Login successfully!",
+                JwtToken = token,
+                Expired = expirationDate,
+                // JwtRefreshToken = refreshToken
+            };
+
+            return response;
         }
     }
 }

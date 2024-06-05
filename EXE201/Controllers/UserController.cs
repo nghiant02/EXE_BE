@@ -42,24 +42,16 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginUserViewModel loginUserViewModel)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginUserDTOs loginUserDTOs)
         {
             try
             {
-                var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
-
-                if (result == null)
-                {
-                    return Unauthorized("Invalid username or password.");
-                }
-
-                var token = _jwtService.GenerateToken(result.UserId.ToString());
-
-                return Ok(new { Token = token, User = result });
+                var result = await _userServices.Login(loginUserDTOs.Username, loginUserDTOs.Password);
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { Status = false, Message = ex.Message });
             }
         }
 

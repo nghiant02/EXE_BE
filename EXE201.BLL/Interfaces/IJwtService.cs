@@ -8,6 +8,6 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IJwtService
     {
-        string GenerateToken(string userId);
+        string GenerateToken(string userId, string userName, string email);
     }
 }
