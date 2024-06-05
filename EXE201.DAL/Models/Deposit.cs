@@ -28,7 +28,6 @@ public partial class Deposit
     public DateTime? DateDeposited { get; set; }
 
     [StringLength(15)]
-    [Unicode(false)]
     public string DepositStatus { get; set; }
 
     [ForeignKey("OrderId")]

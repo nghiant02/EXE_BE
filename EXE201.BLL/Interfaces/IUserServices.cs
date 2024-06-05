@@ -13,17 +13,22 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IUserServices
     {
-        Task<GetUserDTOs> Login(string username, string password);
+        Task<LoginResponseDTOs> Login(string username, string password);
         Task<IEnumerable<User>> GetAllProfileUser();
         Task<bool> ChangeStatusUserToNotActive(int userId);
         Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO);
-        Task<GetUserDTOs> Register(RegisterUserDTOs registerUserDTOs);
         Task<User> ChangePasword(int id, ChangePasswordDTO changePasswordDTO);
         Task<User> FindUserByEmail(string email);
         Task<User> UpdatePassword(string email, string password, int id);
         Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView);
         Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
         Task<UserProfileDTO> GetUserProfile(int userId);
+<<<<<<< ManageNotificaton
+        Task<(bool Success, int UserId)> RegisterUserAsync(RegisterUserRequest request);
+        Task<bool> VerifyEmailWithCodeAsync(int userId, string code);
+        Task<(string Token, string RefreshToken)> RefreshTokenAsync(string token, string refreshToken);
+=======
         Task<User> UserUpdateAvartar(int id, UpdateAvatarUserDTO updateAvatarUserDTO);
+>>>>>>> main
     }
 }

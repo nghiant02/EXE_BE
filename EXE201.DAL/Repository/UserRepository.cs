@@ -38,7 +38,7 @@ namespace EXE201.DAL.Repository
             var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
             if (checkUser != null)
             {
-                checkUser.AccountStatus = "Inactive";
+                checkUser.UserStatus = "Inactive";
 
                 _context.Users.Update(checkUser);
                 await _context.SaveChangesAsync();
@@ -71,8 +71,8 @@ namespace EXE201.DAL.Repository
         public async Task<User> GetUserByUsername(string username)
         {
             return await _context.Users
-                .Include(x => x.Roles)
-                .FirstOrDefaultAsync(x => x.UserName == username);
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.UserName == username);
         }
 
         public async Task<User> UpdateUser(User user)
@@ -89,7 +89,7 @@ namespace EXE201.DAL.Repository
                 existUser.Email = user.Email;
                 existUser.DateOfBirth = user.DateOfBirth;
                 existUser.ProfileImage = user.ProfileImage;
-                existUser.AccountStatus = user.AccountStatus;
+                existUser.UserStatus = user.UserStatus;
                 existUser.Deposits = user.Deposits;
                 existUser.Addresses = user.Addresses;
                 existUser.Carts = user.Carts;
@@ -136,7 +136,7 @@ namespace EXE201.DAL.Repository
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
-                    AccountStatus = u.AccountStatus,
+                    AccountStatus = u.UserStatus,
                     MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .AsQueryable();
@@ -219,13 +219,30 @@ namespace EXE201.DAL.Repository
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
+<<<<<<< ManageNotificaton
+                    AccountStatus = u.UserStatus,
+                    Roles = u.Roles.Select(r => r.RoleName),
+                    MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
+=======
                     AccountStatus = u.AccountStatus,
                     Roles = u.Roles.FirstOrDefault().RoleName,
                     MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
+>>>>>>> main
                 })
                 .FirstOrDefaultAsync();
 
             return user;
+        }
+
+        public async Task<Token> GetRefreshTokenByUserId(string userId)
+        {
+            return await _context.Tokens.FirstOrDefaultAsync(t => t.UserId.ToString() == userId && t.Status == "Active");
+        }
+
+        public async Task UpdateToken(Token token)
+        {
+            _context.Tokens.Update(token);
+            await _context.SaveChangesAsync();
         }
     }
 }

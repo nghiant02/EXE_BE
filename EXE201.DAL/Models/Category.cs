@@ -16,14 +16,12 @@ public partial class Category
     public int CategoryId { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string CategoryName { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string CategoryDescription { get; set; }
 
     [StringLength(10)]
-    [Unicode(false)]
     public string CategoryStatus { get; set; }
 
     [InverseProperty("Category")]

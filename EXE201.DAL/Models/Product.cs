@@ -16,18 +16,15 @@ public partial class Product
     public int ProductId { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string ProductName { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string ProductDescription { get; set; }
 
     [StringLength(255)]
-    [Unicode(false)]
     public string ProductImage { get; set; }
 
     [StringLength(15)]
-    [Unicode(false)]
     public string ProductStatus { get; set; }
 
     public double? ProductPrice { get; set; }
@@ -36,19 +33,16 @@ public partial class Product
     public int? CategoryId { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string ProductSize { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string ProductColor { get; set; }
+
+    [StringLength(255)]
+    public string ProductColorImage { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
-
-    [StringLength(255)]
-    [Unicode(false)]
-    public string ProductColorImage { get; set; }
 
     [InverseProperty("Product")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();

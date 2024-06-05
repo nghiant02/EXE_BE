@@ -7,6 +7,9 @@ using System.Text;
 using EXE201.BLL.Services;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using EXE201.DAL.Models;
+using System.Security.Claims;
+using EXE201.DAL.DTOs.TokenDTOs;
 
 namespace EXE201.Controllers
 {
@@ -41,20 +44,73 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginUserViewModel loginUserViewModel)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginUserDTOs loginUserDTOs)
         {
             try
             {
-                var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
+                var result = await _userServices.Login(loginUserDTOs.Username, loginUserDTOs.Password);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Status = false, Message = ex.Message });
+            }
+        }
 
-                if (result == null)
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTOs refreshTokenDTOs)
+        {
+            try
+            {
+                var (newToken, newRefreshToken) = await _userServices.RefreshTokenAsync(refreshTokenDTOs.Token, refreshTokenDTOs.RefreshToken);
+                return Ok(new
                 {
-                    return Unauthorized("Invalid username or password.");
+                    Token = newToken,
+                    RefreshToken = newRefreshToken
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("RegisterUser")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _userServices.RegisterUserAsync(request);
+                if (result.Success)
+                {
+                    return Ok(new { Message = "Registration successful, please check your email to verify your account.", UserId = result.UserId });
                 }
 
-                var token = _jwtService.GenerateToken(result.UserId.ToString());
+                return BadRequest("An error occurred while registering the user.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-                return Ok(new { Token = token, User = result });
+        [HttpPost("VerifyCode")]
+        public async Task<IActionResult> VerifyEmailWithCode(int userId, string code)
+        {
+            try
+            {
+                var result = await _userServices.VerifyEmailWithCodeAsync(userId, code);
+                if (result)
+                {
+                    return Ok(new { Message = "Email verified successfully." });
+                }
+
+                return BadRequest("Email verification failed.");
             }
             catch (Exception ex)
             {
@@ -68,21 +124,6 @@ namespace EXE201.Controllers
             try
             {
                 var result = await _userServices.AddUserForStaff(addNewUserDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterAsync(
-            [FromBody] RegisterUserDTOs registerUserDTOs)
-        {
-            try
-            {
-                var result = await _userServices.Register(registerUserDTOs);
                 return Ok(result);
             }
             catch (Exception ex)

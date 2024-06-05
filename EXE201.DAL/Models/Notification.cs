@@ -18,7 +18,7 @@ public partial class Notification
     [Column("UserID")]
     public int? UserId { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string NotificationMessage { get; set; }
 
     [Column(TypeName = "datetime")]

@@ -19,15 +19,12 @@ public partial class Address
     public int? UserId { get; set; }
 
     [StringLength(255)]
-    [Unicode(false)]
     public string Street { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string City { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string State { get; set; }
 
     [StringLength(20)]
@@ -35,7 +32,6 @@ public partial class Address
     public string PostalCode { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string Country { get; set; }
 
     [ForeignKey("UserId")]

@@ -47,7 +47,7 @@ namespace EXE201.Controllers
                 string code = IdGenerator.GenerateRandomVerifyCode();
                 await _forgotPawwordService.AddCode(code, email);
                 EmailDTO emailDto = new EmailDTO();
-                emailDto.To = email;
+                emailDto.ToEmail = email;
                 emailDto.Subject = "Verification Code";
                 emailDto.Body = GetHtmlcontent(code);
                 await _emailService.SendEmail(emailDto);

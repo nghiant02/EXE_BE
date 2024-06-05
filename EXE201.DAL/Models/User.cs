@@ -20,7 +20,6 @@ public partial class User
     public string UserName { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string FullName { get; set; }
 
     [StringLength(255)]
@@ -45,7 +44,7 @@ public partial class User
 
     [StringLength(10)]
     [Unicode(false)]
-    public string AccountStatus { get; set; }
+    public string UserStatus { get; set; }
 
     [InverseProperty("User")]
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
@@ -73,6 +72,9 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<RentalOrder> RentalOrders { get; set; } = new List<RentalOrder>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();
 
     [InverseProperty("User")]
     public virtual ICollection<VerifyCode> VerifyCodes { get; set; } = new List<VerifyCode>();

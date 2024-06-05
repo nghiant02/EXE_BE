@@ -8,33 +8,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EXE201.DAL.Models;
 
-[Table("Membership")]
-public partial class Membership
+[Table("Token")]
+public partial class Token
 {
     [Key]
-    [Column("MembershipID")]
-    public int MembershipId { get; set; }
+    [Column("TokenID")]
+    public int TokenId { get; set; }
 
     [Column("UserID")]
     public int? UserId { get; set; }
 
-    [Column("MembershipTypeID")]
-    public int? MembershipTypeId { get; set; }
+    [Column(TypeName = "text")]
+    public string AccessToken { get; set; }
+
+    [Column(TypeName = "text")]
+    public string RefreshToken { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? StartDate { get; set; }
+    public DateTime? IssuedAt { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? EndDate { get; set; }
+    public DateTime? ExpiresAt { get; set; }
 
     [StringLength(10)]
-    public string MembershipStatus { get; set; }
-
-    [ForeignKey("MembershipTypeId")]
-    [InverseProperty("Memberships")]
-    public virtual MembershipType MembershipType { get; set; }
+    public string Status { get; set; }
 
     [ForeignKey("UserId")]
-    [InverseProperty("Memberships")]
+    [InverseProperty("Tokens")]
     public virtual User User { get; set; }
 }

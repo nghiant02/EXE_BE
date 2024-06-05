@@ -19,7 +19,6 @@ public partial class RentalOrder
     public int? UserId { get; set; }
 
     [StringLength(15)]
-    [Unicode(false)]
     public string OrderStatus { get; set; }
 
     [Column(TypeName = "datetime")]
@@ -32,7 +31,6 @@ public partial class RentalOrder
     public DateTime? ReturnDate { get; set; }
 
     [StringLength(255)]
-    [Unicode(false)]
     public string ReturnReason { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
