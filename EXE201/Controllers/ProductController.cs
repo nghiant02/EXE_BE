@@ -27,9 +27,9 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetProductById")]
-        public async Task<IActionResult> GetProductById([FromQuery] int id)
+        public async Task<IActionResult> GetProductById([FromQuery] int productId)
         {
-            var response = await _productServices.GetById(id);
+            var response = await _productServices.GetById(productId);
             if (response.ProductStatus == "Error")
             {
                 return Conflict(response);
@@ -49,9 +49,9 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("DeleteProduct")]
-        public async Task<IActionResult> DeleteProduct([FromQuery] int id)
+        public async Task<IActionResult> DeleteProduct([FromQuery] int productId)
         {
-            var response = await _productServices.DeleteProduct(id);
+            var response = await _productServices.DeleteProduct(productId);
             if (response.Status == "Error")
             {
                 return Conflict(response);
@@ -60,9 +60,9 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("RecoverProduct")]
-        public async Task<IActionResult> RecoverProduct([FromQuery] int id)
+        public async Task<IActionResult> RecoverProduct([FromQuery] int productId)
         {
-            var response = await _productServices.RecoverProduct(id);
+            var response = await _productServices.RecoverProduct(productId);
             if (response.Status == "Error")
             {
                 return Conflict(response);

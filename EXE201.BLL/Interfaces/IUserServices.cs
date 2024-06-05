@@ -1,4 +1,5 @@
 ﻿using EXE201.BLL.DTOs.UserDTOs;
+using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Models;
 using LMSystem.Repository.Helpers;
@@ -20,10 +21,14 @@ namespace EXE201.BLL.Interfaces
         Task<User> FindUserByEmail(string email);
         Task<User> UpdatePassword(string email, string password, int id);
         Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView);
-        Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
+        Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
         Task<UserProfileDTO> GetUserProfile(int userId);
+<<<<<<< ManageNotificaton
         Task<(bool Success, int UserId)> RegisterUserAsync(RegisterUserRequest request);
         Task<bool> VerifyEmailWithCodeAsync(int userId, string code);
         Task<(string Token, string RefreshToken)> RefreshTokenAsync(string token, string refreshToken);
+=======
+        Task<User> UserUpdateAvartar(int id, UpdateAvatarUserDTO updateAvatarUserDTO);
+>>>>>>> main
     }
 }

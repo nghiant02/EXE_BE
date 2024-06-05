@@ -15,6 +15,7 @@ namespace EXE201.BLL.Services
         private readonly IVerifyCodeRepository _verifyCodeRepository;
         private readonly IUserRepository _userRepository;
         public ForgotPasswordService(IVerifyCodeRepository verifyCodeRepository, IUserRepository userRepository)
+
         {
             _verifyCodeRepository = verifyCodeRepository;
             _userRepository = userRepository;

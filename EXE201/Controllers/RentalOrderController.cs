@@ -20,9 +20,9 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetRentalOrderDetail")]
-        public async Task<IActionResult> GetRentalOrderDetail(int id)
+        public async Task<IActionResult> GetRentalOrderDetail(int orderId)
         {
-            var result = await _rentalOrderDetailServices.GetRentalOrderDetailById(id);
+            var result = await _rentalOrderDetailServices.GetRentalOrderDetailById(orderId);
             return Ok(result);
         }
 

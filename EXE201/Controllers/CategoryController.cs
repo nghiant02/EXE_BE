@@ -31,11 +31,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("GetCategoryById")]
-    public async Task<ActionResult> GetCategoryById(int id)
+    public async Task<ActionResult> GetCategoryById(int categoryId)
     {
         try
         {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
             return Ok(category);
         }
         catch (Exception ex)
@@ -87,11 +87,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("UpdateCategoryStatus")]
-    public async Task<ActionResult> UpdateCategoryStatus(int id, [FromBody] string status)
+    public async Task<ActionResult> UpdateCategoryStatus(int categoryId, [FromBody] string status)
     {
         try
         {
-            await _categoryService.UpdateCategoryStatusAsync(id, status);
+            await _categoryService.UpdateCategoryStatusAsync(categoryId, status);
             return NoContent();
         }
         catch (Exception ex)

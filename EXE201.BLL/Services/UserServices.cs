@@ -2,7 +2,11 @@
 using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
+<<<<<<< ManageNotificaton
 using EXE201.DAL.DTOs.EmailDTOs;
+=======
+using EXE201.DAL.DTOs;
+>>>>>>> main
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
@@ -91,7 +95,7 @@ namespace EXE201.BLL.Services
             return allUser;
         }
 
-        public async Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
+        public async Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
         {
             return await _userRepository.GetFilteredUser(filter);
         }
@@ -196,6 +200,23 @@ namespace EXE201.BLL.Services
             var updateUser = await _userRepository.UpdateUser(existUser);
             await _verifyCodeRepository.Delete(verifyCode);
             return updateUser;
+        }
+
+        public async Task<User> UserUpdateAvartar(int id, UpdateAvatarUserDTO updateAvatarUserDTO)
+        {
+            var checkId = await _userRepository.FindAsync(x => x.UserId == id);
+            if (!checkId.Any())
+            {
+                throw new ArgumentException($"User with ID {id} not found");
+            }
+            var updateUser = _mapper.Map<User>(updateAvatarUserDTO);
+            updateUser.UserId = id;
+            updateUser.UserName = checkId.First().UserName;
+            updateUser.AccountStatus = checkId.First().AccountStatus;
+            updateUser.Password = checkId.First().Password;
+            updateUser.Addresses = checkId.First().Addresses;
+
+            return await _userRepository.UpdateUser(updateUser);
         }
 
         public async Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView)
