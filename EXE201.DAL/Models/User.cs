@@ -46,8 +46,17 @@ public partial class User
     [Unicode(false)]
     public string UserStatus { get; set; }
 
-    [InverseProperty("User")]
-    public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+    [StringLength(50)]
+    public string HouseNumber { get; set; }
+
+    [StringLength(255)]
+    public string StreetName { get; set; }
+
+    [StringLength(100)]
+    public string District { get; set; }
+
+    [StringLength(100)]
+    public string CityProvince { get; set; }
 
     [InverseProperty("User")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
