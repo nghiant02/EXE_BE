@@ -148,21 +148,28 @@ namespace EXE201.Controllers
 
         [HttpPut("Change-Password")]
         public async Task<IActionResult> UpdatePassword(
-            int id, ChangePasswordDTO changePassword)
+            int userId, ChangePasswordDTO changePassword)
         {
-            var user = await _userServices.ChangePasword(id, changePassword);
+            var user = await _userServices.ChangePasword(userId, changePassword);
             return Ok(user);
         }
 
         [HttpPut("Update-Profile")]
-        public async Task<IActionResult> UpdateUser([FromQuery] [Required] int id, UpdateProfileUserDTO userView)
+        public async Task<IActionResult> UpdateUser([FromQuery] [Required] int userId, UpdateProfileUserDTO userView)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = await _userServices.UserUpdateUser(id, userView);
+            var user = await _userServices.UserUpdateUser(userId, userView);
             return Ok(user);
+        }
+
+        [HttpPut("UpdateAvatar")]
+        public async Task<IActionResult> UpdateAvatar([FromQuery][Required] int userId, UpdateAvatarUserDTO updateAvatarUserDTO)
+        {
+            var result = await _userServices.UserUpdateAvartar(userId, updateAvatarUserDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetFilteredUser")]

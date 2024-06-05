@@ -29,7 +29,8 @@ namespace EXE201.BLL.DTOs
             CreateMap<Notification, NotificationDto>()
                             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
             CreateMap<AddNewCartDTO, Cart>();
-            CreateMap<AddRatingDTO, Rating>();           
+            CreateMap<AddRatingDTO, Rating>();
+            CreateMap<UpdateAvatarUserDTO, User>();
         }
     }
 }

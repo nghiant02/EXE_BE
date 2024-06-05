@@ -24,20 +24,51 @@ namespace EXE201.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<Rating> AddRating(AddRatingDTO addRatingDTO)
+        public async Task<AddRatingDTO> AddRating(AddRatingDTO addRatingDTO)
         {
             try
             {
-                var rating = _mapper.Map<Rating>(addRatingDTO);
+                var rating = new Rating
+                {
+                    UserId = addRatingDTO.UserId,
+                    ProductId = addRatingDTO.ProductId,
+                    RatingValue = addRatingDTO.RatingValue,
+                    DateGiven = addRatingDTO.DateGiven
+                };
+
+                if (!string.IsNullOrEmpty(addRatingDTO.FeedbackComment) || !string.IsNullOrEmpty(addRatingDTO.FeedbackImage))
+                {
+                    var feedback = new Feedback
+                    {
+                        UserId = addRatingDTO.UserId,
+                        ProductId = addRatingDTO.ProductId,
+                        FeedbackComment = addRatingDTO.FeedbackComment,
+                        FeedbackImage = addRatingDTO.FeedbackImage,
+                        DateGiven = addRatingDTO.DateGiven,
+                        FeedbackStatus = "Pending"
+                    };
+                    rating.Feedback = feedback;
+                }
+
                 await _ratingRepository.AddAsync(rating);
                 await _ratingRepository.SaveChangesAsync();
-                return rating;
+
+                var result = new AddRatingDTO
+                {
+                    UserId = rating.UserId.Value,
+                    ProductId = rating.ProductId.Value,
+                    RatingValue = rating.RatingValue.Value,
+                    DateGiven = rating.DateGiven.Value,
+                    FeedbackComment = rating.Feedback?.FeedbackComment,
+                    FeedbackImage = rating.Feedback?.FeedbackImage
+                };
+
+                return result;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
         }
 
         public async Task<IEnumerable<ProductRatingFeedbackDTO>> GetProductRatingsAndFeedback(int productId)
@@ -45,7 +76,7 @@ namespace EXE201.BLL.Services
             return await _ratingRepository.GetProductRatingsAndFeedback(productId);
         }
 
-        public async Task<IEnumerable<Rating>> GetsApplicaition()
+        public async Task<IEnumerable<Rating>> GetRatings()
         {
             return await _ratingRepository.GetRatings();
         }
