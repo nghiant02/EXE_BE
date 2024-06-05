@@ -23,6 +23,7 @@ namespace EXE201.DAL.Interfaces
         Task<Role> GetRoleById(int roleId);
         Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter);
         Task<UserProfileDTO> GetUserProfile(int userId);
+        Task UpdateToken(Token token);
+        Task<Token> GetRefreshTokenByUserId(string userId);
     }
-
 }

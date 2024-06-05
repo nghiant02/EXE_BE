@@ -8,6 +8,8 @@ using EXE201.BLL.Services;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using EXE201.DAL.Models;
+using System.Security.Claims;
+using EXE201.DAL.DTOs.TokenDTOs;
 
 namespace EXE201.Controllers
 {
@@ -52,6 +54,24 @@ namespace EXE201.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTOs refreshTokenDTOs)
+        {
+            try
+            {
+                var (newToken, newRefreshToken) = await _userServices.RefreshTokenAsync(refreshTokenDTOs.Token, refreshTokenDTOs.RefreshToken);
+                return Ok(new
+                {
+                    Token = newToken,
+                    RefreshToken = newRefreshToken
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 

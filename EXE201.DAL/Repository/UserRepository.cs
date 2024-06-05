@@ -216,5 +216,16 @@ namespace EXE201.DAL.Repository
 
             return user;
         }
+
+        public async Task<Token> GetRefreshTokenByUserId(string userId)
+        {
+            return await _context.Tokens.FirstOrDefaultAsync(t => t.UserId.ToString() == userId && t.Status == "Active");
+        }
+
+        public async Task UpdateToken(Token token)
+        {
+            _context.Tokens.Update(token);
+            await _context.SaveChangesAsync();
+        }
     }
 }

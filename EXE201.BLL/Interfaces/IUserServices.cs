@@ -24,5 +24,6 @@ namespace EXE201.BLL.Interfaces
         Task<UserProfileDTO> GetUserProfile(int userId);
         Task<(bool Success, int UserId)> RegisterUserAsync(RegisterUserRequest request);
         Task<bool> VerifyEmailWithCodeAsync(int userId, string code);
+        Task<(string Token, string RefreshToken)> RefreshTokenAsync(string token, string refreshToken);
     }
 }

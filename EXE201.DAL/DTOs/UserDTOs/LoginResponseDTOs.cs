@@ -11,8 +11,8 @@ namespace EXE201.DAL.DTOs.UserDTOs
     {
         public bool Status { get; set; }
         public string Message { get; set; }
-        public string JwtToken { get; set; }
+        public string Token { get; set; }
+        public string RefreshToken { get; set; }
         public string Expired { get; set; }
-        public string JwtRefreshToken { get; set; }
     }
 }

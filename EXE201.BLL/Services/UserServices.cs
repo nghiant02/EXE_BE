@@ -8,10 +8,12 @@ using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using EXE201.DAL.Repository;
 using LMSystem.Repository.Helpers;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Crypto.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Tools.Tools;
@@ -265,19 +267,58 @@ namespace EXE201.BLL.Services
                 await _userRepository.UpdateUser(user);
             }
 
-            var token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email);
+            var roles = user.Roles.Select(r => r.RoleName).ToList();
+            var token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, roles);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            var tokenEntity = new Token
+            {
+                UserId = user.UserId,
+                AccessToken = token,
+                RefreshToken = refreshToken,
+                IssuedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(30),
+                Status = "Active"
+            };
+            await _userRepository.UpdateToken(tokenEntity);
+
             var expirationDate = DateTime.UtcNow.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ssZ");
 
             var response = new LoginResponseDTOs
             {
                 Status = true,
                 Message = "Login successfully!",
-                JwtToken = token,
-                Expired = expirationDate,
-                // JwtRefreshToken = refreshToken
+                Token = token,
+                RefreshToken = refreshToken,
+                Expired = expirationDate
             };
 
             return response;
+        }
+
+        public async Task<(string Token, string RefreshToken)> RefreshTokenAsync(string token, string refreshToken)
+        {
+            var principal = _jwtService.GetPrincipalFromExpiredToken(token);
+            var userId = principal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            var savedToken = await _userRepository.GetRefreshTokenByUserId(userId);
+            if (savedToken.RefreshToken != refreshToken || savedToken.ExpiresAt <= DateTime.UtcNow)
+            {
+                throw new SecurityTokenException("Invalid refresh token");
+            }
+
+            var user = await _userRepository.GetUserById(int.Parse(userId));
+            var roles = user.Roles.Select(r => r.RoleName).ToList();
+            var newJwtToken = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, roles);
+            var newRefreshToken = _jwtService.GenerateRefreshToken();
+
+            // Update refresh token in the database
+            savedToken.RefreshToken = newRefreshToken;
+            savedToken.IssuedAt = DateTime.UtcNow;
+            savedToken.ExpiresAt = DateTime.UtcNow.AddMinutes(30);
+            await _userRepository.UpdateToken(savedToken);
+
+            return (newJwtToken, newRefreshToken);
         }
     }
 }
