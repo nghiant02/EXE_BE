@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
-<<<<<<< ManageNotificaton
 using EXE201.DAL.DTOs.EmailDTOs;
-=======
 using EXE201.DAL.DTOs;
->>>>>>> main
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
@@ -211,7 +208,7 @@ namespace EXE201.BLL.Services
             var updateUser = _mapper.Map<User>(updateAvatarUserDTO);
             updateUser.UserId = id;
             updateUser.UserName = checkId.First().UserName;
-            updateUser.AccountStatus = checkId.First().AccountStatus;
+            updateUser.UserStatus = checkId.First().UserStatus;
             updateUser.Password = checkId.First().Password;
             updateUser.Addresses = checkId.First().Addresses;
 
