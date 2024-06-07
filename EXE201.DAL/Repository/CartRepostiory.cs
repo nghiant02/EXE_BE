@@ -15,7 +15,7 @@ namespace EXE201.DAL.Repository
     {
         public CartRepostiory(EXE201Context context) : base(context)
         {
-        }
+        }   
 
         public async Task<Cart> AddNewCart(Cart cart)
         {

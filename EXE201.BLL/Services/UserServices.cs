@@ -67,6 +67,13 @@ namespace EXE201.BLL.Services
             {
                 throw new ArgumentException("Id does not exist!!");
             }
+
+            var checkRoleUser = await _userRepository.FindAsync(x => x.UserId == userId);
+            var roleName = checkRoleUser.First().Roles.First().RoleName;
+            if (roleName == "Admin")
+            {
+                throw new UnauthorizedAccessException("Admin users cannot change their own status.");
+            }
             await _userRepository.ChangeStatusUserToNotActive(existUser.UserId);
             return true;
         }
