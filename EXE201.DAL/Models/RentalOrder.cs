@@ -15,6 +15,9 @@ public partial class RentalOrder
     [Column("OrderID")]
     public int OrderId { get; set; }
 
+    [Column("CartID")]
+    public int? CartId { get; set; }
+
     [Column("UserID")]
     public int? UserId { get; set; }
 
@@ -35,6 +38,10 @@ public partial class RentalOrder
 
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? OrderTotal { get; set; }
+
+    [ForeignKey("CartId")]
+    [InverseProperty("RentalOrders")]
+    public virtual Cart Cart { get; set; }
 
     [InverseProperty("Order")]
     public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();

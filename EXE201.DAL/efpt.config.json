@@ -23,11 +23,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Color]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Conversations]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Deposit]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[Feedback]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Image]",
          "ObjectType": 0
       },
       {
@@ -43,6 +55,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Messages]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Notification]",
          "ObjectType": 0
       },
@@ -51,7 +67,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[PaymentMethod]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Product]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductDetail]",
          "ObjectType": 0
       },
       {
@@ -68,6 +92,10 @@
       },
       {
          "Name": "[dbo].[Role]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Size]",
          "ObjectType": 0
       },
       {

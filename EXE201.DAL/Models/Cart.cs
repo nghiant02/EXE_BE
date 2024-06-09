@@ -27,6 +27,9 @@ public partial class Cart
     [InverseProperty("Carts")]
     public virtual Product Product { get; set; }
 
+    [InverseProperty("Cart")]
+    public virtual ICollection<RentalOrder> RentalOrders { get; set; } = new List<RentalOrder>();
+
     [ForeignKey("UserId")]
     [InverseProperty("Carts")]
     public virtual User User { get; set; }
