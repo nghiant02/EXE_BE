@@ -33,7 +33,7 @@ namespace EXE201.DAL.Repository
             return await _context.Users.OrderByDescending(x => x.UserId).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IEnumerable<AllProfileUser>> GetAllUsers()
         {
             return await _context.Users
                 // .Include(x => x.Carts)
@@ -45,9 +45,23 @@ namespace EXE201.DAL.Repository
                 // .Include(x => x.RentalOrders)
                 // .Include(x => x.Ratings)
                 .Include(x => x.Roles)
+                .Select(x => new AllProfileUser
+                {
+                    UserId = x.UserId,
+                    UserName = x.UserName,
+                    FullName = x.FullName,
+                    Phone = x.Phone,
+                    Gender = x.Gender,
+                    DateOfBirth = x.DateOfBirth,
+                    Email = x.Email,
+                    ProfileImage = x.ProfileImage,
+                    UserStatus = x.UserStatus,
+                    Roles = x.Roles.Select(r => r.RoleName).ToList()
+                })
                 .OrderByDescending(x => x.UserId)
                 .ToListAsync();
         }
+
 
         public async Task<User> GetUserById(int userId)
         {

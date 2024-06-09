@@ -82,7 +82,7 @@ namespace EXE201.BLL.Services
             return user.First();
         }
 
-        public async Task<IEnumerable<User>> GetAllProfileUser()
+        public async Task<IEnumerable<AllProfileUser>> GetAllProfileUser()
         {
             var allUser = await _userRepository.GetAllUsers();
             if (allUser == null)
