@@ -6,16 +6,9 @@ using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
-using EXE201.DAL.Repository;
-using LMSystem.Repository.Helpers;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Crypto.Generators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+
 using Tools.Tools;
 
 
@@ -67,7 +60,15 @@ namespace EXE201.BLL.Services
             {
                 throw new ArgumentException("Id does not exist!!");
             }
-            await _userRepository.ChangeStatusUserToNotActive(existUser.UserId);
+
+            var isAdmin = existUser.Roles.Any(x => x.RoleName == "Admin");
+            if (isAdmin)
+            {
+                throw new UnauthorizedAccessException("Admin users cannot change their own status.");
+            }
+            
+            existUser.UserStatus = "Inactive";
+            await _userRepository.UpdateUser(existUser);
             return true;
         }
 

@@ -33,38 +33,27 @@ namespace EXE201.DAL.Repository
             return await _context.Users.OrderByDescending(x => x.UserId).FirstOrDefaultAsync();
         }
 
-        public async Task<User> ChangeStatusUserToNotActive(int id)
-        {
-            var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
-            if (checkUser != null)
-            {
-                checkUser.UserStatus = "Inactive";
-
-                _context.Users.Update(checkUser);
-                await _context.SaveChangesAsync();
-                return checkUser;
-            }
-            return null;
-        }
-
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             return await _context.Users
-                .Include(x => x.Carts)
-                .Include(x => x.Deposits)
-                .Include(x => x.Feedbacks)
-                .Include(x => x.Memberships)
-                .Include(x => x.Notifications)
-                .Include(x => x.Payments)
-                .Include(x => x.RentalOrders)
-                .Include(x => x.Ratings)
+                // .Include(x => x.Carts)
+                // .Include(x => x.Deposits)
+                // .Include(x => x.Feedbacks)
+                // .Include(x => x.Memberships)
+                // .Include(x => x.Notifications)
+                // .Include(x => x.Payments)
+                // .Include(x => x.RentalOrders)
+                // .Include(x => x.Ratings)
+                .Include(x => x.Roles)
                 .OrderByDescending(x => x.UserId)
                 .ToListAsync();
         }
 
         public async Task<User> GetUserById(int userId)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            return await _context.Users
+                .Include(x => x.Roles)
+                .FirstAsync(x => x.UserId == userId);
         }
 
         public async Task<User> GetUserByUsername(string username)
@@ -103,6 +92,7 @@ namespace EXE201.DAL.Repository
                 await _context.SaveChangesAsync();
                 return existUser;
             }
+
             return null;
         }
 
@@ -170,10 +160,14 @@ namespace EXE201.DAL.Repository
                         query = filter.Sort ? query.OrderByDescending(u => u.FullName) : query.OrderBy(u => u.FullName);
                         break;
                     case "dateofbirth":
-                        query = filter.Sort ? query.OrderByDescending(u => u.DateOfBirth) : query.OrderBy(u => u.DateOfBirth);
+                        query = filter.Sort
+                            ? query.OrderByDescending(u => u.DateOfBirth)
+                            : query.OrderBy(u => u.DateOfBirth);
                         break;
                     case "membershiptypename":
-                        query = filter.Sort ? query.OrderByDescending(u => u.MembershipTypeName) : query.OrderBy(u => u.MembershipTypeName);
+                        query = filter.Sort
+                            ? query.OrderByDescending(u => u.MembershipTypeName)
+                            : query.OrderBy(u => u.MembershipTypeName);
                         break;
                     default:
                         query = query.OrderBy(u => u.UserId); // Default sort order
@@ -205,7 +199,7 @@ namespace EXE201.DAL.Repository
             var user = await _context.Users
                 .Include(u => u.Roles)
                 .Include(u => u.Memberships)
-                    .ThenInclude(m => m.MembershipType)
+                .ThenInclude(m => m.MembershipType)
                 .Where(u => u.UserId == userId)
                 .Select(u => new UserProfileDTO
                 {
@@ -218,6 +212,8 @@ namespace EXE201.DAL.Repository
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
                     AccountStatus = u.UserStatus,
+                    Roles = string.Join(", ", u.Roles.Select(r => r.RoleName)),
+                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .FirstOrDefaultAsync();
 
@@ -226,7 +222,8 @@ namespace EXE201.DAL.Repository
 
         public async Task<Token> GetRefreshTokenByUserId(string userId)
         {
-            return await _context.Tokens.FirstOrDefaultAsync(t => t.UserId.ToString() == userId && t.Status == "Active");
+            return await _context.Tokens.FirstOrDefaultAsync(t =>
+                t.UserId.ToString() == userId && t.Status == "Active");
         }
 
         public async Task UpdateToken(Token token)
