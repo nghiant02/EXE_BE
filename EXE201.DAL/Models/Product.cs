@@ -16,6 +16,9 @@ public partial class Product
     public int ProductId { get; set; }
 
     [StringLength(100)]
+    public string ProductTitle { get; set; }
+
+    [StringLength(100)]
     public string ProductName { get; set; }
 
     [Column(TypeName = "ntext")]
@@ -32,15 +35,6 @@ public partial class Product
     [Column("CategoryID")]
     public int? CategoryId { get; set; }
 
-    [StringLength(50)]
-    public string ProductSize { get; set; }
-
-    [StringLength(50)]
-    public string ProductColor { get; set; }
-
-    [StringLength(255)]
-    public string ProductColorImage { get; set; }
-
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
@@ -56,6 +50,9 @@ public partial class Product
 
     [InverseProperty("Product")]
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
+
+    [InverseProperty("Product")]
+    public virtual ICollection<ProductDetail> ProductDetails { get; set; } = new List<ProductDetail>();
 
     [InverseProperty("Product")]
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();

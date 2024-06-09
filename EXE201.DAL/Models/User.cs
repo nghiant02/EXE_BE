@@ -61,6 +61,12 @@ public partial class User
     [InverseProperty("User")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
+    [InverseProperty("User1")]
+    public virtual ICollection<Conversation> ConversationUser1s { get; set; } = new List<Conversation>();
+
+    [InverseProperty("User2")]
+    public virtual ICollection<Conversation> ConversationUser2s { get; set; } = new List<Conversation>();
+
     [InverseProperty("User")]
     public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();
 
@@ -69,6 +75,9 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<Membership> Memberships { get; set; } = new List<Membership>();
+
+    [InverseProperty("Sender")]
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     [InverseProperty("User")]
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();

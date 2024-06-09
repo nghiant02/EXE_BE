@@ -26,7 +26,7 @@ namespace EXE201.DAL.Repository
                 {
                     OrderId = paymentDetails.OrderId,
                     PaymentAmount = paymentDetails.Amount,
-                    PaymentMethod = "Pending",
+                    //PaymentMethod = "Pending",
                     PaymentStatus = "Pending"
                 };
                 await _context.Payments.AddAsync(payment);
@@ -42,7 +42,7 @@ namespace EXE201.DAL.Repository
                 .FirstOrDefaultAsync(p => p.OrderId == processPayment.OrderId && p.PaymentStatus == "Pending");
             if (payment != null)
             {
-                payment.PaymentMethod = processPayment.PaymentMethod;
+                //payment.PaymentMethod = processPayment.PaymentMethod;
                 payment.PaymentStatus = processPayment.Confirm ? "Confirmed" : "Pending";
                 _context.Payments.Update(payment);
 
