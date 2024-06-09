@@ -103,14 +103,12 @@ namespace EXE201.BLL.Services
 
         public async Task<(bool Success, int UserId)> RegisterUserAsync(RegisterUserRequest request)
         {
-            // Check if the username already exists
             var existingUser = await _userRepository.GetUserByUsername(request.UserName);
             if (existingUser != null)
             {
                 throw new ArgumentException("User Name already exists");
             }
 
-            // Check if the email already exists
             var existingEmail = await _userRepository.FindAsync(x => x.Email == request.Email);
             if (existingEmail.Any())
             {
@@ -126,7 +124,6 @@ namespace EXE201.BLL.Services
                 UserStatus = "Inactive"
             };
 
-            // Set default role for user
             var customerRole = await _roleRepository.GetRoleById(3);
             if (customerRole != null)
             {
@@ -283,8 +280,6 @@ namespace EXE201.BLL.Services
 
             var response = new LoginResponseDTOs
             {
-                Status = true,
-                Message = "Login successfully!",
                 Token = token,
                 RefreshToken = refreshToken,
                 Expired = expirationDate
@@ -309,7 +304,6 @@ namespace EXE201.BLL.Services
             var newJwtToken = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, roles);
             var newRefreshToken = _jwtService.GenerateRefreshToken();
 
-            // Update refresh token in the database
             savedToken.RefreshToken = newRefreshToken;
             savedToken.IssuedAt = DateTime.UtcNow;
             savedToken.ExpiresAt = DateTime.UtcNow.AddMinutes(30);
