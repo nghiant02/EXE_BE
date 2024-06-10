@@ -18,12 +18,16 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Image is required!")]
-        public string Image { get; set; }
+        public IEnumerable<string> ProductImage { get; set; }
 
         [Required(ErrorMessage = "Price is required!")]
         public double? Price { get; set; }
 
         [Required(ErrorMessage = "Category is required!")]
         public int? CategoryId { get; set; }
+
+        public IEnumerable<string> ProductColor { get; set; }
+
+        public IEnumerable<string> ProductSize { get; set; }
     }
 }
