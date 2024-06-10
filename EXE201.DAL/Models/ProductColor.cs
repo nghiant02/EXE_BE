@@ -8,26 +8,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EXE201.DAL.Models;
 
-[Table("Cart")]
-public partial class Cart
+[Table("ProductColor")]
+public partial class ProductColor
 {
     [Key]
-    [Column("CartID")]
-    public int CartId { get; set; }
-
-    [Column("UserID")]
-    public int? UserId { get; set; }
+    [Column("ProductColorID")]
+    public int ProductColorId { get; set; }
 
     [Column("ProductID")]
     public int? ProductId { get; set; }
 
-    public int? Quantity { get; set; }
+    [Column("ColorID")]
+    public int? ColorId { get; set; }
+
+    [ForeignKey("ColorId")]
+    [InverseProperty("ProductColors")]
+    public virtual Color Color { get; set; }
 
     [ForeignKey("ProductId")]
-    [InverseProperty("Carts")]
+    [InverseProperty("ProductColors")]
     public virtual Product Product { get; set; }
-
-    [ForeignKey("UserId")]
-    [InverseProperty("Carts")]
-    public virtual User User { get; set; }
 }

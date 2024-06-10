@@ -18,28 +18,34 @@ public partial class ProductDetail
     [Column("ProductID")]
     public int? ProductId { get; set; }
 
-    [Column("ColorID")]
-    public int? ColorId { get; set; }
+    [Column(TypeName = "ntext")]
+    public string Description { get; set; }
 
-    [Column("SizeID")]
-    public int? SizeId { get; set; }
+    [Column(TypeName = "ntext")]
+    public string AdditionalInformation { get; set; }
 
-    [Column("ImageID")]
-    public int? ImageId { get; set; }
+    [Column(TypeName = "ntext")]
+    public string ShippingAndReturns { get; set; }
 
-    [ForeignKey("ColorId")]
-    [InverseProperty("ProductDetails")]
-    public virtual Color Color { get; set; }
+    [Column(TypeName = "ntext")]
+    public string SizeChart { get; set; }
 
-    [ForeignKey("ImageId")]
-    [InverseProperty("ProductDetails")]
-    public virtual Image Image { get; set; }
+    [Column(TypeName = "ntext")]
+    public string Reviews { get; set; }
+
+    [Column(TypeName = "ntext")]
+    public string Questions { get; set; }
+
+    [Column(TypeName = "ntext")]
+    public string VendorInfo { get; set; }
+
+    [Column(TypeName = "ntext")]
+    public string MoreProducts { get; set; }
+
+    [Column(TypeName = "ntext")]
+    public string ProductPolicies { get; set; }
 
     [ForeignKey("ProductId")]
     [InverseProperty("ProductDetails")]
     public virtual Product Product { get; set; }
-
-    [ForeignKey("SizeId")]
-    [InverseProperty("ProductDetails")]
-    public virtual Size Size { get; set; }
 }

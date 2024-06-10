@@ -1,4 +1,4 @@
-﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.FeedbackDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
@@ -30,7 +30,7 @@ namespace EXE201.DAL.Repository
                 {
                     ProductName = addProduct.Name,
                     ProductDescription = addProduct.Description,
-                    ProductImage = addProduct.Image,
+                    //ProductImage = addProduct.Image,
                     ProductStatus = "Available",
                     ProductPrice = addProduct.Price,
                     CategoryId = addProduct.CategoryId
@@ -102,7 +102,7 @@ namespace EXE201.DAL.Repository
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 ProductDescription = p.ProductDescription,
-                ProductImage = p.ProductImage,
+                //ProductImage = p.ProductImage,
                 ProductPrice = p.ProductPrice,
                 ProductSize = p.ProductDetails.Select(s => s.Size.SizeName),
                 ProductColor = p.ProductDetails.Select(c => c.Color.ColorName),
@@ -133,7 +133,7 @@ namespace EXE201.DAL.Repository
                 {
                     ProductName = updateProductDTO.Name,
                     ProductDescription = updateProductDTO.Description,
-                    ProductImage = updateProductDTO.Image,
+                    //ProductImage = updateProductDTO.Image,
                     ProductPrice = updateProductDTO.Price,
                     CategoryId = updateProductDTO.CategoryId
                 };
@@ -152,6 +152,21 @@ namespace EXE201.DAL.Repository
         public async Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter)
         {
             var query = _context.Products
+                                .Include(p => p.Ratings)
+                                .Select(p => new ProductWithRatingDTO
+                                {
+                                    ProductId = p.ProductId,
+                                    ProductName = p.ProductName,
+                                    ProductDescription = p.ProductDescription,
+                                    //ProductImage = p.ProductImage,
+                                    ProductStatus = p.ProductStatus,
+                                    ProductPrice = p.ProductPrice,
+                                    CategoryId = p.CategoryId,
+                                    //ProductSize = p.ProductSize,
+                                    //ProductColor = p.ProductColor,
+                                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
+                                })
+                                .AsQueryable();
                 .Include(p => p.ProductDetails)
                     .ThenInclude(pd => pd.Color)
                 .Include(p => p.ProductDetails)
@@ -251,7 +266,7 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
                     //ProductSize = p.ProductSize,
                     //ProductColor = p.ProductColor,
@@ -277,7 +292,7 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
                     //ProductSize = p.ProductSize,
                     //ProductColor = p.ProductColor,
@@ -303,7 +318,7 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
                     //ProductSize = p.ProductSize,
                     //ProductColor = p.ProductColor,
