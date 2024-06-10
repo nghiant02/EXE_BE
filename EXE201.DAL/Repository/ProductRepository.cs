@@ -1,4 +1,4 @@
-﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.FeedbackDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
@@ -90,6 +90,7 @@ namespace EXE201.DAL.Repository
         public async Task<ProductDetailDTO> GetById(int id)
         {
             var product = await _context.Products
+            .Include(p => p.ProductDetails)
             .Include(p => p.Ratings)
                 .ThenInclude(r => r.User)
             .Include(p => p.Ratings)
@@ -103,8 +104,8 @@ namespace EXE201.DAL.Repository
                 ProductDescription = p.ProductDescription,
                 //ProductImage = p.ProductImage,
                 ProductPrice = p.ProductPrice,
-                //ProductSize = p.ProductSize,
-                //ProductColor = p.ProductColor,
+                ProductSize = p.ProductDetails.Select(s => s.Size.SizeName),
+                ProductColor = p.ProductDetails.Select(c => c.Color.ColorName),
                 ProductStatus = p.ProductStatus,
                 CategoryName = p.Category.CategoryName,
                 AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
@@ -148,34 +149,7 @@ namespace EXE201.DAL.Repository
             }
         }
 
-        //public async Task<IEnumerable<Product>> SearchProduct(string keyword)
-        //{
-        //    return await _dbSet.Where(p => p.ProductName.Contains(keyword) || p.ProductDescription.Contains(keyword)).ToListAsync();
-        //}
-
-        //public async Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice)
-        //{
-        //    var query = _dbSet.AsQueryable();
-
-        //    if (!string.IsNullOrEmpty(category))
-        //    {
-        //        query = query.Where(p => p.Category.CategoryName == category);
-        //    }
-
-        //    if (minPrice.HasValue)
-        //    {
-        //        query = query.Where(p => p.ProductPrice >= minPrice);
-        //    }
-
-        //    if (maxPrice.HasValue)
-        //    {
-        //        query = query.Where(p => p.ProductPrice <= maxPrice);
-        //    }
-
-        //    return await query.ToListAsync();
-        //}
-
-        public async Task<PagedResponseDTO<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter)
+        public async Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter)
         {
             var query = _context.Products
                                 .Include(p => p.Ratings)
@@ -193,20 +167,46 @@ namespace EXE201.DAL.Repository
                                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
                                 })
                                 .AsQueryable();
+                .Include(p => p.ProductDetails)
+                    .ThenInclude(pd => pd.Color)
+                .Include(p => p.ProductDetails)
+                    .ThenInclude(pd => pd.Size)
+                .Include(p => p.Ratings)
+                .Include(p => p.Category)
+                .Select(p => new ProductListDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImage,
+                    ProductStatus = p.ProductStatus,
+                    ProductPrice = p.ProductPrice,
+                    Category = p.Category.CategoryName,
+                    ProductSize = p.ProductDetails.Select(pd => pd.Size.SizeName).ToList(),
+                    ProductColor = p.ProductDetails.Select(pd => pd.Color.ColorName).ToList(),
+                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
+                })
+                .AsQueryable();
 
+            // Apply filters
             if (!string.IsNullOrEmpty(filter.Search))
             {
                 query = query.Where(p => p.ProductName.Contains(filter.Search) || p.ProductDescription.Contains(filter.Search));
             }
 
-            if (!string.IsNullOrEmpty(filter.Color))
+            if (filter.Colors != null && filter.Colors.Any())
             {
-                query = query.Where(p => p.ProductColor == filter.Color);
+                query = query.Where(p => p.ProductColor.Any(color => filter.Colors.Contains(color)));
             }
 
-            if (!string.IsNullOrEmpty(filter.Size))
+            if (filter.Sizes != null && filter.Sizes.Any())
             {
-                query = query.Where(p => p.ProductSize == filter.Size);
+                query = query.Where(p => p.ProductSize.Any(size => filter.Sizes.Contains(size)));
+            }
+
+            if (!string.IsNullOrEmpty(filter.Category))
+            {
+                query = query.Where(p => p.Category.Equals(filter.Category));
             }
 
             if (filter.MinPrice.HasValue)
@@ -219,6 +219,7 @@ namespace EXE201.DAL.Repository
                 query = query.Where(p => p.ProductPrice <= filter.MaxPrice);
             }
 
+            // Apply sorting
             if (!string.IsNullOrEmpty(filter.SortBy))
             {
                 switch (filter.SortBy.ToLower())
@@ -245,15 +246,13 @@ namespace EXE201.DAL.Repository
             var totalCount = await query.CountAsync();
             var products = await query.Skip((filter.PageNumber - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync();
 
-            var pagedResponse = new PagedResponseDTO<ProductWithRatingDTO>
+            return new PagedResponseDTO<ProductListDTO>
             {
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = totalCount,
                 Items = products
             };
-
-            return pagedResponse;
         }
 
         public async Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN)

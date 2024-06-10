@@ -14,7 +14,7 @@ namespace EXE201.BLL.Interfaces
     public interface IUserServices
     {
         Task<LoginResponseDTOs> Login(string username, string password);
-        Task<IEnumerable<User>> GetAllProfileUser();
+        Task<IEnumerable<AllProfileUser>> GetAllProfileUser();
         Task<bool> ChangeStatusUserToNotActive(int userId);
         Task<User> AddUserForStaff(AddNewUserDTO addNewUserDTO);
         Task<User> ChangePasword(int id, ChangePasswordDTO changePasswordDTO);

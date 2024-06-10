@@ -15,7 +15,7 @@ namespace EXE201.DAL.Interfaces
     {
         Task<User> GetUserByUsername(string username);
         Task<User> GetUserById(int userId);
-        Task<IEnumerable<User>> GetAllUsers();
+        Task<IEnumerable<AllProfileUser>> GetAllUsers();
         Task<User> UpdateUser(User user);
         Task<User> AddNewUser(User user);
         Task<User> GetLatestUser();

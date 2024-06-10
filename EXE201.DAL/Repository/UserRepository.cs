@@ -33,7 +33,7 @@ namespace EXE201.DAL.Repository
             return await _context.Users.OrderByDescending(x => x.UserId).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IEnumerable<AllProfileUser>> GetAllUsers()
         {
             return await _context.Users
                 // .Include(x => x.Carts)
@@ -45,9 +45,23 @@ namespace EXE201.DAL.Repository
                 // .Include(x => x.RentalOrders)
                 // .Include(x => x.Ratings)
                 .Include(x => x.Roles)
+                .Select(x => new AllProfileUser
+                {
+                    UserId = x.UserId,
+                    UserName = x.UserName,
+                    FullName = x.FullName,
+                    Phone = x.Phone,
+                    Gender = x.Gender,
+                    DateOfBirth = x.DateOfBirth,
+                    Email = x.Email,
+                    ProfileImage = x.ProfileImage,
+                    UserStatus = x.UserStatus,
+                    Roles = x.Roles.Select(r => r.RoleName).ToList()
+                })
                 .OrderByDescending(x => x.UserId)
                 .ToListAsync();
         }
+
 
         public async Task<User> GetUserById(int userId)
         {
@@ -111,6 +125,7 @@ namespace EXE201.DAL.Repository
         public async Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
         {
             var query = _context.Users
+                .Include(u => u.Roles)
                 .Include(u => u.Memberships)
                 .ThenInclude(m => m.MembershipType)
                 .Select(u => new UserListDTO
@@ -124,6 +139,7 @@ namespace EXE201.DAL.Repository
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
+                    Roles = u.Roles.Select(r => r.RoleName).ToList(),
                     AccountStatus = u.UserStatus,
                     MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
