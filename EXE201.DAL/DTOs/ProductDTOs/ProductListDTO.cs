@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EXE201.DAL.DTOs.ProductDTOs
 {
-    public class ProductWithRatingDTO
+    public class ProductListDTO
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }
@@ -14,9 +14,9 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         public string ProductImage { get; set; }
         public string ProductStatus { get; set; }
         public double? ProductPrice { get; set; }
-        public int? CategoryId { get; set; }
-        public string ProductSize { get; set; }
-        public string ProductColor { get; set; }
+        public string Category { get; set; }
+        public IEnumerable<string> ProductSize { get; set; }
+        public IEnumerable<string> ProductColor { get; set; }
         public double AverageRating { get; set; }
     }
 }
