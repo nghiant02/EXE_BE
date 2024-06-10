@@ -38,6 +38,8 @@ builder.Services.AddScoped<ICartRepository, CartRepostiory>();
 builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IFeedbacksRepository, FeedbackRepository>();
+builder.Services.AddScoped<IProductDetailRepository, ProductDetailRepository>();
+
 
 // Add Services
 builder.Services.AddScoped<IUserServices, UserServices>();
@@ -57,6 +59,8 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IMembershipServices, MembershipServices>();
 builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IFeedbackServices, FeedbackServices>();
+builder.Services.AddScoped<IProductDetailServices, ProductDetailServices>();
+
 
 // Add Cors
 builder.Services.AddCors(options =>

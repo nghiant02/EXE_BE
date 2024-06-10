@@ -27,9 +27,17 @@ namespace EXE201.DAL.Repository
         {
             try
             {
+                // Check if CategoryId exists
+                var categoryExists = await _context.Categories.AnyAsync(c => c.CategoryId == addProduct.CategoryId);
+                if (!categoryExists)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Invalid CategoryId" };
+                }
+
                 var product = new Product
                 {
                     ProductName = addProduct.Name,
+                    ProductTitle = addProduct.Title,
                     ProductDescription = addProduct.Description,
                     ProductStatus = "Available",
                     ProductPrice = addProduct.Price,
@@ -100,6 +108,7 @@ namespace EXE201.DAL.Repository
         }
 
 
+
         public async Task<ResponeModel> DeleteProduct(int id)
         {
             var product = await GetByIdAsync(id);
@@ -157,6 +166,7 @@ namespace EXE201.DAL.Repository
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
+                ProductTitle = p.ProductTitle,
                 ProductDescription = p.ProductDescription,
                 ProductImage = p.ProductImages.Select(p => p.Image.ImageUrl).ToList(),
                 ProductPrice = p.ProductPrice,
@@ -199,68 +209,97 @@ namespace EXE201.DAL.Repository
                     return new ResponeModel { Status = "Error", Message = "Product not found" };
                 }
 
-                // Update product properties
-                product.ProductName = updateProductDTO.Name;
-                product.ProductDescription = updateProductDTO.Description;
-                product.ProductPrice = updateProductDTO.Price;
-                product.CategoryId = updateProductDTO.CategoryId;
-
-                // Update Product Images
-                product.ProductImages.Clear();
-
-                var imageEntities = await _context.Images
-                    .Where(i => updateProductDTO.ProductImage.Contains(i.ImageUrl))
-                    .ToListAsync();
-
-                var newImageUrls = updateProductDTO.ProductImage.Except(imageEntities.Select(i => i.ImageUrl)).ToList();
-                var newImages = newImageUrls.Select(url => new Image { ImageUrl = url }).ToList();
-
-                if (newImages.Any())
+                // Update product properties if provided
+                if (!string.IsNullOrEmpty(updateProductDTO.Name))
                 {
-                    _context.Images.AddRange(newImages);
-                    await _context.SaveChangesAsync();
-                    imageEntities.AddRange(newImages);
+                    product.ProductName = updateProductDTO.Name;
                 }
 
-                product.ProductImages = imageEntities.Select(img => new ProductImage { ImageId = img.ImageId, Product = product }).ToList();
-
-                // Update Product Colors
-                product.ProductColors.Clear();
-
-                var colorEntities = await _context.Colors
-                    .Where(c => updateProductDTO.ProductColor.Contains(c.ColorName))
-                    .ToListAsync();
-
-                var newColorNames = updateProductDTO.ProductColor.Except(colorEntities.Select(c => c.ColorName)).ToList();
-                var newColors = newColorNames.Select(name => new Color { ColorName = name }).ToList();
-
-                if (newColors.Any())
+                if (!string.IsNullOrEmpty(updateProductDTO.ProductTitle))
                 {
-                    _context.Colors.AddRange(newColors);
-                    await _context.SaveChangesAsync();
-                    colorEntities.AddRange(newColors);
+                    product.ProductTitle = updateProductDTO.ProductTitle;
                 }
 
-                product.ProductColors = colorEntities.Select(color => new ProductColor { ColorId = color.ColorId, Product = product }).ToList();
-
-                // Update Product Sizes
-                product.ProductSizes.Clear();
-
-                var sizeEntities = await _context.Sizes
-                    .Where(s => updateProductDTO.ProductSize.Contains(s.SizeName))
-                    .ToListAsync();
-
-                var newSizeNames = updateProductDTO.ProductSize.Except(sizeEntities.Select(s => s.SizeName)).ToList();
-                var newSizes = newSizeNames.Select(name => new Size { SizeName = name }).ToList();
-
-                if (newSizes.Any())
+                if (!string.IsNullOrEmpty(updateProductDTO.Description))
                 {
-                    _context.Sizes.AddRange(newSizes);
-                    await _context.SaveChangesAsync();
-                    sizeEntities.AddRange(newSizes);
+                    product.ProductDescription = updateProductDTO.Description;
                 }
 
-                product.ProductSizes = sizeEntities.Select(size => new ProductSize { SizeId = size.SizeId, Product = product }).ToList();
+                if (updateProductDTO.Price.HasValue)
+                {
+                    product.ProductPrice = updateProductDTO.Price;
+                }
+
+                if (updateProductDTO.CategoryId.HasValue)
+                {
+                    product.CategoryId = updateProductDTO.CategoryId;
+                }
+
+                // Update Product Images if provided
+                if (updateProductDTO.ProductImage != null && updateProductDTO.ProductImage.Any())
+                {
+                    product.ProductImages.Clear();
+
+                    var imageEntities = await _context.Images
+                        .Where(i => updateProductDTO.ProductImage.Contains(i.ImageUrl))
+                        .ToListAsync();
+
+                    var newImageUrls = updateProductDTO.ProductImage.Except(imageEntities.Select(i => i.ImageUrl)).ToList();
+                    var newImages = newImageUrls.Select(url => new Image { ImageUrl = url }).ToList();
+
+                    if (newImages.Any())
+                    {
+                        _context.Images.AddRange(newImages);
+                        await _context.SaveChangesAsync();
+                        imageEntities.AddRange(newImages);
+                    }
+
+                    product.ProductImages = imageEntities.Select(img => new ProductImage { ImageId = img.ImageId, Product = product }).ToList();
+                }
+
+                // Update Product Colors if provided
+                if (updateProductDTO.ProductColor != null && updateProductDTO.ProductColor.Any())
+                {
+                    product.ProductColors.Clear();
+
+                    var colorEntities = await _context.Colors
+                        .Where(c => updateProductDTO.ProductColor.Contains(c.ColorName))
+                        .ToListAsync();
+
+                    var newColorNames = updateProductDTO.ProductColor.Except(colorEntities.Select(c => c.ColorName)).ToList();
+                    var newColors = newColorNames.Select(name => new Color { ColorName = name }).ToList();
+
+                    if (newColors.Any())
+                    {
+                        _context.Colors.AddRange(newColors);
+                        await _context.SaveChangesAsync();
+                        colorEntities.AddRange(newColors);
+                    }
+
+                    product.ProductColors = colorEntities.Select(color => new ProductColor { ColorId = color.ColorId, Product = product }).ToList();
+                }
+
+                // Update Product Sizes if provided
+                if (updateProductDTO.ProductSize != null && updateProductDTO.ProductSize.Any())
+                {
+                    product.ProductSizes.Clear();
+
+                    var sizeEntities = await _context.Sizes
+                        .Where(s => updateProductDTO.ProductSize.Contains(s.SizeName))
+                        .ToListAsync();
+
+                    var newSizeNames = updateProductDTO.ProductSize.Except(sizeEntities.Select(s => s.SizeName)).ToList();
+                    var newSizes = newSizeNames.Select(name => new Size { SizeName = name }).ToList();
+
+                    if (newSizes.Any())
+                    {
+                        _context.Sizes.AddRange(newSizes);
+                        await _context.SaveChangesAsync();
+                        sizeEntities.AddRange(newSizes);
+                    }
+
+                    product.ProductSizes = sizeEntities.Select(size => new ProductSize { SizeId = size.SizeId, Product = product }).ToList();
+                }
 
                 _context.Products.Update(product);
                 await _context.SaveChangesAsync();
@@ -273,6 +312,7 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "An error occurred while updating the product" };
             }
         }
+
 
 
         public async Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter)
@@ -288,6 +328,7 @@ namespace EXE201.DAL.Repository
                 {
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
+                    ProductTitle = p.ProductTitle,
                     ProductDescription = p.ProductDescription,
                     ProductImage = p.ProductImages.Select(pi => pi.Image.ImageUrl).ToList(),
                     ProductStatus = p.ProductStatus,
