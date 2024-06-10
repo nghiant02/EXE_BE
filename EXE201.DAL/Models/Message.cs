@@ -27,8 +27,8 @@ public partial class Message
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
-    [Required]
-    public byte[] UpdatedAt { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? UpdatedAt { get; set; }
 
     public bool? Seen { get; set; }
 

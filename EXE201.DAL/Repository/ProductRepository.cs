@@ -30,7 +30,7 @@ namespace EXE201.DAL.Repository
                 {
                     ProductName = addProduct.Name,
                     ProductDescription = addProduct.Description,
-                    ProductImage = addProduct.Image,
+                    //ProductImage = addProduct.Image,
                     ProductStatus = "Available",
                     ProductPrice = addProduct.Price,
                     CategoryId = addProduct.CategoryId
@@ -101,7 +101,7 @@ namespace EXE201.DAL.Repository
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 ProductDescription = p.ProductDescription,
-                ProductImage = p.ProductImage,
+                //ProductImage = p.ProductImage,
                 ProductPrice = p.ProductPrice,
                 //ProductSize = p.ProductSize,
                 //ProductColor = p.ProductColor,
@@ -132,7 +132,7 @@ namespace EXE201.DAL.Repository
                 {
                     ProductName = updateProductDTO.Name,
                     ProductDescription = updateProductDTO.Description,
-                    ProductImage = updateProductDTO.Image,
+                    //ProductImage = updateProductDTO.Image,
                     ProductPrice = updateProductDTO.Price,
                     CategoryId = updateProductDTO.CategoryId
                 };
@@ -184,7 +184,7 @@ namespace EXE201.DAL.Repository
                                     ProductId = p.ProductId,
                                     ProductName = p.ProductName,
                                     ProductDescription = p.ProductDescription,
-                                    ProductImage = p.ProductImage,
+                                    //ProductImage = p.ProductImage,
                                     ProductStatus = p.ProductStatus,
                                     ProductPrice = p.ProductPrice,
                                     CategoryId = p.CategoryId,
@@ -267,7 +267,7 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
                     //ProductSize = p.ProductSize,
                     //ProductColor = p.ProductColor,
@@ -293,7 +293,7 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
                     //ProductSize = p.ProductSize,
                     //ProductColor = p.ProductColor,
@@ -319,7 +319,7 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
                     //ProductSize = p.ProductSize,
                     //ProductColor = p.ProductColor,

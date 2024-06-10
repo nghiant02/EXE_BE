@@ -20,7 +20,6 @@ public partial class Role
     public string RoleName { get; set; }
 
     [StringLength(255)]
-    [Unicode(false)]
     public string RoleDescription { get; set; }
 
     [ForeignKey("RoleId")]

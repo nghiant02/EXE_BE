@@ -19,5 +19,5 @@ public partial class Size
     public string SizeName { get; set; }
 
     [InverseProperty("Size")]
-    public virtual ICollection<ProductDetail> ProductDetails { get; set; } = new List<ProductDetail>();
+    public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
 }

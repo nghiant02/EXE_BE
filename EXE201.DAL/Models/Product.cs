@@ -24,9 +24,6 @@ public partial class Product
     [Column(TypeName = "ntext")]
     public string ProductDescription { get; set; }
 
-    [StringLength(255)]
-    public string ProductImage { get; set; }
-
     [StringLength(15)]
     public string ProductStatus { get; set; }
 
@@ -52,7 +49,16 @@ public partial class Product
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 
     [InverseProperty("Product")]
+    public virtual ICollection<ProductColor> ProductColors { get; set; } = new List<ProductColor>();
+
+    [InverseProperty("Product")]
     public virtual ICollection<ProductDetail> ProductDetails { get; set; } = new List<ProductDetail>();
+
+    [InverseProperty("Product")]
+    public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+
+    [InverseProperty("Product")]
+    public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
 
     [InverseProperty("Product")]
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();

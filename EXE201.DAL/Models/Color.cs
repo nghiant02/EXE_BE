@@ -19,5 +19,5 @@ public partial class Color
     public string ColorName { get; set; }
 
     [InverseProperty("Color")]
-    public virtual ICollection<ProductDetail> ProductDetails { get; set; } = new List<ProductDetail>();
+    public virtual ICollection<ProductColor> ProductColors { get; set; } = new List<ProductColor>();
 }

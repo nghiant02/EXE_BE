@@ -20,5 +20,5 @@ public partial class Image
     public string ImageUrl { get; set; }
 
     [InverseProperty("Image")]
-    public virtual ICollection<ProductDetail> ProductDetails { get; set; } = new List<ProductDetail>();
+    public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
 }
