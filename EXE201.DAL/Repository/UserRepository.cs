@@ -125,6 +125,7 @@ namespace EXE201.DAL.Repository
         public async Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
         {
             var query = _context.Users
+                .Include(u => u.Roles)
                 .Include(u => u.Memberships)
                 .ThenInclude(m => m.MembershipType)
                 .Select(u => new UserListDTO
@@ -138,6 +139,7 @@ namespace EXE201.DAL.Repository
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
+                    Roles = u.Roles.Select(r => r.RoleName).ToList(),
                     AccountStatus = u.UserStatus,
                     MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
