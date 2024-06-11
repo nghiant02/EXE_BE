@@ -533,5 +533,27 @@ namespace EXE201.DAL.Repository
             };
         }
 
+        public async Task<IEnumerable<ProductSuggestionDTO>> GetProductSuggestions(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return new List<ProductSuggestionDTO>();
+            }
+
+            var suggestions = await _context.Products
+                .Where(p => p.ProductName.Contains(searchTerm))
+                .Select(p => new ProductSuggestionDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductImage = p.ProductImages.Select(pi => pi.Image.ImageUrl).FirstOrDefault(),
+                    ProductPrice = p.ProductPrice,
+                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
+                })
+                .ToListAsync();
+
+            return suggestions;
+        }
+
     }
 }

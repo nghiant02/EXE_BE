@@ -122,5 +122,18 @@ namespace EXE201.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("SuggestionsForSearch")]
+        public async Task<IActionResult> GetProductSuggestions([FromQuery] string searchTerm)
+        {
+            var suggestions = await _productServices.GetProductSuggestions(searchTerm);
+
+            if (!suggestions.Any())
+            {
+                return NotFound(new { Message = "No product suggestions found" });
+            }
+
+            return Ok(suggestions);
+        }
     }
 }

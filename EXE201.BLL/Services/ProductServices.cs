@@ -78,5 +78,10 @@ namespace EXE201.BLL.Services
         {
             return await _productRepository.GetProductRecommendationsByCategory(productId, filter);
         }
+
+        public async Task<IEnumerable<ProductSuggestionDTO>> GetProductSuggestions(string searchTerm)
+        {
+            return await _productRepository.GetProductSuggestions(searchTerm);
+        }
     }
 }
