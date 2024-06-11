@@ -111,9 +111,9 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("RecommendByCategory/{productId}")]
-        public async Task<IActionResult> GetProductRecommendationsByCategory(int productId, [FromQuery] PaginationParameter pagination)
+        public async Task<IActionResult> GetProductRecommendationsByCategory(int productId, [FromQuery] ProductPagingRecommendByCategoryDTO filter)
         {
-            var result = await _productServices.GetProductRecommendationsByCategory(productId, pagination.PageNumber, pagination.PageSize);
+            var result = await _productServices.GetProductRecommendationsByCategory(productId, filter);
 
             if (!result.Items.Any())
             {

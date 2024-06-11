@@ -23,6 +23,6 @@ namespace EXE201.DAL.Interfaces
         Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
-        Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, int pageNumber, int pageSize);
+        Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, ProductPagingRecommendByCategoryDTO filter);
     }
 }
