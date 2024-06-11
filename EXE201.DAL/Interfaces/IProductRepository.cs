@@ -14,12 +14,12 @@ namespace EXE201.DAL.Interfaces
     public interface IProductRepository : IGenericRepository<Product>
     {
         Task<IEnumerable<Product>> GetAll();
-        Task<ProductDetailDTO> GetById(int id);
+        //Task<ProductDetailDTO> GetById(int id);
         Task<ResponeModel> AddProduct(AddProductDTO addProduct);
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
         Task<ResponeModel> DeleteProduct(int id);
         Task<ResponeModel> RecoverProduct(int id);
-        Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter);
+        //Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter);
         Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
