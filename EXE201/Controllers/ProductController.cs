@@ -4,6 +4,7 @@ using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
 using EXE201.ViewModel.UserViewModel;
+using LMSystem.Repository.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -107,6 +108,19 @@ namespace EXE201.Controllers
         {
             var products = await _productServices.GetHighlyRatedProducts(topN);
             return Ok(products);
+        }
+
+        [HttpGet("RecommendByCategory/{productId}")]
+        public async Task<IActionResult> GetProductRecommendationsByCategory(int productId, [FromQuery] PaginationParameter pagination)
+        {
+            var result = await _productServices.GetProductRecommendationsByCategory(productId, pagination.PageNumber, pagination.PageSize);
+
+            if (!result.Items.Any())
+            {
+                return NotFound(new { Message = "No recommendations found" });
+            }
+
+            return Ok(result);
         }
     }
 }

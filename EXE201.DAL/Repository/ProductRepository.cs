@@ -486,5 +486,52 @@ namespace EXE201.DAL.Repository
 
             return products;
         }
+
+        public async Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, int pageNumber = 4, int pageSize = 3)
+        {
+            // Get the category of the given product
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+            if (product == null || product.CategoryId == null)
+            {
+                return new PagedResponseDTO<ProductListRecommendByCategoryDTO>
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = 0,
+                    Items = new List<ProductListRecommendByCategoryDTO>()
+                };
+            }
+
+            // Get products of the same category excluding the current product
+            var query = _context.Products
+                .Where(p => p.CategoryId == product.CategoryId && p.ProductId != productId)
+                .Select(p => new ProductListRecommendByCategoryDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductTitle = p.ProductTitle,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImages.Select(pi => pi.Image.ImageUrl).ToList(),
+                    ProductPrice = p.ProductPrice,
+                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
+                })
+                .AsQueryable();
+
+            var totalCount = await query.CountAsync();
+            var products = await query.Skip((pageNumber - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+
+            return new PagedResponseDTO<ProductListRecommendByCategoryDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = products
+            };
+        }
+
     }
 }
