@@ -149,41 +149,6 @@ namespace EXE201.DAL.Repository
             return await GetAllAsync();
         }
 
-        //public async Task<ProductDetailDTO> GetById(int id)
-        //{
-        //    var product = await _context.Products
-        //    .Include(p => p.ProductDetails)
-        //    .Include(p => p.Ratings)
-        //        .ThenInclude(r => r.User)
-        //    .Include(p => p.Ratings)
-        //        .ThenInclude(r => r.Feedback)
-        //    .Include(p => p.Category)
-        //    .Where(p => p.ProductId == id)
-        //    .Select(p => new ProductDetailDTO
-        //    {
-        //        ProductId = p.ProductId,
-        //        ProductName = p.ProductName,
-        //        ProductDescription = p.ProductDescription,
-        //        //ProductImage = p.ProductImage,
-        //        ProductPrice = p.ProductPrice,
-        //        ProductSize = p.ProductDetails.Select(s => s.Size.SizeName),
-        //        ProductColor = p.ProductDetails.Select(c => c.Color.ColorName),
-        //        ProductStatus = p.ProductStatus,
-        //        CategoryName = p.Category.CategoryName,
-        //        AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
-        //        RatingsFeedback = p.Ratings.Select(r => new RatingFeedbackDTO
-        //        {
-        //            RatingId = r.RatingId,
-        //            UserId = r.User.UserId,
-        //            UserName = r.User.UserName,
-        //            RatingValue = r.RatingValue ?? 0,
-        //            DateGiven = r.DateGiven,
-        //            FeedbackComment = r.Feedback.FeedbackComment,
-        //            FeedbackImage = r.Feedback.FeedbackImage
-        //        }).ToList()
-        //    })
-        //    .FirstOrDefaultAsync();
-
         public async Task<ProductDetailDTO> GetById(int id)
         {
             var product = await _context.Products
@@ -223,8 +188,8 @@ namespace EXE201.DAL.Repository
             })
             .FirstOrDefaultAsync();
 
-        //    return product;
-        //}
+            return product;
+        }
 
         public async Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO)
         {
@@ -348,44 +313,7 @@ namespace EXE201.DAL.Repository
             }
         }
 
-        //public async Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter)
-        //{
-        //    var query = _context.Products
-        //                        .Include(p => p.Ratings)
-        //                        .Select(p => new ProductWithRatingDTO
-        //                        {
-        //                            ProductId = p.ProductId,
-        //                            ProductName = p.ProductName,
-        //                            ProductDescription = p.ProductDescription,
-        //                            //ProductImage = p.ProductImage,
-        //                            ProductStatus = p.ProductStatus,
-        //                            ProductPrice = p.ProductPrice,
-        //                            CategoryId = p.CategoryId,
-        //                            //ProductSize = p.ProductSize,
-        //                            //ProductColor = p.ProductColor,
-        //                            AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
-        //                        })
-        //                        .AsQueryable();
-        //        .Include(p => p.ProductDetails)
-        //            .ThenInclude(pd => pd.Color)
-        //        .Include(p => p.ProductDetails)
-        //            .ThenInclude(pd => pd.Size)
-        //        .Include(p => p.Ratings)
-        //        .Include(p => p.Category)
-        //        .Select(p => new ProductListDTO
-        //        {
-        //            ProductId = p.ProductId,
-        //            ProductName = p.ProductName,
-        //            ProductDescription = p.ProductDescription,
-        //            ProductImage = p.ProductImage,
-        //            ProductStatus = p.ProductStatus,
-        //            ProductPrice = p.ProductPrice,
-        //            Category = p.Category.CategoryName,
-        //            ProductSize = p.ProductDetails.Select(pd => pd.Size.SizeName).ToList(),
-        //            ProductColor = p.ProductDetails.Select(pd => pd.Color.ColorName).ToList(),
-        //            AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
-        //        })
-        //        .AsQueryable();
+
 
         public async Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter)
         {
@@ -413,76 +341,72 @@ namespace EXE201.DAL.Repository
                 })
                 .AsQueryable();
 
-        //    // Apply filters
-        //    if (!string.IsNullOrEmpty(filter.Search))
-        //    {
-        //        query = query.Where(p => p.ProductName.Contains(filter.Search) || p.ProductDescription.Contains(filter.Search));
-        //    }
+            // Apply filters
+            if (!string.IsNullOrEmpty(filter.Search))
+            {
+                query = query.Where(p => p.ProductName.Contains(filter.Search) || p.ProductDescription.Contains(filter.Search));
+            }
 
-        //    if (filter.Colors != null && filter.Colors.Any())
-        //    {
-        //        query = query.Where(p => p.ProductColor.Any(color => filter.Colors.Contains(color)));
-        //    }
+            if (filter.Colors != null && filter.Colors.Any())
+            {
+                query = query.Where(p => p.ProductColor.Any(color => filter.Colors.Contains(color)));
+            }
 
-        //    if (filter.Sizes != null && filter.Sizes.Any())
-        //    {
-        //        query = query.Where(p => p.ProductSize.Any(size => filter.Sizes.Contains(size)));
-        //    }
+            if (filter.Sizes != null && filter.Sizes.Any())
+            {
+                query = query.Where(p => p.ProductSize.Any(size => filter.Sizes.Contains(size)));
+            }
 
-        //    if (!string.IsNullOrEmpty(filter.Category))
-        //    {
-        //        query = query.Where(p => p.Category.Equals(filter.Category));
-        //    }
             if (filter.Category != null && filter.Category.Any())
             {
                 query = query.Where(p => p.Category == filter.Category.FirstOrDefault());
             }
 
-        //    if (filter.MinPrice.HasValue)
-        //    {
-        //        query = query.Where(p => p.ProductPrice >= filter.MinPrice);
-        //    }
+            if (filter.MinPrice.HasValue)
+            {
+                query = query.Where(p => p.ProductPrice >= filter.MinPrice);
+            }
 
-        //    if (filter.MaxPrice.HasValue)
-        //    {
-        //        query = query.Where(p => p.ProductPrice <= filter.MaxPrice);
-        //    }
+            if (filter.MaxPrice.HasValue)
+            {
+                query = query.Where(p => p.ProductPrice <= filter.MaxPrice);
+            }
 
-        //    // Apply sorting
-        //    if (!string.IsNullOrEmpty(filter.SortBy))
-        //    {
-        //        switch (filter.SortBy.ToLower())
-        //        {
-        //            case "price":
-        //                query = filter.Sort ? query.OrderByDescending(p => p.ProductPrice) : query.OrderBy(p => p.ProductPrice);
-        //                break;
-        //            case "name":
-        //                query = filter.Sort ? query.OrderByDescending(p => p.ProductName) : query.OrderBy(p => p.ProductName);
-        //                break;
-        //            case "rating":
-        //                query = filter.Sort ? query.OrderByDescending(p => p.AverageRating) : query.OrderBy(p => p.AverageRating);
-        //                break;
-        //            default:
-        //                query = query.OrderBy(p => p.ProductId);
-        //                break;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        query = query.OrderBy(p => p.ProductId);
-        //    }
+            // Apply sorting
+            if (!string.IsNullOrEmpty(filter.SortBy))
+            {
+                switch (filter.SortBy.ToLower())
+                {
+                    case "price":
+                        query = filter.Sort ? query.OrderByDescending(p => p.ProductPrice) : query.OrderBy(p => p.ProductPrice);
+                        break;
+                    case "name":
+                        query = filter.Sort ? query.OrderByDescending(p => p.ProductName) : query.OrderBy(p => p.ProductName);
+                        break;
+                    case "rating":
+                        query = filter.Sort ? query.OrderByDescending(p => p.AverageRating) : query.OrderBy(p => p.AverageRating);
+                        break;
+                    default:
+                        query = query.OrderBy(p => p.ProductId);
+                        break;
+                }
+            }
+            else
+            {
+                query = query.OrderBy(p => p.ProductId);
+            }
 
-        //    var totalCount = await query.CountAsync();
-        //    var products = await query.Skip((filter.PageNumber - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync();
+            var totalCount = await query.CountAsync();
+            var products = await query.Skip((filter.PageNumber - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync();
 
-        //    return new PagedResponseDTO<ProductListDTO>
-        //    {
-        //        PageNumber = filter.PageNumber,
-        //        PageSize = filter.PageSize,
-        //        TotalCount = totalCount,
-        //        Items = products
-        //    };
-        //}
+            return new PagedResponseDTO<ProductListDTO>
+            {
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = totalCount,
+                Items = products
+            };
+        }
 
 
         public async Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN)

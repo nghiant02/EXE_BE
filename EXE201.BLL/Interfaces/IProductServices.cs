@@ -14,11 +14,11 @@ namespace EXE201.BLL.Interfaces
     {
         Task<ResponeModel> AddProduct(AddProductDTO addProduct);
         Task<IEnumerable<Product>> GetAll();
-        //Task<ProductDetailDTO> GetById(int id);
+        Task<ProductDetailDTO> GetById(int id);
         Task<ResponeModel> DeleteProduct(int id);
         Task<ResponeModel> RecoverProduct(int id);
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
-        //Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter);
+        Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter);
         Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
