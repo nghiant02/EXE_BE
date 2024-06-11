@@ -32,6 +32,9 @@ public partial class Message
 
     public bool? Seen { get; set; }
 
+    [StringLength(50)]
+    public string Type { get; set; }
+
     [ForeignKey("ConversationId")]
     [InverseProperty("Messages")]
     public virtual Conversation Conversation { get; set; }
