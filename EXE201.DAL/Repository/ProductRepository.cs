@@ -420,10 +420,10 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    //ProductImage = p.ProductImage,
+                    ProductImage = p.ProductImages.Select(p => p.Image.ImageUrl).ToList(),
                     ProductPrice = p.ProductPrice,
-                    //ProductSize = p.ProductSize,
-                    //ProductColor = p.ProductColor,
+                    ProductSize = p.ProductSizes.Select(p => p.Size.SizeName).ToList(),
+                    ProductColor = p.ProductColors.Select(p => p.Color.ColorName).ToList(),
                     ProductStatus = p.ProductStatus,
                     CategoryName = p.Category.CategoryName,
                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
@@ -446,10 +446,10 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    //ProductImage = p.ProductImage,
+                    ProductImage = p.ProductImages.Select(p => p.Image.ImageUrl).ToList(),
                     ProductPrice = p.ProductPrice,
-                    //ProductSize = p.ProductSize,
-                    //ProductColor = p.ProductColor,
+                    ProductSize = p.ProductSizes.Select(p => p.Size.SizeName).ToList(),
+                    ProductColor = p.ProductColors.Select(p => p.Color.ColorName).ToList(),
                     ProductStatus = p.ProductStatus,
                     CategoryName = p.Category.CategoryName,
                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
@@ -472,10 +472,10 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    //ProductImage = p.ProductImage,
+                    ProductImage = p.ProductImages.Select(p => p.Image.ImageUrl).ToList(),
                     ProductPrice = p.ProductPrice,
-                    //ProductSize = p.ProductSize,
-                    //ProductColor = p.ProductColor,
+                    ProductSize = p.ProductSizes.Select(p => p.Size.SizeName).ToList(),
+                    ProductColor = p.ProductColors.Select(p => p.Color.ColorName).ToList(),
                     ProductStatus = p.ProductStatus,
                     CategoryName = p.Category.CategoryName,
                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
@@ -487,7 +487,7 @@ namespace EXE201.DAL.Repository
             return products;
         }
 
-        public async Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, int pageNumber = 4, int pageSize = 3)
+        public async Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, ProductPagingRecommendByCategoryDTO filter)
         {
             // Get the category of the given product
             var product = await _context.Products
@@ -497,8 +497,8 @@ namespace EXE201.DAL.Repository
             {
                 return new PagedResponseDTO<ProductListRecommendByCategoryDTO>
                 {
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
+                    PageNumber = filter.PageNumber,
+                    PageSize = filter.PageSize,
                     TotalCount = 0,
                     Items = new List<ProductListRecommendByCategoryDTO>()
                 };
@@ -520,14 +520,14 @@ namespace EXE201.DAL.Repository
                 .AsQueryable();
 
             var totalCount = await query.CountAsync();
-            var products = await query.Skip((pageNumber - 1) * pageSize)
-                                      .Take(pageSize)
+            var products = await query.Skip((filter.PageNumber - 1) * filter.PageSize)
+                                      .Take(filter.PageSize)
                                       .ToListAsync();
 
             return new PagedResponseDTO<ProductListRecommendByCategoryDTO>
             {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
                 TotalCount = totalCount,
                 Items = products
             };
