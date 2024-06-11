@@ -257,10 +257,10 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    ProductImage = p.ProductImages.Select(p => p.Image.ImageUrl).ToList(),
                     ProductPrice = p.ProductPrice,
-                    ProductSize = p.ProductSize,
-                    ProductColor = p.ProductColor,
+                    ProductSize = p.ProductSizes.Select(p => p.Size.SizeName).ToList(),
+                    ProductColor = p.ProductColors.Select(p => p.Color.ColorName).ToList(),
                     ProductStatus = p.ProductStatus,
                     CategoryName = p.Category.CategoryName,
                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
@@ -276,6 +276,9 @@ namespace EXE201.DAL.Repository
         public async Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN)
         {
             var products = await _context.Products
+                .Include(p => p.ProductColors)
+                .Include(p => p.ProductSizes)
+                .Include(p => p.ProductImages)
                 .Include(p => p.Category)
                 .Include(p => p.Ratings)
                 .Select(p => new ProductRecommendationDTO
@@ -283,10 +286,10 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    ProductImage = p.ProductImages.Select(p => p.Image.ImageUrl).ToList(),
                     ProductPrice = p.ProductPrice,
-                    ProductSize = p.ProductSize,
-                    ProductColor = p.ProductColor,
+                    ProductSize = p.ProductSizes.Select(p => p.Size.SizeName).ToList(),
+                    ProductColor = p.ProductColors.Select(p => p.Color.ColorName).ToList(),
                     ProductStatus = p.ProductStatus,
                     CategoryName = p.Category.CategoryName,
                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
@@ -309,10 +312,10 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    ProductImage = p.ProductImages.Select(p => p.Image.ImageUrl).ToList(),
                     ProductPrice = p.ProductPrice,
-                    ProductSize = p.ProductSize,
-                    ProductColor = p.ProductColor,
+                    ProductSize = p.ProductSizes.Select(p => p.Size.SizeName).ToList(),
+                    ProductColor = p.ProductColors.Select(p => p.Color.ColorName).ToList(),
                     ProductStatus = p.ProductStatus,
                     CategoryName = p.Category.CategoryName,
                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
@@ -322,6 +325,51 @@ namespace EXE201.DAL.Repository
                 .ToListAsync();
 
             return products;
+        }
+        public async Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, int pageNumber, int pageSize)
+        {
+            // Get the category of the given product
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+            if (product == null || product.CategoryId == null)
+            {
+                return new PagedResponseDTO<ProductListRecommendByCategoryDTO>
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = 0,
+                    Items = new List<ProductListRecommendByCategoryDTO>()
+                };
+            }
+
+            // Get products of the same category excluding the current product
+            var query = _context.Products
+                .Where(p => p.CategoryId == product.CategoryId && p.ProductId != productId)
+                .Select(p => new ProductListRecommendByCategoryDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductTitle = p.ProductTitle,
+                    ProductDescription = p.ProductDescription,
+                    ProductImage = p.ProductImages.Select(pi => pi.Image.ImageUrl).ToList(),
+                    ProductPrice = p.ProductPrice,
+                    AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0
+                })
+                .AsQueryable();
+
+            var totalCount = await query.CountAsync();
+            var products = await query.Skip((pageNumber - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+
+            return new PagedResponseDTO<ProductListRecommendByCategoryDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = products
+            };
         }
     }
 }
