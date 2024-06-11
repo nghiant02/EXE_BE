@@ -26,7 +26,7 @@ namespace EXE201.DAL.Repository
                 {
                     OrderId = paymentDetails.OrderId,
                     PaymentAmount = paymentDetails.Amount,
-                    PaymentMethod = "Pending",
+                    //PaymentMethod = "Pending",
                     PaymentStatus = "Pending"
                 };
                 await _context.Payments.AddAsync(payment);
@@ -42,7 +42,7 @@ namespace EXE201.DAL.Repository
                 .FirstOrDefaultAsync(p => p.OrderId == processPayment.OrderId && p.PaymentStatus == "Pending");
             if (payment != null)
             {
-                payment.PaymentMethod = processPayment.PaymentMethod;
+                //payment.PaymentMethod = processPayment.PaymentMethod;
                 payment.PaymentStatus = processPayment.Confirm ? "Confirmed" : "Pending";
                 _context.Payments.Update(payment);
 
@@ -76,6 +76,21 @@ namespace EXE201.DAL.Repository
                     PaymentStatus = p.PaymentStatus
                 })
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate)
+        {
+            var profits = await _context.Payments
+                .Where(p => p.PaymentStatus == "Completed" && p.Order.DatePlaced >= startDate && p.Order.DatePlaced <= endDate)
+                .GroupBy(p => p.Order.DatePlaced.Value.Date)
+                .Select(g => new ProfitDTO
+                {
+                    Date = g.Key,
+                    TotalProfit = g.Sum(p => p.PaymentAmount ?? 0)
+                })
+                .ToListAsync();
+
+            return profits;
         }
     }
 }

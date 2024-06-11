@@ -11,8 +11,8 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IRatingServices
     {
-        Task<Rating> AddRating(AddRatingDTO addRatingDTO);
-        Task<IEnumerable<Rating>> GetsApplicaition();
+        Task<AddRatingDTO> AddRating(AddRatingDTO addRatingDTO);
+        Task<IEnumerable<Rating>> GetRatings();
         Task<IEnumerable<UserRatingFeedbackDTO>> GetUserRatingsAndFeedback(int userId);
         Task<IEnumerable<ProductRatingFeedbackDTO>> GetProductRatingsAndFeedback(int productId);
         Task<IEnumerable<ProductDetailDTO>> GetAllProductsWithRatingsFeedback();

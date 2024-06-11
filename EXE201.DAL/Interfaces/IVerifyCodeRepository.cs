@@ -10,5 +10,6 @@ namespace EXE201.DAL.Interfaces
 {
     public interface IVerifyCodeRepository : IGenericRepository<VerifyCode>
     {
+        Task<VerifyCode> GetByCodeAsync(string code);
     }
 }

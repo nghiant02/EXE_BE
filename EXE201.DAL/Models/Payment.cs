@@ -24,17 +24,32 @@ public partial class Payment
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? PaymentAmount { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
-    public string PaymentMethod { get; set; }
+    [Column("PaymentMethodID")]
+    public int? PaymentMethodId { get; set; }
+
+    [StringLength(15)]
+    public string PaymentStatus { get; set; }
+
+    [StringLength(100)]
+    public string FullName { get; set; }
 
     [StringLength(15)]
     [Unicode(false)]
-    public string PaymentStatus { get; set; }
+    public string Phone { get; set; }
+
+    [StringLength(255)]
+    public string Address { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? PaymentTime { get; set; }
 
     [ForeignKey("OrderId")]
     [InverseProperty("Payments")]
     public virtual RentalOrder Order { get; set; }
+
+    [ForeignKey("PaymentMethodId")]
+    [InverseProperty("Payments")]
+    public virtual PaymentMethod PaymentMethod { get; set; }
 
     [ForeignKey("UserId")]
     [InverseProperty("Payments")]

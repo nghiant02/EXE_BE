@@ -4,6 +4,7 @@ using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
 using EXE201.ViewModel.UserViewModel;
+using LMSystem.Repository.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -27,9 +28,9 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetProductById")]
-        public async Task<IActionResult> GetProductById([FromQuery] int id)
+        public async Task<IActionResult> GetProductById([FromQuery] int productId)
         {
-            var response = await _productServices.GetById(id);
+            var response = await _productServices.GetById(productId);
             if (response.ProductStatus == "Error")
             {
                 return Conflict(response);
@@ -49,9 +50,9 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("DeleteProduct")]
-        public async Task<IActionResult> DeleteProduct([FromQuery] int id)
+        public async Task<IActionResult> DeleteProduct([FromQuery] int productId)
         {
-            var response = await _productServices.DeleteProduct(id);
+            var response = await _productServices.DeleteProduct(productId);
             if (response.Status == "Error")
             {
                 return Conflict(response);
@@ -60,9 +61,9 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("RecoverProduct")]
-        public async Task<IActionResult> RecoverProduct([FromQuery] int id)
+        public async Task<IActionResult> RecoverProduct([FromQuery] int productId)
         {
-            var response = await _productServices.RecoverProduct(id);
+            var response = await _productServices.RecoverProduct(productId);
             if (response.Status == "Error")
             {
                 return Conflict(response);
@@ -71,7 +72,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO updateProductDTO)
+        public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductDTO updateProductDTO)
         {
             var response = await _productServices.UpdateProduct(updateProductDTO);
             if (response.Status == "Error")
@@ -80,20 +81,6 @@ namespace EXE201.Controllers
             }
             return Ok(response);
         }
-
-        //[HttpGet("SearchProduct")]
-        //public async Task<IActionResult> SearchProduct([FromQuery] string keyword)
-        //{
-        //    var products = await _productServices.SearchProduct(keyword);
-        //    return Ok(products);
-        //}
-
-        //[HttpGet("FilterProduct")]
-        //public async Task<IActionResult> FilterProduct([FromQuery] string category, [FromQuery] double? minPrice, [FromQuery] double? maxPrice)
-        //{
-        //    var products = await _productServices.FilterProduct(category, minPrice, maxPrice);
-        //    return Ok(products);
-        //}
 
         [HttpGet("PagingAndFilteredProducts")]
         public async Task<IActionResult> GetFilteredProducts([FromQuery] ProductFilterDTO filter)
@@ -121,6 +108,19 @@ namespace EXE201.Controllers
         {
             var products = await _productServices.GetHighlyRatedProducts(topN);
             return Ok(products);
+        }
+
+        [HttpGet("RecommendByCategory/{productId}")]
+        public async Task<IActionResult> GetProductRecommendationsByCategory(int productId, [FromQuery] PaginationParameter pagination)
+        {
+            var result = await _productServices.GetProductRecommendationsByCategory(productId, pagination.PageNumber, pagination.PageSize);
+
+            if (!result.Items.Any())
+            {
+                return NotFound(new { Message = "No recommendations found" });
+            }
+
+            return Ok(result);
         }
     }
 }

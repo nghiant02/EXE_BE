@@ -1,8 +1,9 @@
 ﻿public class ProductFilterDTO
 {
     public string? Search { get; set; }
-    public string? Color { get; set; }
-    public string? Size { get; set; }
+    public List<string> Category { get; set; } = new List<string>();
+    public List<string> Colors { get; set; } = new List<string>();
+    public List<string> Sizes { get; set; } = new List<string>();
     public double? MinPrice { get; set; }
     public double? MaxPrice { get; set; }
     public string? SortBy { get; set; } 

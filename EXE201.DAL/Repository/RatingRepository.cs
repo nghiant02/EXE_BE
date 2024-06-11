@@ -25,6 +25,7 @@ namespace EXE201.DAL.Repository
                 var ratingList = await _context.Ratings
                     .Include(x => x.User)
                     .Include(x => x.Product)
+                    .Include(x => x.Feedback)
                     .ToListAsync();
 
                 return ratingList;
@@ -89,10 +90,10 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
-                    ProductSize = p.ProductSize,
-                    ProductColor = p.ProductColor,
+                    //ProductSize = p.ProductSize,
+                    //ProductColor = p.ProductColor,
                     ProductStatus = p.ProductStatus,
                     CategoryName = p.Category.CategoryName,
                     AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,

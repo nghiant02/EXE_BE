@@ -16,9 +16,9 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetDepositByUserId")]
-        public async Task<IActionResult> GetDepositByUserId(int id)
+        public async Task<IActionResult> GetDepositByUserId(int userId)
         {
-            var result = await _depositServices.GetDepositByIdAsync(id);
+            var result = await _depositServices.GetDepositByIdAsync(userId);
             return Ok(result);
         }
 

@@ -15,8 +15,10 @@ namespace EXE201.DAL.DTOs.UserDTOs
         public string Phone { get; set; }
         public int? Gender { get; set; }
         public DateOnly? DateOfBirth { get; set; }
+        public string Address { get; set; }
         public string Email { get; set; }
         public string ProfileImage { get; set; }
+        public IEnumerable<string> Roles { get; set; }
         public string AccountStatus { get; set; }
         public string MembershipTypeName { get; set; }
     }

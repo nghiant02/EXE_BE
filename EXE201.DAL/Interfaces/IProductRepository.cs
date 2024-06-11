@@ -19,12 +19,10 @@ namespace EXE201.DAL.Interfaces
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
         Task<ResponeModel> DeleteProduct(int id);
         Task<ResponeModel> RecoverProduct(int id);
-        //Task<IEnumerable<Product>> SearchProduct(string keyword);
-        //Task<IEnumerable<Product>> FilterProduct(string category, double? minPrice, double? maxPrice);
-        Task<PagedList<ProductWithRatingDTO>> GetFilteredProducts(ProductFilterDTO filter);
+        Task<PagedResponseDTO<ProductListDTO>> GetFilteredProducts(ProductFilterDTO filter);
         Task<IEnumerable<ProductRecommendationDTO>> GetHotProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetNewProducts(int topN);
         Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
-
+        Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, int pageNumber, int pageSize);
     }
 }

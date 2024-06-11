@@ -23,10 +23,10 @@ namespace EXE201.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetCartById")]
-        public async Task<IActionResult> GetCartById(int id)
+        [HttpGet("GetCartByUserId")]
+        public async Task<IActionResult> GetCartById(int userId)
         {
-            var result = await _cartService.GetCartById(id);
+            var result = await _cartService.GetCartById(userId);
             return Ok(result);
         }
 
@@ -38,9 +38,9 @@ namespace EXE201.Controllers
         }
 
         [HttpDelete("DeleteCart")]
-        public async Task<IActionResult> DeleteCart(int id)
+        public async Task<IActionResult> DeleteCart(int cartId)
         {
-            var result = await _cartService.DeleteCart(id);
+            var result = await _cartService.DeleteCart(cartId);
             return Ok(result);
         }
 

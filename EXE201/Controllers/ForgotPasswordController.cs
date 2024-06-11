@@ -47,7 +47,7 @@ namespace EXE201.Controllers
                 string code = IdGenerator.GenerateRandomVerifyCode();
                 await _forgotPawwordService.AddCode(code, email);
                 EmailDTO emailDto = new EmailDTO();
-                emailDto.To = email;
+                emailDto.ToEmail = email;
                 emailDto.Subject = "Verification Code";
                 emailDto.Body = GetHtmlcontent(code);
                 await _emailService.SendEmail(emailDto);
@@ -87,6 +87,5 @@ namespace EXE201.Controllers
                 + "<div style=\"padding-top: 16px; font-size: 18px;\">\r\nAll you have to do is copy the confirmation code and paste it to your\r\n form to complete the email verification process.\r\n</div>\r\n</div>";
             return Response;
         }
-
     }
 }

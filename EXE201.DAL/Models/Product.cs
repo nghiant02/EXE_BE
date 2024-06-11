@@ -16,32 +16,21 @@ public partial class Product
     public int ProductId { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
+    public string ProductTitle { get; set; }
+
+    [StringLength(100)]
     public string ProductName { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string ProductDescription { get; set; }
 
-    [StringLength(255)]
-    [Unicode(false)]
-    public string ProductImage { get; set; }
-
     [StringLength(15)]
-    [Unicode(false)]
     public string ProductStatus { get; set; }
 
     public double? ProductPrice { get; set; }
 
     [Column("CategoryID")]
     public int? CategoryId { get; set; }
-
-    [StringLength(50)]
-    [Unicode(false)]
-    public string ProductSize { get; set; }
-
-    [StringLength(50)]
-    [Unicode(false)]
-    public string ProductColor { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
@@ -58,6 +47,18 @@ public partial class Product
 
     [InverseProperty("Product")]
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
+
+    [InverseProperty("Product")]
+    public virtual ICollection<ProductColor> ProductColors { get; set; } = new List<ProductColor>();
+
+    [InverseProperty("Product")]
+    public virtual ICollection<ProductDetail> ProductDetails { get; set; } = new List<ProductDetail>();
+
+    [InverseProperty("Product")]
+    public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+
+    [InverseProperty("Product")]
+    public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
 
     [InverseProperty("Product")]
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();

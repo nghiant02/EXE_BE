@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.DTOs.UserDTOs;
+﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.UserDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using LMSystem.Repository.Helpers;
@@ -32,46 +33,48 @@ namespace EXE201.DAL.Repository
             return await _context.Users.OrderByDescending(x => x.UserId).FirstOrDefaultAsync();
         }
 
-        public async Task<User> ChangeStatusUserToNotActive(int id)
-        {
-            var checkUser = await _context.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
-            if (checkUser != null)
-            {
-                checkUser.AccountStatus = "Inactive";
-
-                _context.Users.Update(checkUser);
-                await _context.SaveChangesAsync();
-                return checkUser;
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IEnumerable<AllProfileUser>> GetAllUsers()
         {
             return await _context.Users
-                .Include(x => x.Addresses)
-                .Include(x => x.Carts)
-                .Include(x => x.Deposits)
-                .Include(x => x.Feedbacks)
-                .Include(x => x.Memberships)
-                .Include(x => x.Notifications)
-                .Include(x => x.Payments)
-                .Include(x => x.RentalOrders)
-                .Include(x => x.Ratings)
+                // .Include(x => x.Carts)
+                // .Include(x => x.Deposits)
+                // .Include(x => x.Feedbacks)
+                // .Include(x => x.Memberships)
+                // .Include(x => x.Notifications)
+                // .Include(x => x.Payments)
+                // .Include(x => x.RentalOrders)
+                // .Include(x => x.Ratings)
+                .Include(x => x.Roles)
+                .Select(x => new AllProfileUser
+                {
+                    UserId = x.UserId,
+                    UserName = x.UserName,
+                    FullName = x.FullName,
+                    Phone = x.Phone,
+                    Gender = x.Gender,
+                    DateOfBirth = x.DateOfBirth,
+                    Email = x.Email,
+                    ProfileImage = x.ProfileImage,
+                    UserStatus = x.UserStatus,
+                    Roles = x.Roles.Select(r => r.RoleName).ToList()
+                })
                 .OrderByDescending(x => x.UserId)
                 .ToListAsync();
         }
 
+
         public async Task<User> GetUserById(int userId)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            return await _context.Users
+                .Include(x => x.Roles)
+                .FirstAsync(x => x.UserId == userId);
         }
 
         public async Task<User> GetUserByUsername(string username)
         {
             return await _context.Users
-                .Include(x => x.Roles)
-                .FirstOrDefaultAsync(x => x.UserName == username);
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.UserName == username);
         }
 
         public async Task<User> UpdateUser(User user)
@@ -88,9 +91,8 @@ namespace EXE201.DAL.Repository
                 existUser.Email = user.Email;
                 existUser.DateOfBirth = user.DateOfBirth;
                 existUser.ProfileImage = user.ProfileImage;
-                existUser.AccountStatus = user.AccountStatus;
+                existUser.UserStatus = user.UserStatus;
                 existUser.Deposits = user.Deposits;
-                existUser.Addresses = user.Addresses;
                 existUser.Carts = user.Carts;
                 existUser.Feedbacks = user.Feedbacks;
                 existUser.Memberships = user.Memberships;
@@ -104,6 +106,7 @@ namespace EXE201.DAL.Repository
                 await _context.SaveChangesAsync();
                 return existUser;
             }
+
             return null;
         }
 
@@ -119,9 +122,10 @@ namespace EXE201.DAL.Repository
             return await _context.Roles.FindAsync(roleId);
         }
 
-        public async Task<PagedList<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
+        public async Task<PagedResponseDTO<UserListDTO>> GetFilteredUser(UserFilterDTO filter)
         {
             var query = _context.Users
+                .Include(u => u.Roles)
                 .Include(u => u.Memberships)
                 .ThenInclude(m => m.MembershipType)
                 .Select(u => new UserListDTO
@@ -133,9 +137,11 @@ namespace EXE201.DAL.Repository
                     Phone = u.Phone,
                     Gender = u.Gender,
                     DateOfBirth = u.DateOfBirth,
+                    Address = u.Address,
                     Email = u.Email,
                     ProfileImage = u.ProfileImage,
-                    AccountStatus = u.AccountStatus,
+                    Roles = u.Roles.Select(r => r.RoleName).ToList(),
+                    AccountStatus = u.UserStatus,
                     MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .AsQueryable();
@@ -171,10 +177,14 @@ namespace EXE201.DAL.Repository
                         query = filter.Sort ? query.OrderByDescending(u => u.FullName) : query.OrderBy(u => u.FullName);
                         break;
                     case "dateofbirth":
-                        query = filter.Sort ? query.OrderByDescending(u => u.DateOfBirth) : query.OrderBy(u => u.DateOfBirth);
+                        query = filter.Sort
+                            ? query.OrderByDescending(u => u.DateOfBirth)
+                            : query.OrderBy(u => u.DateOfBirth);
                         break;
                     case "membershiptypename":
-                        query = filter.Sort ? query.OrderByDescending(u => u.MembershipTypeName) : query.OrderBy(u => u.MembershipTypeName);
+                        query = filter.Sort
+                            ? query.OrderByDescending(u => u.MembershipTypeName)
+                            : query.OrderBy(u => u.MembershipTypeName);
                         break;
                     default:
                         query = query.OrderBy(u => u.UserId); // Default sort order
@@ -186,8 +196,18 @@ namespace EXE201.DAL.Repository
                 query = query.OrderBy(u => u.UserId); // Default sort order
             }
 
-            var users = await query.ToListAsync();
-            return PagedList<UserListDTO>.ToPagedList(users, filter.PageNumber, filter.PageSize);
+            var totalCount = await query.CountAsync();
+            var users = await query.Skip((filter.PageNumber - 1) * filter.PageSize).Take(filter.PageSize).ToListAsync();
+
+            var pagedResponse = new PagedResponseDTO<UserListDTO>
+            {
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = totalCount,
+                Items = users
+            };
+
+            return pagedResponse;
         }
 
 
@@ -196,7 +216,7 @@ namespace EXE201.DAL.Repository
             var user = await _context.Users
                 .Include(u => u.Roles)
                 .Include(u => u.Memberships)
-                    .ThenInclude(m => m.MembershipType)
+                .ThenInclude(m => m.MembershipType)
                 .Where(u => u.UserId == userId)
                 .Select(u => new UserProfileDTO
                 {
@@ -207,14 +227,27 @@ namespace EXE201.DAL.Repository
                     Gender = u.Gender,
                     DateOfBirth = u.DateOfBirth,
                     Email = u.Email,
+                    Address = u.Address,
                     ProfileImage = u.ProfileImage,
-                    AccountStatus = u.AccountStatus,
-                    Roles = u.Roles.Select(r => r.RoleName),
-                    MembershipTypes = u.Memberships.Select(m => m.MembershipType.MembershipTypeName)
+                    AccountStatus = u.UserStatus,
+                    Roles = string.Join(", ", u.Roles.Select(r => r.RoleName)),
+                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .FirstOrDefaultAsync();
 
             return user;
+        }
+
+        public async Task<Token> GetRefreshTokenByUserId(string userId)
+        {
+            return await _context.Tokens.FirstOrDefaultAsync(t =>
+                t.UserId.ToString() == userId && t.Status == "Active");
+        }
+
+        public async Task UpdateToken(Token token)
+        {
+            _context.Tokens.Update(token);
+            await _context.SaveChangesAsync();
         }
     }
 }

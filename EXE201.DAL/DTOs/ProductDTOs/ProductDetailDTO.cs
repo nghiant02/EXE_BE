@@ -11,11 +11,12 @@ namespace EXE201.DAL.DTOs.ProductDTOs
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }
+        public string ProductTitle { get; set; }
         public string ProductDescription { get; set; }
-        public string ProductImage { get; set; }
+        public IEnumerable<string> ProductImage { get; set; }
         public double? ProductPrice { get; set; }
-        public string ProductSize { get; set; }
-        public string ProductColor { get; set; }
+        public IEnumerable<string> ProductSize { get; set; }
+        public IEnumerable<string> ProductColor { get; set; }
         public string ProductStatus { get; set; }
         public string CategoryName { get; set; }
         public double AverageRating { get; set; }

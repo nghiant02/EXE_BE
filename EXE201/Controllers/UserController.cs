@@ -6,6 +6,10 @@ using EXE201.DAL.DTOs.EmailDTOs;
 using System.Text;
 using EXE201.BLL.Services;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
+using EXE201.DAL.Models;
+using System.Security.Claims;
+using EXE201.DAL.DTOs.TokenDTOs;
 
 namespace EXE201.Controllers
 {
@@ -15,10 +19,14 @@ namespace EXE201.Controllers
     public class UserController : Controller
     {
         private readonly IUserServices _userServices;
+        private readonly IEmailService _emailService;
+        private readonly IJwtService _jwtService;
 
-        public UserController(IUserServices userServices)
+        public UserController(IUserServices userServices, IEmailService emailService, IJwtService jwtService)
         {
             _userServices = userServices;
+            _emailService = emailService;
+            _jwtService = jwtService;
         }
 
         [HttpGet("GetAllProfileUsers")]
@@ -36,25 +44,54 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginUserViewModel loginUserViewModel)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginUserDTOs loginUserDTOs)
         {
             try
             {
-                var result = await _userServices.Login(loginUserViewModel.Username, loginUserViewModel.Password);
+                var result = await _userServices.Login(loginUserDTOs.Username, loginUserDTOs.Password);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { Status = false, Message = ex.Message });
             }
         }
-        [HttpPost("AddNewUserForStaff")]
-        public async Task<IActionResult> AddNewUser(AddNewUserDTO addNewUserDTO)
+
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTOs refreshTokenDTOs)
         {
             try
             {
-                var result = await _userServices.AddUserForStaff(addNewUserDTO);
-                return Ok(result);
+                var (newToken, newRefreshToken) = await _userServices.RefreshTokenAsync(refreshTokenDTOs.Token, refreshTokenDTOs.RefreshToken);
+                return Ok(new
+                {
+                    Token = newToken,
+                    RefreshToken = newRefreshToken
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("RegisterUser")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _userServices.RegisterUserAsync(request);
+                if (result.Success)
+                {
+                    return Ok(new { Message = "Registration successful, please check your email to verify your account.", UserId = result.UserId });
+                }
+
+                return BadRequest("An error occurred while registering the user.");
             }
             catch (Exception ex)
             {
@@ -62,12 +99,31 @@ namespace EXE201.Controllers
             }
         }
 
-        [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserDTOs registerUserDTOs)
+        [HttpPost("VerifyCode")]
+        public async Task<IActionResult> VerifyEmailWithCode(int userId, string code)
         {
             try
             {
-                var result = await _userServices.Register(registerUserDTOs);
+                var result = await _userServices.VerifyEmailWithCodeAsync(userId, code);
+                if (result)
+                {
+                    return Ok(new { Message = "Email verified successfully." });
+                }
+
+                return BadRequest("Email verification failed.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("AddNewUserForStaff")]
+        public async Task<IActionResult> AddNewUser(AddNewUserDTO addNewUserDTO)
+        {
+            try
+            {
+                var result = await _userServices.AddUserForStaff(addNewUserDTO);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -91,43 +147,34 @@ namespace EXE201.Controllers
         }
 
         [HttpPut("Change-Password")]
-        public async Task<IActionResult> UpdatePassword(int id, ChangePasswordDTO changePassword)
+        public async Task<IActionResult> UpdatePassword(
+            int userId, ChangePasswordDTO changePassword)
         {
-            var user = await _userServices.ChangePasword(id,changePassword);
+            var user = await _userServices.ChangePasword(userId, changePassword);
             return Ok(user);
         }
 
         [HttpPut("Update-Profile")]
-        public async Task<IActionResult> UpdateUser([FromQuery][Required] int id, UpdateProfileUserDTO userView)
+        public async Task<IActionResult> UpdateUser([FromQuery] [Required] int userId, UpdateProfileUserDTO userView)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = await _userServices.UserUpdateUser(id, userView);
+            var user = await _userServices.UserUpdateUser(userId, userView);
             return Ok(user);
         }
 
-        private string GetHtmlcontent(string name)
+        [HttpPut("UpdateAvatar")]
+        public async Task<IActionResult> UpdateAvatar([FromQuery][Required] int userId, UpdateAvatarUserDTO updateAvatarUserDTO)
         {
-            string Response = "<div style=\"wid" +
-                              "th:100%;text-align:center;margin:10px\">";
-            Response += "<h1>Welcome to Voguary</h1>";
-            Response +=
-                "<img style=\"width:10rem\" src=\"https://cdn-icons-png.flaticon.com/128/1145/1145941.png\" />";
-            Response += "<h1 style=\"color:#f57f0e\">Dear " + name + "</h1>";
-            Response +=
-                "<button style=\"background-color: #f57f0e; color: white; padding: 14px 20px; margin: 8px 0; border: none; cursor: pointer; border-radius: 4px;\">";
-            Response += "<a href=\" " + name +
-                        "\" style=\"text-decoration: none; color: white;\">Activate the account</a>";
-            Response += "</button>";
-            Response += "<div><h1>Contact us: lammjnhphong4560@gmail.com</h1></div>";
-            Response += "</div>";
-            return Response;
+            var result = await _userServices.UserUpdateAvartar(userId, updateAvatarUserDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetFilteredUser")]
-        public async Task<IActionResult> GetFilteredUser([FromQuery] UserFilterDTO filter)
+        public async Task<IActionResult> GetFilteredUser(
+            [FromQuery] UserFilterDTO filter)
         {
             var users = await _userServices.GetFilteredUser(filter);
             return Ok(users);
