@@ -73,5 +73,10 @@ namespace EXE201.BLL.Services
         {
             return await _productRepository.GetHighlyRatedProducts(topN);
         }
+
+        public async Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, int pageNumber, int pageSize)
+        {
+            return await _productRepository.GetProductRecommendationsByCategory(productId, pageNumber, pageSize);
+        }
     }
 }

@@ -21,4 +21,15 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         public double AverageRating { get; set; }
         public int ColorCount { get; set; }
     }
+
+    public class ProductListRecommendByCategoryDTO
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public string ProductTitle { get; set; }
+        public string ProductDescription { get; set; }
+        public List<string> ProductImage { get; set; }
+        public double? ProductPrice { get; set; }
+        public double AverageRating { get; set; }
+    }
 }
