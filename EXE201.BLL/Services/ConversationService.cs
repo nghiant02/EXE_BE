@@ -1,4 +1,5 @@
 using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.ConversationDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 
@@ -14,12 +15,12 @@ public class ConversationService : IConversationService
     }
 
 
-    public async Task<Conversation> GetConversationByConversationId(int conversationId)
+    public async Task<ViewConversationDto> GetConversationByConversationId(int conversationId)
     {
         return await _conversationRepository.GetConversationByIdAsync(conversationId);
     }
 
-    public async Task<IEnumerable<Conversation>> GetConversations(int userId)
+    public async Task<IEnumerable<ViewConversationDto>> GetConversations(int userId)
     {
         return await _conversationRepository.GetConversations(userId);
     }
@@ -29,7 +30,8 @@ public class ConversationService : IConversationService
         return await _conversationRepository.FindConversationAsync(senderId, receiverId);
     }
 
-    public async Task<(IEnumerable<Conversation> conversations, Conversation conversation)> NewConversationAsync(int senderId, int receiverId)
+    public async Task<(IEnumerable<ViewConversationDto> conversations, Conversation conversation)> NewConversationAsync(
+        int senderId, int receiverId)
     {
         return await _conversationRepository.NewConversationAsync(senderId, receiverId);
     }

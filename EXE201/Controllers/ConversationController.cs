@@ -20,4 +20,11 @@ public class ConversationController : ControllerBase
         var result = await _conversationService.GetConversations(userId);
         return Ok(result);
     }
+
+    [HttpGet("GetConversationByConversationId")]
+    public async Task<IActionResult> GetConversationByConversationId(int conversationId)
+    {
+        var result = await _conversationService.GetConversationByConversationId(conversationId);
+        return Ok(result);
+    }
 }

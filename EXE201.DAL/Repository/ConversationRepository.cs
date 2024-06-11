@@ -1,3 +1,4 @@
+using EXE201.DAL.DTOs.ConversationDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
@@ -11,7 +12,8 @@ public class ConversationRepository : GenericRepository<Conversation>, IConversa
     {
     }
 
-    public async Task<(IEnumerable<Conversation> conversations, Conversation conversation)> NewConversationAsync(int senderId,
+    public async Task<(IEnumerable<ViewConversationDto> conversations, Conversation conversation)> NewConversationAsync(
+        int senderId,
         int receiverId)
     {
         try
@@ -62,13 +64,32 @@ public class ConversationRepository : GenericRepository<Conversation>, IConversa
         }
     }
 
-    public async Task<IEnumerable<Conversation>> GetConversations(int userId)
+    public async Task<IEnumerable<ViewConversationDto>> GetConversations(int userId)
     {
         try
         {
             return await _context.Conversations
-                .Where(c => c.User1Id == userId || c.User2Id == userId)
-                .OrderByDescending(c => c.UpdatedAt)
+                .Include(x => x.Messages)
+                .Where(x => x.User1Id == userId || x.User2Id == userId)
+                .Select(x => new ViewConversationDto
+                {
+                    ConversationId = x.ConversationId,
+                    User1Id = x.User1Id,
+                    User2Id = x.User2Id,
+                    LastMessage = x.LastMessage,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt,
+                    Messages = x.Messages.Select(y => new ViewMessageDto
+                    {
+                        MessageId = y.MessageId,
+                        Message1 = y.Message1,
+                        CreatedAt = y.CreatedAt,
+                        UpdatedAt = y.UpdatedAt,
+                        Seen = y.Seen,
+                        SenderId = y.SenderId
+                    }).ToList()
+                })
+                .OrderByDescending(x => x.UpdatedAt)
                 .ToListAsync();
         }
         catch (Exception ex)
@@ -78,13 +99,32 @@ public class ConversationRepository : GenericRepository<Conversation>, IConversa
         }
     }
 
-    public async Task<Conversation> GetConversationByIdAsync(int conversationId)
+    public async Task<ViewConversationDto> GetConversationByIdAsync(int conversationId)
     {
         try
         {
-            return await _context.Conversations
+            var conversationDto = await _context.Conversations
                 .Include(c => c.Messages)
+                .Select(c => new ViewConversationDto
+                {
+                    ConversationId = c.ConversationId,
+                    User1Id = c.User1Id,
+                    User2Id = c.User2Id,
+                    LastMessage = c.LastMessage,
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt,
+                    Messages = c.Messages.Select(y => new ViewMessageDto
+                    {
+                        MessageId = y.MessageId,
+                        Message1 = y.Message1,
+                        CreatedAt = y.CreatedAt,
+                        UpdatedAt = y.UpdatedAt,
+                        Seen = y.Seen,
+                        SenderId = y.SenderId
+                    }).ToList()
+                })
                 .FirstOrDefaultAsync(c => c.ConversationId == conversationId);
+            return conversationDto;
         }
         catch (Exception ex)
         {
