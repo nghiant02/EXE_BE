@@ -4,6 +4,7 @@ using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
 using EXE201.ViewModel.UserViewModel;
+using LMSystem.Repository.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -71,7 +72,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO updateProductDTO)
+        public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductDTO updateProductDTO)
         {
             var response = await _productServices.UpdateProduct(updateProductDTO);
             if (response.Status == "Error")
@@ -107,6 +108,32 @@ namespace EXE201.Controllers
         {
             var products = await _productServices.GetHighlyRatedProducts(topN);
             return Ok(products);
+        }
+
+        [HttpGet("RecommendByCategory/{productId}")]
+        public async Task<IActionResult> GetProductRecommendationsByCategory(int productId, [FromQuery] ProductPagingRecommendByCategoryDTO filter)
+        {
+            var result = await _productServices.GetProductRecommendationsByCategory(productId, filter);
+
+            if (!result.Items.Any())
+            {
+                return NotFound(new { Message = "No recommendations found" });
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("SuggestionsForSearch")]
+        public async Task<IActionResult> GetProductSuggestions([FromQuery] string searchTerm)
+        {
+            var suggestions = await _productServices.GetProductSuggestions(searchTerm);
+
+            if (!suggestions.Any())
+            {
+                return NotFound(new { Message = "No product suggestions found" });
+            }
+
+            return Ok(suggestions);
         }
     }
 }

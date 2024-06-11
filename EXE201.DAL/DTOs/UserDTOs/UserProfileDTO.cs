@@ -15,6 +15,7 @@ namespace EXE201.DAL.DTOs.UserDTOs
         public int? Gender { get; set; }
         public DateOnly? DateOfBirth { get; set; }
         public string Email { get; set; }
+        public string Address { get; set; }
         public string ProfileImage { get; set; }
         public string AccountStatus { get; set; }
         public string Roles { get; set; }
