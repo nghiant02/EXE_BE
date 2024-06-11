@@ -26,16 +26,16 @@ namespace EXE201.Controllers
             return Ok(product);
         }
 
-        [HttpGet("GetProductById")]
-        public async Task<IActionResult> GetProductById([FromQuery] int productId)
-        {
-            var response = await _productServices.GetById(productId);
-            if (response.ProductStatus == "Error")
-            {
-                return Conflict(response);
-            }
-            return Ok(response);
-        }
+        //[HttpGet("GetProductById")]
+        //public async Task<IActionResult> GetProductById([FromQuery] int productId)
+        //{
+        //    var response = await _productServices.GetById(productId);
+        //    if (response.ProductStatus == "Error")
+        //    {
+        //        return Conflict(response);
+        //    }
+        //    return Ok(response);
+        //}
 
         [HttpPost("AddProduct")]
         public async Task<IActionResult> AddProduct([FromBody] AddProductDTO addProductDTO)
@@ -81,12 +81,12 @@ namespace EXE201.Controllers
             return Ok(response);
         }
 
-        [HttpGet("PagingAndFilteredProducts")]
-        public async Task<IActionResult> GetFilteredProducts([FromQuery] ProductFilterDTO filter)
-        {
-            var products = await _productServices.GetFilteredProducts(filter);
-            return Ok(products);
-        }
+        //[HttpGet("PagingAndFilteredProducts")]
+        //public async Task<IActionResult> GetFilteredProducts([FromQuery] ProductFilterDTO filter)
+        //{
+        //    var products = await _productServices.GetFilteredProducts(filter);
+        //    return Ok(products);
+        //}
 
         [HttpGet("RecommendHot")]
         public async Task<IActionResult> RecommendHot(int topN = 10)
