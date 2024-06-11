@@ -29,7 +29,7 @@ public class ConversationRepository : GenericRepository<Conversation>, IConversa
                 User1Id = senderId,
                 User2Id = receiverId,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = BitConverter.GetBytes(DateTime.UtcNow.ToBinary())
+                UpdatedAt = DateTime.UtcNow
             };
 
             await _context.Conversations.AddAsync(newConversation);

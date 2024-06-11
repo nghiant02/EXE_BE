@@ -26,8 +26,8 @@ public partial class Conversation
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
-    [Required]
-    public byte[] UpdatedAt { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? UpdatedAt { get; set; }
 
     [InverseProperty("Conversation")]
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();

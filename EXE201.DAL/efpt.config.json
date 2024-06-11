@@ -75,7 +75,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ProductColor]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ProductDetail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductImage]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductSize]",
          "ObjectType": 0
       },
       {

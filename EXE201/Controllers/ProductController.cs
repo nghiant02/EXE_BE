@@ -71,7 +71,7 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDTO updateProductDTO)
+        public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductDTO updateProductDTO)
         {
             var response = await _productServices.UpdateProduct(updateProductDTO);
             if (response.Status == "Error")

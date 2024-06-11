@@ -90,7 +90,7 @@ namespace EXE201.DAL.Repository
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
                     ProductDescription = p.ProductDescription,
-                    ProductImage = p.ProductImage,
+                    //ProductImage = p.ProductImage,
                     ProductPrice = p.ProductPrice,
                     //ProductSize = p.ProductSize,
                     //ProductColor = p.ProductColor,

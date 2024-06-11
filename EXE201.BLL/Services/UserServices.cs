@@ -224,10 +224,10 @@ namespace EXE201.BLL.Services
             updatingUser.UserStatus = oldUser.First().UserStatus;
             updatingUser.Password = oldUser.First().Password;
             updatingUser.ProfileImage = oldUser.First().ProfileImage;
-            updatingUser.HouseNumber = oldUser.First().HouseNumber;
-            updatingUser.StreetName = oldUser.First().StreetName;
-            updatingUser.District = oldUser.First().District;
-            updatingUser.CityProvince = oldUser.First().CityProvince;
+            //updatingUser.HouseNumber = oldUser.First().HouseNumber;
+            //updatingUser.StreetName = oldUser.First().StreetName;
+            //updatingUser.District = oldUser.First().District;
+            //updatingUser.CityProvince = oldUser.First().CityProvince;
 
             return await _userRepository.UpdateUser(updatingUser);
         }

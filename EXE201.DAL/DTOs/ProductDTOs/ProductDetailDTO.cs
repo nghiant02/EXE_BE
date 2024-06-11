@@ -13,7 +13,7 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         public string ProductName { get; set; }
         public string ProductTitle { get; set; }
         public string ProductDescription { get; set; }
-        public string ProductImage { get; set; }
+        public IEnumerable<string> ProductImage { get; set; }
         public double? ProductPrice { get; set; }
         public IEnumerable<string> ProductSize { get; set; }
         public IEnumerable<string> ProductColor { get; set; }
