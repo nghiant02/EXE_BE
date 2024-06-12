@@ -10,10 +10,8 @@ namespace EXE201.BLL.Interfaces
 {
     public interface INotificationServices
     {
-        Task<IEnumerable<NotificationDto>> GetAllNotificationsAsync();
-        Task<NotificationDto> GetNotificationByIdAsync(int id);
-        Task AddNotificationAsync(NotificationAddDto notificationDto);
-        Task UpdateNotificationAsync(NotificationEditDto notificationDto);
-        Task DeleteNotificationAsync(int id);
+        Task<IEnumerable<NotificationDto>> GetNotificationsByUserIdAsync(int userId);
+        Task SendNotificationAsync(NotificationSendDto notificationSendDto);
+        Task MarkNotificationAsSeenAsync(int notificationId);
     }
 }
