@@ -157,5 +157,27 @@ namespace EXE201.Controllers
             }
             return Ok(new { Message = response.Message });
         }
+
+        [HttpPost("AddSizeToProduct")]
+        public async Task<IActionResult> AddSizeToProduct([FromQuery] int productId, [FromQuery] int sizeId)
+        {
+            var response = await _productServices.AddSizeToProduct(productId, sizeId);
+            if (response.Status == "Error")
+            {
+                return BadRequest(new { Message = response.Message });
+            }
+            return Ok(new { Message = response.Message });
+        }
+
+        [HttpDelete("DeleteSizeFromProduct")]
+        public async Task<IActionResult> DeleteSizeFromProduct([FromQuery] int productId, [FromQuery] int sizeId)
+        {
+            var response = await _productServices.DeleteSizeFromProduct(productId, sizeId);
+            if (response.Status == "Error")
+            {
+                return BadRequest(new { Message = response.Message });
+            }
+            return Ok(new { Message = response.Message });
+        }
     }
 }
