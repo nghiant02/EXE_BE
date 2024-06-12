@@ -41,6 +41,8 @@ builder.Services.AddScoped<IFeedbacksRepository, FeedbackRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository >();
 builder.Services.AddScoped<IProductDetailRepository, ProductDetailRepository>();
 builder.Services.AddScoped<IColorRepository, ColorRepository>();
+builder.Services.AddScoped<ISizeRepository, SizeRepository>();
+
 
 
 
@@ -65,6 +67,8 @@ builder.Services.AddScoped<IFeedbackServices, FeedbackServices>();
 builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IProductDetailServices, ProductDetailServices>();
 builder.Services.AddScoped<IColorServices, ColorServices>();
+builder.Services.AddScoped<ISizeServices, SizeServices>();
+
 
 
 // Add Cors
