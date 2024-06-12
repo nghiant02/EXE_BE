@@ -15,47 +15,30 @@ namespace EXE201.Controllers
             _notificationService = notificationService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetNotifications()
+        [HttpGet("GetNotificationByUserId")]
+        public async Task<IActionResult> GetNotificationsByUserIdAsync(int userId)
         {
-            var notifications = await _notificationService.GetAllNotificationsAsync();
+            var notifications = await _notificationService.GetNotificationsByUserIdAsync(userId);
             return Ok(notifications);
         }
 
-        [HttpGet("{notificationId}")]
-        public async Task<IActionResult> GetNotification(int notificationId)
+        [HttpPost("SendNotification")]
+        public async Task<IActionResult> SendNotificationAsync([FromBody] NotificationSendDto notificationSendDto)
         {
-            var notification = await _notificationService.GetNotificationByIdAsync(notificationId);
-            if (notification == null)
+            if (notificationSendDto == null)
             {
-                return NotFound();
+                return BadRequest("Notification data is null.");
             }
-            return Ok(notification);
+
+            await _notificationService.SendNotificationAsync(notificationSendDto);
+            return Ok("Notification sent successfully.");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateNotification([FromBody] NotificationAddDto notificationDto)
+        [HttpPut("MarkAsSeen")]
+        public async Task<IActionResult> MarkAsSeenAsync(int notificationId)
         {
-            await _notificationService.AddNotificationAsync(notificationDto);
-            return CreatedAtAction(nameof(GetNotification), new { id = notificationDto.UserId }, notificationDto);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNotification(int id, [FromBody] NotificationEditDto notificationDto)
-        {
-            if (id != notificationDto.NotificationId)
-            {
-                return BadRequest();
-            }
-            await _notificationService.UpdateNotificationAsync(notificationDto);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNotification(int notificationId)
-        {
-            await _notificationService.DeleteNotificationAsync(notificationId);
-            return NoContent();
+            await _notificationService.MarkNotificationAsSeenAsync(notificationId);
+            return Ok("Notification marked as seen.");
         }
     }
 }

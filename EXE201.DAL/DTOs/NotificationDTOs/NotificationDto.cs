@@ -12,6 +12,7 @@ namespace EXE201.DAL.DTOs.NotificationDTOs
         public int UserId { get; set; }
         public string NotificationMessage { get; set; }
         public DateTime DateSent { get; set; }
-        public string UserName { get; set; }
+        public string NotificationType { get; set; }
+        public bool Seen { get; set; }
     }
 }
