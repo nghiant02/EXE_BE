@@ -83,5 +83,15 @@ namespace EXE201.BLL.Services
         {
             return await _productRepository.GetProductSuggestions(searchTerm);
         }
+
+        public async Task<ResponeModel> AddColorToProduct(int productId, int colorId)
+        {
+            return await _productRepository.AddColorToProduct(productId, colorId);
+        }
+
+        public async Task<ResponeModel> DeleteColorFromProduct(int productId, int colorId)
+        {
+            return await _productRepository.DeleteColorFromProduct(productId, colorId);
+        }
     }
 }
