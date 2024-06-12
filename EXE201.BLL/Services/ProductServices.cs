@@ -7,6 +7,7 @@ using EXE201.DAL.Models;
 using LMSystem.Repository.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,6 +93,16 @@ namespace EXE201.BLL.Services
         public async Task<ResponeModel> DeleteColorFromProduct(int productId, int colorId)
         {
             return await _productRepository.DeleteColorFromProduct(productId, colorId);
+        }
+
+        public async Task<ResponeModel> AddSizeToProduct(int productId, int sizeId)
+        {
+            return await _productRepository.AddSizeToProduct(productId, sizeId);
+        }
+
+        public async Task<ResponeModel> DeleteSizeFromProduct(int productId, int sizeId)
+        {
+            return await _productRepository.DeleteSizeFromProduct(productId, sizeId);
         }
     }
 }
