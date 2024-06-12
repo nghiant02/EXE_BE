@@ -1,6 +1,7 @@
 ﻿using EXE201.BLL.Interfaces;
 using EXE201.BLL.Services;
 using EXE201.DAL.DTOs.PaymentDTOs;
+using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -16,27 +17,49 @@ namespace EXE201.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpPost("EnterPaymentDetails")]
-        public async Task<IActionResult> EnterPaymentDetails([FromBody] EnterPaymentDetailsDTO paymentDetails)
+        [HttpPost("AddPaymentForUser")]
+        public async Task<IActionResult> AddPaymentForUser([FromQuery] int userId, [FromQuery] AddPaymentDTO request)
         {
-            var result = await _paymentService.EnterPaymentDetails(paymentDetails);
-            if (result.Status == "Success")
+            var response = await _paymentService.AddPaymentForUser(userId, request);
+            if (response.Status == "Error")
             {
-                return Ok(result);
+                return BadRequest(new { Message = response.Message });
             }
-            return BadRequest(result);
+            return Ok(response.DataObject);
         }
 
-        [HttpPost("ProcessPayment")]
-        public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentDTO processPayment)
+        [HttpPost("ConfirmPayment")]
+        public async Task<IActionResult> ConfirmPayment([FromQuery] int paymentId)
         {
-            var result = await _paymentService.ProcessPayment(processPayment);
-            if (result.Status == "Success")
+            var response = await _paymentService.ConfirmPayment(paymentId);
+            if (response.Status == "Error")
             {
-                return Ok(result);
+                return BadRequest(new { Message = response.Message });
             }
-            return BadRequest(result);
+            return Ok(response.DataObject);
         }
+
+        //[HttpPost("EnterPaymentDetails")]
+        //public async Task<IActionResult> EnterPaymentDetails([FromBody] EnterPaymentDetailsDTO paymentDetails)
+        //{
+        //    var result = await _paymentService.EnterPaymentDetails(paymentDetails);
+        //    if (result.Status == "Success")
+        //    {
+        //        return Ok(result);
+        //    }
+        //    return BadRequest(result);
+        //}
+
+        //[HttpPost("ProcessPayment")]
+        //public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentDTO processPayment)
+        //{
+        //    var result = await _paymentService.ProcessPayment(processPayment);
+        //    if (result.Status == "Success")
+        //    {
+        //        return Ok(result);
+        //    }
+        //    return BadRequest(result);
+        //}
 
         [HttpGet("ViewHistoryPaymentByUserId")]
         public async Task<IActionResult> GetPaymentsByUserId(int userId)
