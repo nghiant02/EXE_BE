@@ -40,6 +40,8 @@ builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IFeedbacksRepository, FeedbackRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository >();
 builder.Services.AddScoped<IProductDetailRepository, ProductDetailRepository>();
+builder.Services.AddScoped<IColorRepository, ColorRepository>();
+
 
 
 // Add Services
@@ -62,6 +64,8 @@ builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IFeedbackServices, FeedbackServices>();
 builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IProductDetailServices, ProductDetailServices>();
+builder.Services.AddScoped<IColorServices, ColorServices>();
+
 
 // Add Cors
 builder.Services.AddCors(options =>
