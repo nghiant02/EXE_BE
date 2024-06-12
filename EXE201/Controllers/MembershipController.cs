@@ -15,9 +15,16 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetAllMembership")]
-        public async Task<IActionResult> getAll()
+        public async Task<IActionResult> GetAll()
         {
             var result = await _membershipServices.GetMemberships();
+            return Ok(result);
+        }
+
+        [HttpGet("GetMembershipByUserId")]
+        public async Task<IActionResult> GetMembershipByUserId(int userId)
+        {
+            var result = await _membershipServices.GetMembershipByUserId(userId);
             return Ok(result);
         }
     }
