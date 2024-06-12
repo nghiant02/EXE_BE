@@ -11,6 +11,7 @@ namespace EXE201.DAL.Repository
     public class ColorRepository : GenericRepository<Color>, IColorRepository
     {
         private readonly EXE201Context _context;
+
         public ColorRepository(EXE201Context context) : base(context)
         {
             _context = context;
@@ -28,6 +29,13 @@ namespace EXE201.DAL.Repository
             if (string.IsNullOrEmpty(colorName))
             {
                 return new ResponeModel { Status = "Error", Message = "Color name is required" };
+            }
+
+            // Check if color name already exists
+            var exists = await _context.Colors.AnyAsync(c => c.ColorName == colorName);
+            if (exists)
+            {
+                return new ResponeModel { Status = "Error", Message = "Color name already exists" };
             }
 
             var color = new Color { ColorName = colorName };
@@ -74,6 +82,13 @@ namespace EXE201.DAL.Repository
             if (string.IsNullOrEmpty(newColorName))
             {
                 return new ResponeModel { Status = "Error", Message = "New color name is required" };
+            }
+
+            // Check if new color name already exists
+            var exists = await _context.Colors.AnyAsync(c => c.ColorName == newColorName && c.ColorId != colorId);
+            if (exists)
+            {
+                return new ResponeModel { Status = "Error", Message = "Color name already exists" };
             }
 
             color.ColorName = newColorName;

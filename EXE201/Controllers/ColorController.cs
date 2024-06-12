@@ -1,4 +1,5 @@
-﻿using EXE201.DAL.DTOs.ColorDTOs;
+﻿using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.ColorDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,24 +9,24 @@ using System.Threading.Tasks;
 [ApiController]
 public class ColorController : ControllerBase
 {
-    private readonly IColorRepository _colorRepository;
+    private readonly IColorServices _colorServices;
 
-    public ColorController(IColorRepository colorRepository)
+    public ColorController(IColorServices colorServices)
     {
-        _colorRepository = colorRepository;
+        _colorServices = colorServices;
     }
 
     [HttpGet("GetAllColors")]
     public async Task<IActionResult> GetAllColors()
     {
-        var colors = await _colorRepository.GetAllColors();
+        var colors = await _colorServices.GetAllColors();
         return Ok(colors);
     }
 
     [HttpPost("CreateColor")]
     public async Task<IActionResult> CreateColor([FromBody] CreateColorDTO request)
     {
-        var response = await _colorRepository.CreateColor(request.ColorName);
+        var response = await _colorServices.CreateColor(request.ColorName);
         if (response.Status == "Error")
         {
             return BadRequest(new { Message = response.Message });
@@ -36,7 +37,7 @@ public class ColorController : ControllerBase
     [HttpDelete("DeleteColor")]
     public async Task<IActionResult> DeleteColor(int colorId)
     {
-        var response = await _colorRepository.DeleteColor(colorId);
+        var response = await _colorServices.DeleteColor(colorId);
         if (response.Status == "Error")
         {
             return NotFound(new { Message = response.Message });
@@ -47,7 +48,7 @@ public class ColorController : ControllerBase
     [HttpPut("UpdateColor")]
     public async Task<IActionResult> UpdateColor([FromBody] UpdateColorDTO request)
     {
-        var response = await _colorRepository.UpdateColor(request.ColorId, request.NewColorName);
+        var response = await _colorServices.UpdateColor(request.ColorId, request.NewColorName);
         if (response.Status == "Error")
         {
             return BadRequest(new { Message = response.Message });
