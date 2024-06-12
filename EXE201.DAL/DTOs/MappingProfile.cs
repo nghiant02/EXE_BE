@@ -24,10 +24,8 @@ namespace EXE201.BLL.DTOs
             CreateMap<UpdateProfileUserDTO, User>();
             CreateMap<UpdateCategoryDTOs, Category>();
             CreateMap<AddCategoryDTOs, Category>();
-            CreateMap<NotificationAddDto, Notification>();
-            CreateMap<NotificationEditDto, Notification>();
-            CreateMap<Notification, NotificationDto>()
-                            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+            CreateMap<Notification, NotificationDto>();
+            CreateMap<NotificationSendDto, Notification>();
             CreateMap<AddNewCartDTO, Cart>();
             CreateMap<AddRatingDTO, Rating>();
             CreateMap<UpdateAvatarUserDTO, User>();

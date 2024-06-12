@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace EXE201.DAL.DTOs.NotificationDTOs
 {
-    public class NotificationEditDto
+    public class NotificationSendDto
     {
-        public int NotificationId { get; set; }
+        public int UserId { get; set; }
         public string NotificationMessage { get; set; }
         public DateTime DateSent { get; set; }
+        public string NotificationType { get; set; }
     }
 }

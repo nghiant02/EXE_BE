@@ -16,14 +16,28 @@ namespace EXE201.DAL.Repository
         {
         }
 
-        public async Task<IEnumerable<Notification>> GetAllAsync()
+        public async Task<IEnumerable<Notification>> GetNotificationsByUserIdAsync(int userId)
         {
-            return await _context.Notifications.Include(n => n.User).ToListAsync();
+            return await _context.Notifications
+                .Where(n => n.UserId == userId)
+                .ToListAsync();
         }
 
-        public async Task<Notification> GetByIdAsync(int id)
+        public async Task AddNotificationAsync(Notification notification)
         {
-            return await _context.Notifications.Include(n => n.User).FirstOrDefaultAsync(n => n.NotificationId == id);
+            await AddAsync(notification);
+            await SaveChangesAsync();
+        }
+
+        public async Task MarkAsSeenAsync(int notificationId)
+        {
+            var notification = await GetByIdAsync(notificationId);
+            if (notification != null)
+            {
+                notification.Seen = true;
+                Update(notification);
+                await SaveChangesAsync();
+            }
         }
     }
 }

@@ -22,44 +22,23 @@ namespace EXE201.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<NotificationDto>> GetAllNotificationsAsync()
+        public async Task<IEnumerable<NotificationDto>> GetNotificationsByUserIdAsync(int userId)
         {
-            var notifications = await _notificationRepository.GetAllAsync();
+            var notifications = await _notificationRepository.GetNotificationsByUserIdAsync(userId);
             return _mapper.Map<IEnumerable<NotificationDto>>(notifications);
         }
 
-        public async Task<NotificationDto> GetNotificationByIdAsync(int id)
+        public async Task SendNotificationAsync(NotificationSendDto notificationSendDto)
         {
-            var notification = await _notificationRepository.GetByIdAsync(id);
-            return _mapper.Map<NotificationDto>(notification);
+            var notification = _mapper.Map<Notification>(notificationSendDto);
+            notification.DateSent = DateTime.UtcNow;
+            notification.Seen = false;
+            await _notificationRepository.AddNotificationAsync(notification);
         }
 
-        public async Task AddNotificationAsync(NotificationAddDto notificationDto)
+        public async Task MarkNotificationAsSeenAsync(int notificationId)
         {
-            var notification = _mapper.Map<Notification>(notificationDto);
-            await _notificationRepository.AddAsync(notification);
-            await _notificationRepository.SaveChangesAsync();
-        }
-
-        public async Task UpdateNotificationAsync(NotificationEditDto notificationDto)
-        {
-            var notification = await _notificationRepository.GetByIdAsync(notificationDto.NotificationId);
-            if (notification != null)
-            {
-                _mapper.Map(notificationDto, notification);
-                _notificationRepository.Update(notification);
-                await _notificationRepository.SaveChangesAsync();
-            }
-        }
-
-        public async Task DeleteNotificationAsync(int id)
-        {
-            var notification = await _notificationRepository.GetByIdAsync(id);
-            if (notification != null)
-            {
-                await _notificationRepository.Delete(notification);
-                await _notificationRepository.SaveChangesAsync();
-            }
+            await _notificationRepository.MarkAsSeenAsync(notificationId);
         }
     }
 }

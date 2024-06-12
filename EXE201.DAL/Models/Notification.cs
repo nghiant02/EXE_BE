@@ -24,6 +24,11 @@ public partial class Notification
     [Column(TypeName = "datetime")]
     public DateTime? DateSent { get; set; }
 
+    [StringLength(50)]
+    public string NotificationType { get; set; }
+
+    public bool? Seen { get; set; }
+
     [ForeignKey("UserId")]
     [InverseProperty("Notifications")]
     public virtual User User { get; set; }
