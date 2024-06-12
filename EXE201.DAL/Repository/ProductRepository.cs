@@ -555,5 +555,79 @@ namespace EXE201.DAL.Repository
             return suggestions;
         }
 
+        public async Task<ResponeModel> AddColorToProduct(int productId, int colorId)
+        {
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductColors)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product not found" };
+                }
+
+                var colorExists = await _context.Colors.AnyAsync(c => c.ColorId == colorId);
+                if (!colorExists)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Color not found" };
+                }
+
+                if (product.ProductColors.Any(pc => pc.ColorId == colorId))
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product already has this color" };
+                }
+
+                var productColor = new ProductColor
+                {
+                    ProductId = productId,
+                    ColorId = colorId
+                };
+
+                product.ProductColors.Add(productColor);
+                await _context.SaveChangesAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Color added to product successfully" };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while adding the color to the product" };
+            }
+        }
+
+        public async Task<ResponeModel> DeleteColorFromProduct(int productId, int colorId)
+        {
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductColors)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product not found" };
+                }
+
+                var productColor = product.ProductColors.FirstOrDefault(pc => pc.ColorId == colorId);
+                if (productColor == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Color not associated with this product" };
+                }
+
+                product.ProductColors.Remove(productColor);
+                await _context.SaveChangesAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Color removed from product successfully" };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while removing the color from the product" };
+            }
+        }
+
+
     }
 }

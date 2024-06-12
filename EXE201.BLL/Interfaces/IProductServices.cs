@@ -24,6 +24,8 @@ namespace EXE201.BLL.Interfaces
         Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
         Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, ProductPagingRecommendByCategoryDTO filter);
         Task<IEnumerable<ProductSuggestionDTO>> GetProductSuggestions(string searchTerm);
+        Task<ResponeModel> AddColorToProduct(int productId, int colorId);
+        Task<ResponeModel> DeleteColorFromProduct(int productId, int colorId);
 
     }
 }
