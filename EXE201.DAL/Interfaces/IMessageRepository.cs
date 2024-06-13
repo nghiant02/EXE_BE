@@ -6,7 +6,7 @@ namespace EXE201.DAL.Interfaces;
 
 public interface IMessageRepository : IGenericRepository<Message>
 {
-    // Task<ViewConversationDto> NewMessageAsync(NewMessageDto newMessage);
+    Task<ViewConversationDto> NewMessageAsync(NewMessageDto newMessage);
     Task<IEnumerable<ViewMessageDto>> GetMessageAsync(int conversationId);
     Task<IEnumerable<UnseenMessageDto>> GetUnseenMessagesAsync(int userId);
     Task MarkMessagesAsSeenAsync(int conversationId, int userId);
