@@ -146,7 +146,7 @@ namespace EXE201.Controllers
             }
         }
 
-        [HttpPut("Change-Password")]
+        [HttpPut("ChangePassword")]
         public async Task<IActionResult> UpdatePassword(
             int userId, ChangePasswordDTO changePassword)
         {
@@ -154,7 +154,7 @@ namespace EXE201.Controllers
             return Ok(user);
         }
 
-        [HttpPut("Update-Profile")]
+        [HttpPut("UpdateProfile")]
         public async Task<IActionResult> UpdateUser([FromQuery] [Required] int userId, UpdateProfileUserDTO userView)
         {
             if (!ModelState.IsValid)
