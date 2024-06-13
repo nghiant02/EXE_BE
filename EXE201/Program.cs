@@ -43,6 +43,7 @@ builder.Services.AddScoped<IProductDetailRepository, ProductDetailRepository>();
 builder.Services.AddScoped<IColorRepository, ColorRepository>();
 builder.Services.AddScoped<ISizeRepository, SizeRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 
 
@@ -69,6 +70,7 @@ builder.Services.AddScoped<IProductDetailServices, ProductDetailServices>();
 builder.Services.AddScoped<IColorServices, ColorServices>();
 builder.Services.AddScoped<ISizeServices, SizeServices>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 //builder.Services.AddScoped<PayOSPaymentService>();
 
 

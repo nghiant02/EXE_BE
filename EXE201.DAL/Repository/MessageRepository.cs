@@ -15,56 +15,57 @@ public class MessageRepository : GenericRepository<Message>, IMessageRepository
         _conversationRepository = new ConversationRepository(context);
     }
 
-    // public async Task<ViewConversationDto> NewMessageAsync(NewMessageDto newMessage)
-    // {
-    //     using var transaction = await _context.Database.BeginTransactionAsync();
-    //     try
-    //     {
-    //         var message = new Message
-    //         {
-    //             ConversationId = newMessage.ConversationId,
-    //             Message1 = newMessage.Message1,
-    //             SenderId = newMessage.SenderId,
-    //             Seen = false,
-    //             CreatedAt = DateTime.UtcNow,
-    //             UpdatedAt = DateTime.UtcNow
-    //         };
-    //
-    //         _context.Messages.Add(message);
-    //         await _context.SaveChangesAsync();
-    //
-    //         var conversation = await _context.Conversations.FindAsync(newMessage.ConversationId);
-    //         if (conversation != null)
-    //         {
-    //             conversation.LastMessage = GetLastMessagePreview(newMessage.Type, newMessage.Message1);
-    //             conversation.UpdatedAt = DateTime.UtcNow;
-    //             _context.Conversations.Update(conversation);
-    //             await _context.SaveChangesAsync();
-    //         }
-    //
-    //         await MarkMessagesAsSeenAsync(newMessage.ConversationId, newMessage.SenderId);
-    //
-    //         var conversations = await _conversationRepository.GetConversationByIdAsync(newMessage.SenderId);
-    //
-    //         await transaction.CommitAsync();
-    //
-    //         return new ViewConversationDto()
-    //         {
-    //             ConversationId = conversations.ConversationId,
-    //             LastMessage = conversations.LastMessage,
-    //             User1Id = conversations.User1Id,
-    //             User2Id = conversations.User2Id,
-    //             CreatedAt = conversations.CreatedAt,
-    //             UpdatedAt = conversations.UpdatedAt,
-    //         };
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         await transaction.RollbackAsync();
-    //         Console.Error.WriteLine("Error new message", ex);
-    //         throw;
-    //     }
-    // }
+    public async Task<ViewConversationDto> NewMessageAsync(NewMessageDto newMessage)
+    {
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            var message = new Message
+            {
+                ConversationId = newMessage.ConversationId,
+                Message1 = newMessage.Message1,
+                SenderId = newMessage.SenderId,
+                Seen = false,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+    
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+    
+            var conversation = await _context.Conversations.FindAsync(newMessage.ConversationId);
+            if (conversation != null)
+            {
+                conversation.LastMessage = GetLastMessagePreview(newMessage.Type, newMessage.Message1);
+                conversation.UpdatedAt = DateTime.UtcNow;
+                _context.Conversations.Update(conversation);
+                await _context.SaveChangesAsync();
+            }
+    
+            await MarkMessagesAsSeenAsync(newMessage.ConversationId, newMessage.SenderId);
+    
+            var conversations = await _conversationRepository.GetConversationByIdAsync(newMessage.ConversationId);
+    
+            await transaction.CommitAsync();
+    
+            return new ViewConversationDto
+            {
+                ConversationId = conversations.ConversationId,
+                LastMessage = conversations.LastMessage,
+                User1Id = conversations.User1Id,
+                User2Id = conversations.User2Id,
+                CreatedAt = conversations.CreatedAt,
+                UpdatedAt = conversations.UpdatedAt,
+                Messages = conversations.Messages
+            };
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            Console.Error.WriteLine("Error new message", ex);
+            throw;
+        }
+    }
 
     public async Task<IEnumerable<ViewMessageDto>> GetMessageAsync(int conversationId)
     {
