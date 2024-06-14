@@ -27,5 +27,6 @@ namespace EXE201.BLL.Interfaces
         Task<bool> VerifyEmailWithCodeAsync(int userId, string code);
         Task<(string Token, string RefreshToken)> RefreshTokenAsync(string token, string refreshToken);
         Task<User> UserUpdateAvartar(int id, UpdateAvatarUserDTO updateAvatarUserDTO);
+        Task<(string, UpdateProfileUserDTO)> GoogleAuthorizeUser(GoogleUserDto googleUser);
     }
 }
