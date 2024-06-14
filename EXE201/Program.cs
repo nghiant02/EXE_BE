@@ -124,7 +124,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Register Swagger services
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Voguary API", Version = "v1" });
 
     // Add JWT Authentication
     var securityScheme = new OpenApiSecurityScheme

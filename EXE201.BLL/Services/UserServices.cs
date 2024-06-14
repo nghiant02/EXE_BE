@@ -8,7 +8,8 @@ using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-
+using Google.Apis.Auth;
+using Microsoft.Extensions.Configuration;
 using Tools.Tools;
 
 
@@ -22,8 +23,8 @@ namespace EXE201.BLL.Services
         private readonly IEmailService _emailService;
         private readonly IVerifyCodeRepository _verifyCodeRepository;
         private readonly IJwtService _jwtService;
-
-        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository, IEmailService emailService, IVerifyCodeRepository verifyCodeRepository, IJwtService jwtService)
+        public UserServices(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository,
+            IEmailService emailService, IVerifyCodeRepository verifyCodeRepository, IJwtService jwtService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -43,11 +44,13 @@ namespace EXE201.BLL.Services
 
         public async Task<User> ChangePasword(int id, ChangePasswordDTO changePasswordDTO)
         {
-            var users = await _userRepository.FindAsync(x => x.UserId == id && x.Password == changePasswordDTO.CurrentPassword);
+            var users = await _userRepository.FindAsync(x =>
+                x.UserId == id && x.Password == changePasswordDTO.CurrentPassword);
             if (!users.Any())
             {
                 throw new ArgumentException("Wrong Password!");
             }
+
             var user = users.First();
             user.Password = changePasswordDTO.NewPassword;
             return await _userRepository.UpdateUser(user);
@@ -66,7 +69,7 @@ namespace EXE201.BLL.Services
             {
                 throw new UnauthorizedAccessException("Admin users cannot change their own status.");
             }
-            
+
             existUser.UserStatus = "Inactive";
             await _userRepository.UpdateUser(existUser);
             return true;
@@ -79,6 +82,7 @@ namespace EXE201.BLL.Services
             {
                 return null;
             }
+
             return user.First();
         }
 
@@ -89,6 +93,7 @@ namespace EXE201.BLL.Services
             {
                 throw new ArgumentException("Do not exist User");
             }
+
             return allUser;
         }
 
@@ -187,6 +192,7 @@ namespace EXE201.BLL.Services
             {
                 throw new Exception("Invalid Request");
             }
+
             var existUser = user.First();
             var verifyCode = checkCode.First();
 
@@ -203,6 +209,7 @@ namespace EXE201.BLL.Services
             {
                 throw new ArgumentException($"User with ID {id} not found");
             }
+
             var updateUser = _mapper.Map<User>(updateAvatarUserDTO);
             updateUser.UserId = id;
             updateUser.UserName = checkId.First().UserName;
@@ -211,6 +218,50 @@ namespace EXE201.BLL.Services
             return await _userRepository.UpdateUser(updateUser);
         }
 
+        public async Task<(string, UpdateProfileUserDTO)> GoogleAuthorizeUser(GoogleUserDto googleUser)
+        {
+            var payload = await GoogleJsonWebSignature.ValidateAsync(googleUser.IdToken);
+            User user;
+            var check = await _userRepository.FindAsync(x => x.Email == payload.Email);
+            if (check.Any())
+            {
+                user = check.First();
+            }
+            else
+            {
+                User addGoogleUser = new User
+                {
+                    Email = payload.Email,
+                    FullName = payload.Name,
+                    Phone = string.Empty,
+                    UserStatus = "Active",
+                    Roles = new List<Role> { (await _roleRepository.FindAsync(r => r.RoleName.Equals("User"))).First() },
+                    DateOfBirth = null,
+                    Gender = null,
+                    ProfileImage = payload.Picture,
+                };
+                user = await _userRepository.AddNewUser(addGoogleUser);
+            }
+
+            UpdateProfileUserDTO userUpdate = _mapper.Map<UpdateProfileUserDTO>(user);
+            var roles = user.Roles.Select(r => r.RoleName).ToList();
+            string token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, roles);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+            var tokenEntity = new Token
+            {
+                UserId = user.UserId,
+                AccessToken = token,
+                RefreshToken = refreshToken,
+                IssuedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(30),
+                Status = "Active"
+            };
+            await _userRepository.UpdateToken(tokenEntity);
+
+            return (token, userUpdate);
+        }
+
+
         public async Task<User> UserUpdateUser(int id, UpdateProfileUserDTO userView)
         {
             var oldUser = await _userRepository.FindAsync(x => x.UserId == id);
@@ -218,6 +269,7 @@ namespace EXE201.BLL.Services
             {
                 throw new ArgumentException($"User with ID {id} not found");
             }
+
             var updatingUser = _mapper.Map<User>(userView);
             updatingUser.UserId = id;
             updatingUser.UserName = oldUser.First().UserName;
