@@ -14,7 +14,7 @@ namespace EXE201.Controllers
             _productDetailServices = productDetailServices;
         }
 
-        [HttpPost("ViewProductDetailByProductId")]
+        [HttpGet("ViewProductDetailByProductId")]
         public async Task<IActionResult> GetProductDetailByProductId([FromQuery] int productId)
         {
             var productDetail = await _productDetailServices.GetProductDetailByProductId(productId);
@@ -24,22 +24,20 @@ namespace EXE201.Controllers
                 return NotFound(new { Message = "Product detail not found" });
             }
 
-            var productSpecificationDTO = new ProductSpecificationDTO
+            var productDetailView = new ProductDetailViewDTO
             {
-                ProductDetailId = productDetail.ProductDetailId,
-                ProductId = productDetail.ProductId ?? 0,
-                Description = productDetail.Description,
-                AdditionalInformation = productDetail.AdditionalInformation,
-                ShippingAndReturns = productDetail.ShippingAndReturns,
-                SizeChart = productDetail.SizeChart,
-                Reviews = productDetail.Reviews,
-                Questions = productDetail.Questions,
-                VendorInfo = productDetail.VendorInfo,
-                MoreProducts = productDetail.MoreProducts,
-                ProductPolicies = productDetail.ProductPolicies
+                Description = productDetail.Description?.Split("\n").ToArray(),
+                AdditionalInformation = productDetail.AdditionalInformation?.Split("\n").ToArray(),
+                ShippingAndReturns = productDetail.ShippingAndReturns?.Split("\n").ToArray(),
+                SizeChart = productDetail.SizeChart?.Split("\n").ToArray(),
+                Reviews = productDetail.Reviews?.Split("\n").ToArray(),
+                Questions = productDetail.Questions?.Split("\n").ToArray(),
+                VendorInfo = productDetail.VendorInfo?.Split("\n").ToArray(),
+                MoreProducts = productDetail.MoreProducts?.Split("\n").ToArray(),
+                ProductPolicies = productDetail.ProductPolicies?.Split("\n").ToArray()
             };
 
-            return Ok(productSpecificationDTO);
+            return Ok(productDetailView);
         }
 
         [HttpPost("AddProductDetail")]
