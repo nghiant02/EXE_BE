@@ -15,9 +15,6 @@ namespace EXE201.DAL.Interfaces
     {
         Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails);
         Task<ResponeModel> ConfirmPayment(int paymentId);
-        //Task<PaymentMethod> GetPaymentMethodByName(string name);
-        //Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails);
-        //Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment);
         Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId);
         Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
     }
