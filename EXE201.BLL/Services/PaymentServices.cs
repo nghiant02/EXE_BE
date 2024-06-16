@@ -105,16 +105,6 @@ namespace EXE201.BLL.Services
             return paymentResult;
         }
 
-        //public async Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails)
-        //{
-        //    return await _paymentRepository.EnterPaymentDetails(paymentDetails);
-        //}
-
-        //public async Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment)
-        //{
-        //    return await _paymentRepository.ProcessPayment(processPayment);
-        //}
-
         public async Task<IEnumerable<Payment>> GetPaymentsByUserIdAsync(int userId)
         {
             return await _paymentRepository.GetPaymentHistoryByUserIdAsync(userId);

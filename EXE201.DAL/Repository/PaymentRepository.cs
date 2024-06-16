@@ -111,51 +111,6 @@ namespace EXE201.DAL.Repository
             return new ResponeModel { Status = "Success", Message = "Payment confirmed and cart cleared successfully" };
         }
 
-        //public async Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails)
-        //{
-        //    var order = await _context.RentalOrders.FindAsync(paymentDetails.OrderId);
-        //    if (order != null)
-        //    {
-        //        var payment = new Payment
-        //        {
-        //            OrderId = paymentDetails.OrderId,
-        //            PaymentAmount = paymentDetails.Amount,
-        //            //PaymentMethod = "Pending",
-        //            PaymentStatus = "Pending"
-        //        };
-        //        await _context.Payments.AddAsync(payment);
-        //        await SaveChangesAsync();
-        //        return new ResponeModel { Status = "Success", Message = "Payment details entered successfully", DataObject = payment };
-        //    }
-        //    return new ResponeModel { Status = "Error", Message = "Order not found" };
-        //}
-
-        //public async Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment)
-        //{
-        //    var payment = await _context.Payments
-        //        .FirstOrDefaultAsync(p => p.OrderId == processPayment.OrderId && p.PaymentStatus == "Pending");
-        //    if (payment != null)
-        //    {
-        //        //payment.PaymentMethod = processPayment.PaymentMethod;
-        //        payment.PaymentStatus = processPayment.Confirm ? "Confirmed" : "Pending";
-        //        _context.Payments.Update(payment);
-
-        //        if (processPayment.Confirm)
-        //        {
-        //            var order = await _context.RentalOrders.FindAsync(processPayment.OrderId);
-        //            if (order != null)
-        //            {
-        //                order.OrderStatus = "Paid";
-        //                _context.RentalOrders.Update(order);
-        //            }
-        //        }
-
-        //        await SaveChangesAsync();
-        //        return new ResponeModel { Status = "Success", Message = "Payment processed successfully", DataObject = payment };
-        //    }
-        //    return new ResponeModel { Status = "Error", Message = "Pending payment not found" };
-        //}
-
         public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)
         {
             return await _dbSet

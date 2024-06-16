@@ -14,7 +14,7 @@ namespace EXE201.BLL.Interfaces
         Task<AddRatingDTO> AddRating(AddRatingDTO addRatingDTO);
         Task<IEnumerable<Rating>> GetRatings();
         Task<IEnumerable<UserRatingFeedbackDTO>> GetUserRatingsAndFeedback(int userId);
-        Task<IEnumerable<ProductRatingFeedbackDTO>> GetProductRatingsAndFeedback(int productId);
+        Task<ProductRatingFeedbackResponseDTO> GetProductRatingsAndFeedback(int productId, int? ratingFilter);
         Task<IEnumerable<ProductDetailDTO>> GetAllProductsWithRatingsFeedback();
     }
 }

@@ -39,28 +39,6 @@ namespace EXE201.Controllers
             return Ok(response.DataObject);
         }
 
-        //[HttpPost("EnterPaymentDetails")]
-        //public async Task<IActionResult> EnterPaymentDetails([FromBody] EnterPaymentDetailsDTO paymentDetails)
-        //{
-        //    var result = await _paymentService.EnterPaymentDetails(paymentDetails);
-        //    if (result.Status == "Success")
-        //    {
-        //        return Ok(result);
-        //    }
-        //    return BadRequest(result);
-        //}
-
-        //[HttpPost("ProcessPayment")]
-        //public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentDTO processPayment)
-        //{
-        //    var result = await _paymentService.ProcessPayment(processPayment);
-        //    if (result.Status == "Success")
-        //    {
-        //        return Ok(result);
-        //    }
-        //    return BadRequest(result);
-        //}
-
         [HttpGet("ViewHistoryPaymentByUserId")]
         public async Task<IActionResult> GetPaymentsByUserId(int userId)
         {

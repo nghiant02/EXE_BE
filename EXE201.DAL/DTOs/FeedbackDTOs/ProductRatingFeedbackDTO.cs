@@ -16,4 +16,13 @@ namespace EXE201.DAL.DTOs.FeedbackDTOs
         public string FeedbackComment { get; set; }
         public string FeedbackImage { get; set; }
     }
+
+    public class ProductRatingFeedbackResponseDTO
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public double AverageRating { get; set; }
+        public int TotalRatings { get; set; }
+        public List<ProductRatingFeedbackDTO> Ratings { get; set; }
+    }
 }

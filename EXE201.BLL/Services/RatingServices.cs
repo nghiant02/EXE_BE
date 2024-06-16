@@ -71,9 +71,9 @@ namespace EXE201.BLL.Services
             }
         }
 
-        public async Task<IEnumerable<ProductRatingFeedbackDTO>> GetProductRatingsAndFeedback(int productId)
+        public async Task<ProductRatingFeedbackResponseDTO> GetProductRatingsAndFeedback(int productId, int? ratingFilter)
         {
-            return await _ratingRepository.GetProductRatingsAndFeedback(productId);
+            return await _ratingRepository.GetProductRatingsAndFeedback(productId, ratingFilter);
         }
 
         public async Task<IEnumerable<Rating>> GetRatings()

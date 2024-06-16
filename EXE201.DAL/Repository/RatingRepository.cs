@@ -56,25 +56,40 @@ namespace EXE201.DAL.Repository
             return ratings;
         }
 
-        public async Task<IEnumerable<ProductRatingFeedbackDTO>> GetProductRatingsAndFeedback(int productId)
+        public async Task<ProductRatingFeedbackResponseDTO> GetProductRatingsAndFeedback(int productId, int? ratingFilter)
         {
-            var ratings = await _context.Ratings
+            var ratingsQuery = _context.Ratings
                 .Include(r => r.Feedback)
                 .Include(r => r.User)
-                .Where(r => r.ProductId == productId)
-                .Select(r => new ProductRatingFeedbackDTO
-                {
-                    RatingId = r.RatingId,
-                    UserId = r.User.UserId,
-                    UserName = r.User.UserName,
-                    RatingValue = r.RatingValue ?? 0,
-                    DateGiven = r.DateGiven,
-                    FeedbackComment = r.Feedback.FeedbackComment,
-                    FeedbackImage = r.Feedback.FeedbackImage
-                })
-                .ToListAsync();
+                .Where(r => r.ProductId == productId);
 
-            return ratings;
+            if (ratingFilter.HasValue)
+            {
+                ratingsQuery = ratingsQuery.Where(r => r.RatingValue == ratingFilter.Value);
+            }
+
+            var ratings = await ratingsQuery.Select(r => new ProductRatingFeedbackDTO
+            {
+                RatingId = r.RatingId,
+                UserId = r.User.UserId,
+                UserName = r.User.UserName,
+                RatingValue = r.RatingValue ?? 0,
+                DateGiven = r.DateGiven,
+                FeedbackComment = r.Feedback.FeedbackComment,
+                FeedbackImage = r.Feedback.FeedbackImage
+            }).ToListAsync();
+
+            var averageRating = ratings.Any() ? ratings.Average(r => r.RatingValue) : 0;
+            var totalRatings = ratings.Count;
+
+            return new ProductRatingFeedbackResponseDTO
+            {
+                ProductId = productId,
+                ProductName = (await _context.Products.FindAsync(productId))?.ProductName,
+                AverageRating = averageRating,
+                TotalRatings = totalRatings,
+                Ratings = ratings
+            };
         }
 
         public async Task<IEnumerable<ProductDetailDTO>> GetAllProductsWithRatingsFeedback()
