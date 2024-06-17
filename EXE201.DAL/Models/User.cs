@@ -49,6 +49,17 @@ public partial class User
     [StringLength(255)]
     public string Address { get; set; }
 
+    [StringLength(50)]
+    public string MembershipLevel { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? TotalRentalValue { get; set; }
+
+    public int? RewardPoints { get; set; }
+
+    [Column("MembershipPolicyID")]
+    public int? MembershipPolicyId { get; set; }
+
     [InverseProperty("User")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
@@ -64,8 +75,9 @@ public partial class User
     [InverseProperty("User")]
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
-    [InverseProperty("User")]
-    public virtual ICollection<Membership> Memberships { get; set; } = new List<Membership>();
+    [ForeignKey("MembershipPolicyId")]
+    [InverseProperty("Users")]
+    public virtual MembershipPolicy MembershipPolicy { get; set; }
 
     [InverseProperty("Sender")]
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
@@ -81,6 +93,12 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<RentalOrder> RentalOrders { get; set; } = new List<RentalOrder>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<RewardPoint> RewardPointsNavigation { get; set; } = new List<RewardPoint>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<RewardRedemption> RewardRedemptions { get; set; } = new List<RewardRedemption>();
 
     [InverseProperty("User")]
     public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();
