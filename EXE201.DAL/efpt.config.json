@@ -47,11 +47,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Membership]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[MembershipType]",
+         "Name": "[dbo].[MembershipPolicy]",
          "ObjectType": 0
       },
       {
@@ -100,6 +96,14 @@
       },
       {
          "Name": "[dbo].[RentalOrderDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RewardPoints]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RewardRedemption]",
          "ObjectType": 0
       },
       {
