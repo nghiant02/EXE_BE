@@ -56,6 +56,20 @@ namespace EXE201.Controllers
                 return BadRequest(new { Status = false, Message = ex.Message });
             }
         }
+        
+        [HttpPost("GoogleLogin")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleUserDto googleUserDto)
+        {
+            try
+            {
+                var result = await _userServices.GoogleAuthorizeUser(googleUserDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Status = false, Message = ex.Message });
+            }
+        }
 
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTOs refreshTokenDTOs)
@@ -146,7 +160,7 @@ namespace EXE201.Controllers
             }
         }
 
-        [HttpPut("Change-Password")]
+        [HttpPut("ChangePassword")]
         public async Task<IActionResult> UpdatePassword(
             int userId, ChangePasswordDTO changePassword)
         {
@@ -154,7 +168,7 @@ namespace EXE201.Controllers
             return Ok(user);
         }
 
-        [HttpPut("Update-Profile")]
+        [HttpPut("UpdateProfile")]
         public async Task<IActionResult> UpdateUser([FromQuery] [Required] int userId, UpdateProfileUserDTO userView)
         {
             if (!ModelState.IsValid)

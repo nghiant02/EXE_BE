@@ -50,6 +50,7 @@ namespace EXE201.DAL.Repository
                     UserId = x.UserId,
                     UserName = x.UserName,
                     FullName = x.FullName,
+                    Password = x.Password,
                     Phone = x.Phone,
                     Gender = x.Gender,
                     DateOfBirth = x.DateOfBirth,
