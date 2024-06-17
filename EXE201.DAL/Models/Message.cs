@@ -33,6 +33,7 @@ public partial class Message
     public bool? Seen { get; set; }
 
     [StringLength(50)]
+    [Unicode(false)]
     public string Type { get; set; }
 
     [ForeignKey("ConversationId")]
