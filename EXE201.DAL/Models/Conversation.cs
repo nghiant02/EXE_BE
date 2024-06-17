@@ -15,10 +15,10 @@ public partial class Conversation
     public int ConversationId { get; set; }
 
     [Column("User1ID")]
-    public int? User1Id { get; set; }
+    public int User1Id { get; set; }
 
     [Column("User2ID")]
-    public int? User2Id { get; set; }
+    public int User2Id { get; set; }
 
     [StringLength(255)]
     public string LastMessage { get; set; }

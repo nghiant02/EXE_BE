@@ -1,5 +1,6 @@
 ﻿using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.PaymentDTOs;
+using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
@@ -14,52 +15,100 @@ namespace EXE201.DAL.Repository
 {
     public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     {
+        private readonly EXE201Context _context;
+
         public PaymentRepository(EXE201Context context) : base(context)
         {
+            _context = context;
         }
-        public async Task<ResponeModel> EnterPaymentDetails(EnterPaymentDetailsDTO paymentDetails)
+        public async Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails)
         {
-            var order = await _context.RentalOrders.FindAsync(paymentDetails.OrderId);
-            if (order != null)
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
             {
-                var payment = new Payment
-                {
-                    OrderId = paymentDetails.OrderId,
-                    PaymentAmount = paymentDetails.Amount,
-                    //PaymentMethod = "Pending",
-                    PaymentStatus = "Pending"
-                };
-                await _context.Payments.AddAsync(payment);
-                await SaveChangesAsync();
-                return new ResponeModel { Status = "Success", Message = "Payment details entered successfully", DataObject = payment };
+                return new ResponeModel { Status = "Error", Message = "User not found" };
             }
-            return new ResponeModel { Status = "Error", Message = "Order not found" };
+
+            var cartItems = await _context.Carts
+                .Where(c => c.UserId == userId)
+                .Include(c => c.Product)
+                .ToListAsync();
+
+            if (!cartItems.Any())
+            {
+                return new ResponeModel { Status = "Error", Message = "No items in cart" };
+            }
+
+            var paymentAmount = cartItems.Sum(c => (decimal?)(c.Quantity * c.Product.ProductPrice ?? 0));
+
+            var payment = new Payment
+            {
+                UserId = userId,
+                PaymentAmount = paymentAmount,
+                FullName = paymentDetails.FullName ?? user.FullName,
+                Phone = paymentDetails.Phone ?? user.Phone,
+                Address = paymentDetails.Address ?? user.Address,
+                PaymentStatus = "Pending",
+                PaymentTime = DateTime.UtcNow,
+                PaymentMethodId = paymentDetails.PaymentMethodId
+            };
+
+            _context.Payments.Add(payment);
+            await _context.SaveChangesAsync();
+
+            // Ensure PaymentMethod is included
+            var paymentWithMethod = await _context.Payments
+                .Include(p => p.PaymentMethod)  // Ensure PaymentMethod is included
+                .Include(p => p.User)  // Include User for cart details
+                .ThenInclude(u => u.Carts)
+                .ThenInclude(c => c.Product)
+                .Where(p => p.PaymentId == payment.PaymentId)
+                .FirstOrDefaultAsync();
+
+            if (paymentWithMethod == null)
+            {
+                return new ResponeModel { Status = "Error", Message = "Payment retrieval failed after creation" };
+            }
+
+            return new ResponeModel { Status = "Success", Message = "Payment created successfully", DataObject = paymentWithMethod };
         }
 
-        public async Task<ResponeModel> ProcessPayment(ProcessPaymentDTO processPayment)
+        public async Task ClearUserCart(int userId)
+        {
+            var cartItems = await _context.Carts
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
+
+            if (cartItems.Any())
+            {
+                _context.Carts.RemoveRange(cartItems);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<ResponeModel> ConfirmPayment(int paymentId)
         {
             var payment = await _context.Payments
-                .FirstOrDefaultAsync(p => p.OrderId == processPayment.OrderId && p.PaymentStatus == "Pending");
-            if (payment != null)
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.PaymentId == paymentId);
+
+            if (payment == null)
             {
-                //payment.PaymentMethod = processPayment.PaymentMethod;
-                payment.PaymentStatus = processPayment.Confirm ? "Confirmed" : "Pending";
-                _context.Payments.Update(payment);
-
-                if (processPayment.Confirm)
-                {
-                    var order = await _context.RentalOrders.FindAsync(processPayment.OrderId);
-                    if (order != null)
-                    {
-                        order.OrderStatus = "Paid";
-                        _context.RentalOrders.Update(order);
-                    }
-                }
-
-                await SaveChangesAsync();
-                return new ResponeModel { Status = "Success", Message = "Payment processed successfully", DataObject = payment };
+                return new ResponeModel { Status = "Error", Message = "Payment not found" };
             }
-            return new ResponeModel { Status = "Error", Message = "Pending payment not found" };
+
+            if (payment.PaymentStatus == "Completed")
+            {
+                return new ResponeModel { Status = "Error", Message = "Payment is already completed" };
+            }
+
+            payment.PaymentStatus = "Completed";
+            _context.Payments.Update(payment);
+            await _context.SaveChangesAsync();
+
+            await ClearUserCart((int)payment.UserId);
+
+            return new ResponeModel { Status = "Success", Message = "Payment confirmed and cart cleared successfully" };
         }
 
         public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)

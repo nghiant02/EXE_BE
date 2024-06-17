@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EXE201.DAL.DTOs.UserDTOs;
 
 namespace EXE201.BLL.Services
 {
@@ -25,6 +26,11 @@ namespace EXE201.BLL.Services
         public async Task<IEnumerable<Membership>> GetMemberships()
         {
             return await _membershipRepository.GetAll();
+        }
+
+        public async Task<MembershipUserDto> GetMembershipByUserId(int userId)
+        {
+            return await _membershipRepository.GetMembershipByUserId(userId);
         }
     }
 }

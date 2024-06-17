@@ -555,5 +555,153 @@ namespace EXE201.DAL.Repository
             return suggestions;
         }
 
+        public async Task<ResponeModel> AddColorToProduct(int productId, int colorId)
+        {
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductColors)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product not found" };
+                }
+
+                var colorExists = await _context.Colors.AnyAsync(c => c.ColorId == colorId);
+                if (!colorExists)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Color not found" };
+                }
+
+                if (product.ProductColors.Any(pc => pc.ColorId == colorId))
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product already has this color" };
+                }
+
+                var productColor = new ProductColor
+                {
+                    ProductId = productId,
+                    ColorId = colorId
+                };
+
+                product.ProductColors.Add(productColor);
+                await _context.SaveChangesAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Color added to product successfully" };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while adding the color to the product" };
+            }
+        }
+
+        public async Task<ResponeModel> DeleteColorFromProduct(int productId, int colorId)
+        {
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductColors)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product not found" };
+                }
+
+                var productColor = product.ProductColors.FirstOrDefault(pc => pc.ColorId == colorId);
+                if (productColor == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Color not associated with this product" };
+                }
+
+                product.ProductColors.Remove(productColor);
+                await _context.SaveChangesAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Color removed from product successfully" };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while removing the color from the product" };
+            }
+        }
+
+        public async Task<ResponeModel> AddSizeToProduct(int productId, int sizeId)
+        {
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductSizes)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product not found" };
+                }
+
+                var sizeExists = await _context.Sizes.AnyAsync(s => s.SizeId == sizeId);
+                if (!sizeExists)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Size not found" };
+                }
+
+                if (product.ProductSizes.Any(ps => ps.SizeId == sizeId))
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product already has this size" };
+                }
+
+                var productSize = new ProductSize
+                {
+                    ProductId = productId,
+                    SizeId = sizeId
+                };
+
+                product.ProductSizes.Add(productSize);
+                await _context.SaveChangesAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Size added to product successfully" };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while adding the size to the product" };
+            }
+        }
+
+        public async Task<ResponeModel> DeleteSizeFromProduct(int productId, int sizeId)
+        {
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductSizes)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product not found" };
+                }
+
+                var productSize = product.ProductSizes.FirstOrDefault(ps => ps.SizeId == sizeId);
+                if (productSize == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Size not associated with this product" };
+                }
+
+                product.ProductSizes.Remove(productSize);
+                await _context.SaveChangesAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Size removed from product successfully" };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while removing the size from the product" };
+            }
+        }
+
+
+
     }
 }

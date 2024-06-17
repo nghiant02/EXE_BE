@@ -41,15 +41,25 @@ namespace EXE201.Controllers
             return Ok(ratings);
         }
 
-        [HttpGet("ProductRatingsAndFeedback/{productId}")]
-        public async Task<IActionResult> GetProductRatingsAndFeedback(int productId)
+        [HttpGet("GetProductRatingsAndFeedback")]
+        public async Task<IActionResult> GetProductRatingsAndFeedback([FromQuery] int productId, [FromQuery] int? ratingFilter)
         {
-            var ratings = await _ratingServices.GetProductRatingsAndFeedback(productId);
-            if (ratings == null || !ratings.Any())
+            // Log the received parameters
+            Console.WriteLine($"Received productId: {productId}, ratingFilter: {ratingFilter}");
+
+            if (!ratingFilter.HasValue)
             {
-                return NotFound();
+                ratingFilter = null;
             }
-            return Ok(ratings);
+
+            var productRatings = await _ratingServices.GetProductRatingsAndFeedback(productId, ratingFilter);
+
+            if (productRatings == null)
+            {
+                return NotFound(new { Message = "Product ratings and feedback not found" });
+            }
+
+            return Ok(productRatings);
         }
 
         [HttpGet("AllProductsWithRatingsFeedback")]

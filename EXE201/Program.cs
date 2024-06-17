@@ -38,7 +38,13 @@ builder.Services.AddScoped<ICartRepository, CartRepostiory>();
 builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IFeedbacksRepository, FeedbackRepository>();
+builder.Services.AddScoped<IConversationRepository, ConversationRepository >();
 builder.Services.AddScoped<IProductDetailRepository, ProductDetailRepository>();
+builder.Services.AddScoped<IColorRepository, ColorRepository>();
+builder.Services.AddScoped<ISizeRepository, SizeRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+
 
 
 // Add Services
@@ -59,7 +65,15 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IMembershipServices, MembershipServices>();
 builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IFeedbackServices, FeedbackServices>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IProductDetailServices, ProductDetailServices>();
+builder.Services.AddScoped<IColorServices, ColorServices>();
+builder.Services.AddScoped<ISizeServices, SizeServices>();
+builder.Services.AddScoped<IPaymentServices, PaymentServices>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+//builder.Services.AddScoped<PayOSPaymentService>();
+
+
 
 
 // Add Cors
@@ -110,7 +124,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Register Swagger services
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Voguary API", Version = "v1" });
 
     // Add JWT Authentication
     var securityScheme = new OpenApiSecurityScheme
