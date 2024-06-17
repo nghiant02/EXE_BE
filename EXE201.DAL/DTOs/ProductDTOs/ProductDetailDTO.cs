@@ -17,6 +17,7 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         public double? ProductPrice { get; set; }
         public IEnumerable<string> ProductSize { get; set; }
         public IEnumerable<string> ProductColor { get; set; }
+        public IEnumerable<string> ProductColorImage { get; set; }
         public string ProductStatus { get; set; }
         public string CategoryName { get; set; }
         public double AverageRating { get; set; }

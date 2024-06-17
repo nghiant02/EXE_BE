@@ -172,6 +172,7 @@ namespace EXE201.DAL.Repository
                 ProductPrice = p.ProductPrice,
                 ProductSize = p.ProductSizes.Select(p => p.Size.SizeName).ToList(),
                 ProductColor = p.ProductColors.Select(p => p.Color.ColorName).ToList(),
+                ProductColorImage = p.ProductColors.Select(p => p.ProductColorImage),
                 ProductStatus = p.ProductStatus,
                 CategoryName = p.Category.CategoryName,
                 AverageRating = p.Ratings.Any() ? p.Ratings.Average(r => r.RatingValue ?? 0) : 0,
