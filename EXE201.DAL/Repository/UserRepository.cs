@@ -95,7 +95,7 @@ namespace EXE201.DAL.Repository
                 existUser.Deposits = user.Deposits;
                 existUser.Carts = user.Carts;
                 existUser.Feedbacks = user.Feedbacks;
-                //existUser.Memberships = user.Memberships;
+                existUser.Memberships = user.Memberships;
                 existUser.Roles = user.Roles;
                 existUser.Notifications = user.Notifications;
                 existUser.Payments = user.Payments;
@@ -126,8 +126,8 @@ namespace EXE201.DAL.Repository
         {
             var query = _context.Users
                 .Include(u => u.Roles)
-                //.Include(u => u.Memberships)
-                //.ThenInclude(m => m.MembershipType)
+                .Include(u => u.Memberships)
+                .ThenInclude(m => m.MembershipType)
                 .Select(u => new UserListDTO
                 {
                     UserId = u.UserId,
@@ -142,7 +142,7 @@ namespace EXE201.DAL.Repository
                     ProfileImage = u.ProfileImage,
                     Roles = u.Roles.Select(r => r.RoleName).ToList(),
                     AccountStatus = u.UserStatus,
-                    //MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
+                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .AsQueryable();
 
@@ -215,8 +215,8 @@ namespace EXE201.DAL.Repository
         {
             var user = await _context.Users
                 .Include(u => u.Roles)
-                //.Include(u => u.Memberships)
-                //.ThenInclude(m => m.MembershipType)
+                .Include(u => u.Memberships)
+                .ThenInclude(m => m.MembershipType)
                 .Where(u => u.UserId == userId)
                 .Select(u => new UserProfileDTO
                 {
@@ -231,7 +231,7 @@ namespace EXE201.DAL.Repository
                     ProfileImage = u.ProfileImage,
                     AccountStatus = u.UserStatus,
                     Roles = string.Join(", ", u.Roles.Select(r => r.RoleName)),
-                    //MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
+                    MembershipTypeName = u.Memberships.FirstOrDefault().MembershipType.MembershipTypeName
                 })
                 .FirstOrDefaultAsync();
 

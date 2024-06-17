@@ -36,8 +36,6 @@ public partial class RentalOrder
     [Column(TypeName = "decimal(10, 2)")]
     public decimal? OrderTotal { get; set; }
 
-    public int? PointsEarned { get; set; }
-
     [InverseProperty("Order")]
     public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();
 

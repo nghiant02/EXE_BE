@@ -21,9 +21,6 @@ public partial class ProductColor
     [Column("ColorID")]
     public int? ColorId { get; set; }
 
-    [StringLength(255)]
-    public string ProductColorImage { get; set; }
-
     [ForeignKey("ColorId")]
     [InverseProperty("ProductColors")]
     public virtual Color Color { get; set; }
