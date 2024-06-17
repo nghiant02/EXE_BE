@@ -8,9 +8,9 @@ using EXE201.DAL.DTOs.UserDTOs;
 
 namespace EXE201.BLL.Interfaces
 {
-    public interface IMembershipServices
-    {
-        Task<IEnumerable<Membership>> GetMemberships();
-        Task<MembershipUserDto> GetMembershipByUserId(int userId);
-    }
+    //public interface IMembershipServices
+    //{
+    //    Task<IEnumerable<Membership>> GetMemberships();
+    //    Task<MembershipUserDto> GetMembershipByUserId(int userId);
+    //}
 }
