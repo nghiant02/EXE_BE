@@ -11,51 +11,52 @@ using EXE201.DAL.DTOs.UserDTOs;
 
 namespace EXE201.DAL.Repository
 {
-    public class MembershipRepository : GenericRepository<Membership>, IMembershipRepository
+    public class MembershipRepository : GenericRepository<MembershipPolicy>, IMembershipRepository
     {
         public MembershipRepository(EXE201Context context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Membership>> GetAll()
+        public async Task<IEnumerable<MembershipPolicy>> GetAll()
         {
-            try
-            {
-                var membership = await _context.Memberships
-                    .Include(x => x.User)
-                    .Include(x => x.MembershipType)
-                    .ToListAsync();
-                return membership;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            // try
+            // {
+            //     var membership = await _context.MembershipPolicies
+            //         .Include(x => x.User)
+            //         .Include(x => x.MembershipType)
+            //         .ToListAsync();
+            // return membership;
+            // }
+            // catch (Exception ex)
+            // {
+            //     throw new Exception(ex.Message);
+            // }
+            return null;
         }
 
         public async Task<MembershipUserDto> GetMembershipByUserId(int userId)
         {
             try
             {
-                var membership = await _context.Memberships
-                    .Where(x => x.UserId == userId)
-                    .Include(x => x.MembershipType)
-                    .Select(x => new MembershipUserDto
-                    {
-                        MembershipId = x.MembershipId,
-                        UserId = x.UserId,
-                        MembershipTypeId = x.MembershipType.MembershipTypeId,
-                        MembershipTypeName = x.MembershipType.MembershipTypeName,
-                        MembershipTypeDescription = x.MembershipType.MembershipDescription,
-                        MembershipTypeBenefits = x.MembershipType.MembershipBenefits,
-                        MembershipStatus = x.MembershipStatus,
-                        StartDate = x.StartDate
-                    })
-                    .FirstOrDefaultAsync();
-                if (membership != null)
-                {
-                    return membership;
-                }
+                // var membership = await _context.MembershipPolicies
+                //     .Where(x => x.UserId == userId)
+                //     .Include(x => x.MembershipType)
+                //     .Select(x => new MembershipUserDto
+                //     {
+                //         MembershipId = x.MembershipId,
+                //         UserId = x.UserId,
+                //         MembershipTypeId = x.MembershipType.MembershipTypeId,
+                //         MembershipTypeName = x.MembershipType.MembershipTypeName,
+                //         MembershipTypeDescription = x.MembershipType.MembershipDescription,
+                //         MembershipTypeBenefits = x.MembershipType.MembershipBenefits,
+                //         MembershipStatus = x.MembershipStatus,
+                //         StartDate = x.StartDate
+                //     })
+                //     .FirstOrDefaultAsync();
+                // if (membership != null)
+                // {
+                //     return membership;
+                // }
                 return null;
             }
             catch (Exception e)

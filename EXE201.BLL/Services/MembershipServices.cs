@@ -23,7 +23,7 @@ namespace EXE201.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Membership>> GetMemberships()
+        public async Task<IEnumerable<MembershipPolicy>> GetMemberships()
         {
             return await _membershipRepository.GetAll();
         }

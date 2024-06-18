@@ -25,5 +25,6 @@ namespace EXE201.DAL.Interfaces
         Task<UserProfileDTO> GetUserProfile(int userId);
         Task UpdateToken(Token token);
         Task<Token> GetRefreshTokenByUserId(string userId);
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
 using EXE201.BLL.DTOs.UserDTOs;
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs.EmailDTOs;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using Tools.Tools;
 
 
@@ -218,34 +220,53 @@ namespace EXE201.BLL.Services
             return await _userRepository.UpdateUser(updateUser);
         }
 
-        public async Task<(string, UpdateProfileUserDTO)> GoogleAuthorizeUser(GoogleUserDto googleUser)
+        public async Task<LoginResponseDTOs> GoogleAuthorizeUser(GoogleUserDto googleUser)
         {
-            var payload = await GoogleJsonWebSignature.ValidateAsync(googleUser.IdToken);
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(googleUser.IdToken) as JwtSecurityToken;
+            var payload = jsonToken.Payload.SerializeToJson();
+
+            JObject jsonObject = JObject.Parse(payload);
+
+            JObject identities = (JObject)jsonObject["identities"];
+            JArray emailIdentities = (JArray)identities["email"];
+            string email = (string)emailIdentities[0];
+            string name = (string)jsonObject["name"];
+
             User user;
-            var check = await _userRepository.FindAsync(x => x.Email == payload.Email);
+            var check = await _userRepository.FindAsync(x => x.Email == email, 
+                r => r.Roles);
+            Console.WriteLine(check);
             if (check.Any())
             {
                 user = check.First();
             }
             else
             {
+                var checkRole = await _roleRepository.FindAsync(r => r.RoleName.Equals("Customer"));
+                var customerRole = checkRole.First();
+                if (customerRole == null)
+                {
+                    throw new InvalidOperationException("User role not found");
+                }
                 User addGoogleUser = new User
                 {
-                    Email = payload.Email,
-                    FullName = payload.Name,
+                    Email = email,
+                    FullName = name,
                     Phone = string.Empty,
                     UserStatus = "Active",
-                    Roles = new List<Role> { (await _roleRepository.FindAsync(r => r.RoleName.Equals("User"))).First() },
+                    Roles = new List<Role> { customerRole },
                     DateOfBirth = null,
                     Gender = null,
-                    ProfileImage = payload.Picture,
+                    ProfileImage = "",
                 };
                 user = await _userRepository.AddNewUser(addGoogleUser);
             }
 
-            UpdateProfileUserDTO userUpdate = _mapper.Map<UpdateProfileUserDTO>(user);
-            var roles = user.Roles.Select(r => r.RoleName).ToList();
-            string token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, roles);
+            var cusRole = user.Roles.ToList();
+            var userRoles = user.Roles.Select(r => r.RoleName).ToList();
+            var token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, userRoles);
+            
             var refreshToken = _jwtService.GenerateRefreshToken();
             var tokenEntity = new Token
             {
@@ -257,8 +278,14 @@ namespace EXE201.BLL.Services
                 Status = "Active"
             };
             await _userRepository.UpdateToken(tokenEntity);
-
-            return (token, userUpdate);
+            var expirationDate = DateTime.UtcNow.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ssZ");
+            var response = new LoginResponseDTOs
+            {
+                Token = token,
+                RefreshToken = refreshToken,
+                Expired = expirationDate
+            };
+            return response ;
         }
 
 

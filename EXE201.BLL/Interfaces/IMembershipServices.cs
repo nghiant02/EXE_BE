@@ -10,7 +10,7 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IMembershipServices
     {
-        Task<IEnumerable<Membership>> GetMemberships();
+        Task<IEnumerable<MembershipPolicy>> GetMemberships();
         Task<MembershipUserDto> GetMembershipByUserId(int userId);
     }
 }
