@@ -2,6 +2,7 @@
 using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
+using EXE201.DAL.DTOs.RentalOrderDTOs;
 using EXE201.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,11 @@ namespace EXE201.BLL.Services
         public async Task<OrderStatusDTO> GetOrderStatus(int orderId)
         {
             return await _rentalOrderRepository.GetOrderStatus(orderId);
+        }
+
+        public async Task<List<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId)
+        {
+            return await _rentalOrderRepository.GetRentalOrdersByUserId(userId);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
+using EXE201.DAL.DTOs.RentalOrderDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
@@ -78,5 +79,25 @@ namespace EXE201.DAL.Repository
 
             return order;
         }
+
+        public async Task<List<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId)
+        {
+            var rentalOrders = await _context.RentalOrders
+                .Where(o => o.UserId == userId)
+                .Select(o => new RentalOrderResponseDTO
+                {
+                    OrderId = o.OrderId,
+                    OrderStatus = o.OrderStatus,
+                    DatePlaced = o.DatePlaced,
+                    DueDate = o.DueDate,
+                    ReturnDate = o.ReturnDate,
+                    OrderTotal = o.OrderTotal,
+                    PointsEarned = o.PointsEarned
+                })
+                .ToListAsync();
+
+            return rentalOrders;
+        }
+
     }
 }

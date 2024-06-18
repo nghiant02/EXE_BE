@@ -69,5 +69,18 @@ namespace EXE201.Controllers
             }
             return Ok(orderStatus);
         }
+
+        [HttpGet("GetRentalOrdersByUserId")]
+        public async Task<IActionResult> GetRentalOrdersByUserId([FromQuery] int userId)
+        {
+            var rentalOrders = await _rentalOrderServices.GetRentalOrdersByUserId(userId);
+
+            if (rentalOrders == null || rentalOrders.Count == 0)
+            {
+                return NotFound(new { Message = "No rental orders found for the user." });
+            }
+
+            return Ok(rentalOrders);
+        }
     }
 }
