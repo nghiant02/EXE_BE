@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductDetailController : Controller
     {
         private readonly IProductDetailServices _productDetailServices;

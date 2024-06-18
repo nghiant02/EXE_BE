@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+
 namespace MCC.DAL.Repository.Interface;
 
 public interface IGenericRepository<T> where T : class
@@ -11,5 +12,8 @@ public interface IGenericRepository<T> where T : class
     void Update(T entity);
     Task Delete(T entity);
     Task SaveChangesAsync();
-    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+
+    Task<IEnumerable<T>> FindAsync(
+        Expression<Func<T, bool>> predicate,
+        params Expression<Func<T, object>>[] includes);
 }

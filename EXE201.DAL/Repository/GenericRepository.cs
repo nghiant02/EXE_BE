@@ -47,10 +47,25 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context.Entry(entity).State = EntityState.Modified;
     }
 
-    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+    // public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+    // {
+    //     return await _dbSet.Where(predicate).ToListAsync();
+    // }
+    
+    public async Task<IEnumerable<T>> FindAsync(
+        Expression<Func<T, bool>> predicate,
+        params Expression<Func<T, object>>[] includes)
     {
-        return await _dbSet.Where(predicate).ToListAsync();
+        IQueryable<T> query = _dbSet.Where(predicate);
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        return await query.ToListAsync();
     }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
