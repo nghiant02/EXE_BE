@@ -13,4 +13,5 @@ namespace EXE201.BLL.Interfaces
     //    Task<IEnumerable<Membership>> GetMemberships();
     //    Task<MembershipUserDto> GetMembershipByUserId(int userId);
     //}
+
 }

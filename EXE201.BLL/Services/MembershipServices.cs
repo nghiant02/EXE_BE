@@ -22,11 +22,7 @@ namespace EXE201.BLL.Services
     //        _membershipRepository = membershipRepository;
     //        _mapper = mapper;
     //    }
-
-    //    public async Task<IEnumerable<Membership>> GetMemberships()
-    //    {
-    //        return await _membershipRepository.GetAll();
-    //    }
+    
 
     //    public async Task<MembershipUserDto> GetMembershipByUserId(int userId)
     //    {
