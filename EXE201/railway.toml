@@ -1,0 +1,7 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./EXE201/Dockerfile"
+
+[deploy]
+startCommand = "dotnet EXE201.dll"
+restartPolicyType = "never"
