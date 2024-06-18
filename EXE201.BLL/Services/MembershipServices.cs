@@ -11,26 +11,22 @@ using EXE201.DAL.DTOs.UserDTOs;
 
 namespace EXE201.BLL.Services
 {
-    public class MembershipServices : IMembershipServices
+    //public class MembershipServices : IMembershipServices
 
-    {
-        private readonly IMembershipRepository _membershipRepository;
-        private readonly IMapper _mapper;
+    //{
+    //    private readonly IMembershipRepository _membershipRepository;
+    //    private readonly IMapper _mapper;
 
-        public MembershipServices(IMembershipRepository membershipRepository, IMapper mapper)
-        {
-            _membershipRepository = membershipRepository;
-            _mapper = mapper;
-        }
+    //    public MembershipServices(IMembershipRepository membershipRepository, IMapper mapper)
+    //    {
+    //        _membershipRepository = membershipRepository;
+    //        _mapper = mapper;
+    //    }
+    
 
-        public async Task<IEnumerable<MembershipPolicy>> GetMemberships()
-        {
-            return await _membershipRepository.GetAll();
-        }
-
-        public async Task<MembershipUserDto> GetMembershipByUserId(int userId)
-        {
-            return await _membershipRepository.GetMembershipByUserId(userId);
-        }
-    }
+    //    public async Task<MembershipUserDto> GetMembershipByUserId(int userId)
+    //    {
+    //        return await _membershipRepository.GetMembershipByUserId(userId);
+    //    }
+    //}
 }

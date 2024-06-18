@@ -9,9 +9,9 @@ using EXE201.DAL.DTOs.UserDTOs;
 
 namespace EXE201.DAL.Interfaces
 {
-    public interface IMembershipRepository : IGenericRepository<MembershipPolicy>
-    {
-        Task<IEnumerable<MembershipPolicy>> GetAll();
-        Task<MembershipUserDto> GetMembershipByUserId(int userId);
-    }
+    //public interface IMembershipRepository : IGenericRepository<Membership>
+    //{
+    //    Task<IEnumerable<Membership>> GetAll();
+    //    Task<MembershipUserDto> GetMembershipByUserId(int userId);
+    //}
 }
