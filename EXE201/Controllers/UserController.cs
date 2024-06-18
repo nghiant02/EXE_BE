@@ -96,7 +96,7 @@ namespace EXE201.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+        
             try
             {
                 var result = await _userServices.RegisterUserAsync(request);
@@ -104,7 +104,7 @@ namespace EXE201.Controllers
                 {
                     return Ok(new { Message = "Registration successful, please check your email to verify your account.", UserId = result.UserId });
                 }
-
+        
                 return BadRequest("An error occurred while registering the user.");
             }
             catch (Exception ex)

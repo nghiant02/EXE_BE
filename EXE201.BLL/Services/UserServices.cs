@@ -185,6 +185,7 @@ namespace EXE201.BLL.Services
 
             return true;
         }
+        
 
         public async Task<User> UpdatePassword(string email, string password, int id)
         {
@@ -262,10 +263,15 @@ namespace EXE201.BLL.Services
                 };
                 user = await _userRepository.AddNewUser(addGoogleUser);
             }
-
-            var cusRole = user.Roles.ToList();
+            
             var userRoles = user.Roles.Select(r => r.RoleName).ToList();
-            var token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, userRoles);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, userRoles.FirstOrDefault()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FullName)
+            };
+            var token = _jwtService.GenerateAccessToken(claims);
             
             var refreshToken = _jwtService.GenerateRefreshToken();
             var tokenEntity = new Token
@@ -314,12 +320,12 @@ namespace EXE201.BLL.Services
         public async Task<LoginResponseDTOs> Login(string username, string password)
         {
             var user = await _userRepository.GetUserByUsername(username);
-
+        
             if (user == null)
                 throw new ArgumentException("Invalid username or password.");
-
+        
             bool passwordIsValid = false;
-
+        
             try
             {
                 passwordIsValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
@@ -328,23 +334,29 @@ namespace EXE201.BLL.Services
             {
                 passwordIsValid = user.Password == password;
             }
-
+        
             if (!passwordIsValid)
                 throw new ArgumentException("Invalid username or password.");
-
+        
             if (user.UserStatus != "Active")
                 throw new InvalidOperationException("User account is not active.");
-
+        
             if (user.Password == password)
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword(password);
                 await _userRepository.UpdateUser(user);
             }
-
+        
             var roles = user.Roles.Select(r => r.RoleName).ToList();
-            var token = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, roles);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FullName)
+            };
+            var token = _jwtService.GenerateAccessToken(claims);
             var refreshToken = _jwtService.GenerateRefreshToken();
-
+        
             var tokenEntity = new Token
             {
                 UserId = user.UserId,
@@ -355,40 +367,46 @@ namespace EXE201.BLL.Services
                 Status = "Active"
             };
             await _userRepository.UpdateToken(tokenEntity);
-
+        
             var expirationDate = DateTime.UtcNow.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ssZ");
-
+        
             var response = new LoginResponseDTOs
             {
                 Token = token,
                 RefreshToken = refreshToken,
                 Expired = expirationDate
             };
-
+        
             return response;
         }
-
+        
         public async Task<(string Token, string RefreshToken)> RefreshTokenAsync(string token, string refreshToken)
         {
             var principal = _jwtService.GetPrincipalFromExpiredToken(token);
             var userId = principal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-
+        
             var savedToken = await _userRepository.GetRefreshTokenByUserId(userId);
             if (savedToken.RefreshToken != refreshToken || savedToken.ExpiresAt <= DateTime.UtcNow)
             {
                 throw new SecurityTokenException("Invalid refresh token");
             }
-
+        
             var user = await _userRepository.GetUserById(int.Parse(userId));
             var roles = user.Roles.Select(r => r.RoleName).ToList();
-            var newJwtToken = _jwtService.GenerateToken(user.UserId.ToString(), user.UserName, user.Email, roles);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FullName)
+            };
+            var newJwtToken = _jwtService.GenerateAccessToken(claims);
             var newRefreshToken = _jwtService.GenerateRefreshToken();
-
+        
             savedToken.RefreshToken = newRefreshToken;
             savedToken.IssuedAt = DateTime.UtcNow;
             savedToken.ExpiresAt = DateTime.UtcNow.AddMinutes(30);
             await _userRepository.UpdateToken(savedToken);
-
+        
             return (newJwtToken, newRefreshToken);
         }
     }
