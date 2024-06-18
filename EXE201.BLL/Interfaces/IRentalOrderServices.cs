@@ -1,5 +1,6 @@
 ﻿using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
+using EXE201.DAL.DTOs.RentalOrderDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace EXE201.BLL.Interfaces
         Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason);
         Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem);
         Task<OrderStatusDTO> GetOrderStatus(int orderId);
+        Task<List<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId);
+
     }
 }
