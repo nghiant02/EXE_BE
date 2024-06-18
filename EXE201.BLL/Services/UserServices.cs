@@ -218,6 +218,11 @@ namespace EXE201.BLL.Services
             updateUser.UserName = checkId.First().UserName;
             updateUser.UserStatus = checkId.First().UserStatus;
             updateUser.Password = checkId.First().Password;
+            updateUser.FullName = checkId.First().FullName;
+            updateUser.Phone = checkId.First().Phone;
+            updateUser.Gender = checkId.First().Gender;
+            updateUser.DateOfBirth = checkId.First().DateOfBirth;
+            updateUser.Email = checkId.First().Email;
             return await _userRepository.UpdateUser(updateUser);
         }
 
