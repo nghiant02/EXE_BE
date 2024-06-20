@@ -47,6 +47,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[MembershipHistory]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[MembershipPolicy]",
          "ObjectType": 0
       },
