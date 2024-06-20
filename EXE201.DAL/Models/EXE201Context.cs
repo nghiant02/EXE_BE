@@ -33,6 +33,8 @@ public partial class EXE201Context : DbContext
 
     public virtual DbSet<Inventory> Inventories { get; set; }
 
+    public virtual DbSet<MembershipHistory> MembershipHistories { get; set; }
+
     public virtual DbSet<MembershipPolicy> MembershipPolicies { get; set; }
 
     public virtual DbSet<Message> Messages { get; set; }
@@ -135,6 +137,15 @@ public partial class EXE201Context : DbContext
             entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D353A2C975");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Inventories).HasConstraintName("FK__Inventory__Produ__07C12930");
+        });
+
+        modelBuilder.Entity<MembershipHistory>(entity =>
+        {
+            entity.HasKey(e => e.MembershipHistoryId).HasName("PK__Membersh__39F8063930D64681");
+
+            entity.HasOne(d => d.User).WithMany(p => p.MembershipHistories)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MembershipHistory_UserID");
         });
 
         modelBuilder.Entity<MembershipPolicy>(entity =>

@@ -60,6 +60,9 @@ public partial class User
     [Column("MembershipPolicyID")]
     public int? MembershipPolicyId { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? LastMembershipUpdate { get; set; }
+
     [InverseProperty("User")]
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
@@ -74,6 +77,9 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<MembershipHistory> MembershipHistories { get; set; } = new List<MembershipHistory>();
 
     [ForeignKey("MembershipPolicyId")]
     [InverseProperty("Users")]
