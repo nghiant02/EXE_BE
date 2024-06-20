@@ -27,6 +27,9 @@ public partial class MembershipHistory
     [Column(TypeName = "datetime")]
     public DateTime? ChangeDate { get; set; }
 
+    [StringLength(255)]
+    public string Reason { get; set; }
+
     [ForeignKey("UserId")]
     [InverseProperty("MembershipHistories")]
     public virtual User User { get; set; }
