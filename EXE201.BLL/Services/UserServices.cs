@@ -355,10 +355,11 @@ namespace EXE201.BLL.Services
             var roles = user.Roles.Select(r => r.RoleName).ToList();
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FullName)
+                new Claim("userId", user.UserId.ToString()),
+                new Claim("role", roles.FirstOrDefault() ?? ""),
+                new Claim("email", user.Email)
             };
+
             var token = _jwtService.GenerateAccessToken(claims);
             var refreshToken = _jwtService.GenerateRefreshToken();
         
