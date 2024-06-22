@@ -71,16 +71,29 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetRentalOrdersByUserId")]
-        public async Task<IActionResult> GetRentalOrdersByUserId([FromQuery] int userId)
+        public async Task<IActionResult> GetRentalOrdersByUserId([FromQuery] int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
         {
-            var rentalOrders = await _rentalOrderServices.GetRentalOrdersByUserId(userId);
+            var rentalOrders = await _rentalOrderServices.GetRentalOrdersByUserId(userId, pageNumber, pageSize);
 
-            if (rentalOrders == null || rentalOrders.Count == 0)
+            if (rentalOrders == null)
             {
                 return NotFound(new { Message = "No rental orders found for the user." });
             }
 
             return Ok(rentalOrders);
+        }
+
+        [HttpGet("GetPagedRentalOrderDetailsByUserId")]
+        public async Task<IActionResult> GetPagedRentalOrderDetailsByUserId([FromQuery] int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
+        {
+            var rentalOrderDetails = await _rentalOrderDetailServices.GetPagedRentalOrderDetailsByUserId(userId, pageNumber, pageSize);
+
+            if (rentalOrderDetails == null)
+            {
+                return NotFound(new { Message = "No rental order details found for the user." });
+            }
+
+            return Ok(rentalOrderDetails);
         }
     }
 }

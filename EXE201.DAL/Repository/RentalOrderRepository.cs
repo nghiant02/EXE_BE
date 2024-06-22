@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EXE201.DAL.Repository
 {
@@ -80,9 +81,9 @@ namespace EXE201.DAL.Repository
             return order;
         }
 
-        public async Task<List<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId)
+        public async Task<PagedResponseDTO<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize)
         {
-            var rentalOrders = await _context.RentalOrders
+            var rentalOrders =  _context.RentalOrders
                 .Where(o => o.UserId == userId)
                 .Select(o => new RentalOrderResponseDTO
                 {
@@ -94,9 +95,18 @@ namespace EXE201.DAL.Repository
                     OrderTotal = o.OrderTotal,
                     PointsEarned = o.PointsEarned
                 })
-                .ToListAsync();
+                .AsQueryable();
 
-            return rentalOrders;
+            var totalCount = await rentalOrders.CountAsync();
+            var products = await rentalOrders.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToListAsync();
+
+            return new PagedResponseDTO<RentalOrderResponseDTO>
+            {
+                PageNumber = PageNumber,
+                PageSize = PageSize,
+                TotalCount = totalCount,
+                Items = products
+            };
         }
 
     }

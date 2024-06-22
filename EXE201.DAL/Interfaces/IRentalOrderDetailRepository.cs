@@ -1,4 +1,6 @@
-﻿using EXE201.DAL.Models;
+﻿using EXE201.DAL.DTOs.RentalOrderDTOs;
+using EXE201.DAL.DTOs;
+using EXE201.DAL.Models;
 using MCC.DAL.Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -11,5 +13,6 @@ namespace EXE201.DAL.Interfaces
     public interface IRentalOrderDetailRepository : IGenericRepository<RentalOrderDetail>
     {
         Task<RentalOrderDetail> GetRentalOrderDetail(int id);
+        Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize);
     }
 }

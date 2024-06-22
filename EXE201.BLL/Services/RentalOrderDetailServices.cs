@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using EXE201.BLL.Interfaces;
+using EXE201.DAL.DTOs.RentalOrderDTOs;
+using EXE201.DAL.DTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using System;
@@ -38,6 +40,11 @@ namespace EXE201.BLL.Services
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize)
+        {
+            return await _rentalOrderDetailRepository.GetPagedRentalOrderDetailsByUserId(userId, pageNumber, pageSize);
         }
     }
 }

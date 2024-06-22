@@ -15,7 +15,8 @@ namespace EXE201.BLL.Interfaces
         Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason);
         Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem);
         Task<OrderStatusDTO> GetOrderStatus(int orderId);
-        Task<List<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId);
+        Task<PagedResponseDTO<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize);
+
 
     }
 }
