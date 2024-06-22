@@ -556,7 +556,7 @@ namespace EXE201.DAL.Repository
             return suggestions;
         }
 
-        public async Task<ResponeModel> AddColorToProduct(int productId, int colorId)
+        public async Task<ResponeModel> AddColorToProduct(int productId, int colorId, string ProductColorImage)
         {
             try
             {
@@ -575,7 +575,7 @@ namespace EXE201.DAL.Repository
                     return new ResponeModel { Status = "Error", Message = "Color not found" };
                 }
 
-                if (product.ProductColors.Any(pc => pc.ColorId == colorId))
+                if (product.ProductColors.Any(pc => pc.ColorId == colorId && pc.ProductColorImage.Equals(ProductColorImage)))
                 {
                     return new ResponeModel { Status = "Error", Message = "Product already has this color" };
                 }
@@ -583,7 +583,8 @@ namespace EXE201.DAL.Repository
                 var productColor = new ProductColor
                 {
                     ProductId = productId,
-                    ColorId = colorId
+                    ColorId = colorId,
+                    ProductColorImage = ProductColorImage
                 };
 
                 product.ProductColors.Add(productColor);
@@ -702,7 +703,33 @@ namespace EXE201.DAL.Repository
             }
         }
 
+        public async Task<ResponeModel> UpdateColorImageForProduct(int productId, int colorId, string newColorImage)
+        {
+            try
+            {
+                var productColor = await _context.ProductColors
+                    .Include(pc => pc.Product)
+                    .Include(pc => pc.Color)
+                    .FirstOrDefaultAsync(pc => pc.ProductId == productId && pc.ColorId == colorId);
 
+                if (productColor == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product or color not found" };
+                }
+
+                productColor.ProductColorImage = newColorImage;
+
+                _context.ProductColors.Update(productColor);
+                await _context.SaveChangesAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Color image updated successfully" };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while updating the color image" };
+            }
+        }
 
     }
 }
