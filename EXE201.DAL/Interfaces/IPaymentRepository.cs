@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
+using LMSystem.Repository.Helpers;
 
 namespace EXE201.DAL.Interfaces
 {
@@ -15,7 +16,7 @@ namespace EXE201.DAL.Interfaces
     {
         Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails);
         Task<ResponeModel> ConfirmPayment(int paymentId);
-        Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId);
+        Task<PagedResponseDTO<PaymentHistoryDto>> GetPaymentHistoryByUserIdAsync(int userId, PaginationParameter paginationParameter);
         Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
     }
 }

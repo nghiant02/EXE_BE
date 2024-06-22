@@ -3,6 +3,7 @@ using EXE201.DAL.DTOs.PaymentDTOs;
 using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
+using LMSystem.Repository.Helpers;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -111,20 +112,36 @@ namespace EXE201.DAL.Repository
             return new ResponeModel { Status = "Success", Message = "Payment confirmed and cart cleared successfully" };
         }
 
-        public async Task<IEnumerable<Payment>> GetPaymentHistoryByUserIdAsync(int userId)
+        public async Task<PagedResponseDTO<PaymentHistoryDto>> GetPaymentHistoryByUserIdAsync(int userId, PaginationParameter paginationParameter)
         {
-            return await _dbSet
-                .Where(p => p.UserId == userId)
-                .Select(p => new Payment
+            var query = _dbSet
+                            .Where(p => p.UserId == userId)
+                            .Include(p => p.Order)
+                                .ThenInclude(o => o.RentalOrderDetails)
+                                    .ThenInclude(ro => ro.Product) // Include product details
+                            .OrderByDescending(p => p.PaymentTime);
+
+            var totalRecords = await query.CountAsync();
+            var payments = await query
+                .Skip((paginationParameter.PageNumber - 1) * paginationParameter.PageSize)
+                .Take(paginationParameter.PageSize)
+                .Select(p => new PaymentHistoryDto
                 {
                     PaymentId = p.PaymentId,
-                    OrderId = p.OrderId,
-                    UserId = p.UserId,
+                    PaymentTime = p.PaymentTime,
                     PaymentAmount = p.PaymentAmount,
-                    PaymentMethod = p.PaymentMethod,
-                    PaymentStatus = p.PaymentStatus
+                    PaymentContent = p.Order.RentalOrderDetails.Select(ro => ro.Product.ProductTitle).FirstOrDefault(),
+                    PaymentMethodName = p.PaymentMethod.PaymentMethodName
                 })
                 .ToListAsync();
+
+            return new PagedResponseDTO<PaymentHistoryDto>
+            {
+                PageNumber = paginationParameter.PageNumber,
+                PageSize = paginationParameter.PageSize,
+                TotalCount = totalRecords,
+                Items = payments
+            };
         }
 
         public async Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate)

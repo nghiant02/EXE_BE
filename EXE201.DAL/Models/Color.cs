@@ -18,6 +18,10 @@ public partial class Color
     [StringLength(50)]
     public string ColorName { get; set; }
 
+    [StringLength(7)]
+    [Unicode(false)]
+    public string HexCode { get; set; }
+
     [InverseProperty("Color")]
     public virtual ICollection<ProductColor> ProductColors { get; set; } = new List<ProductColor>();
 }

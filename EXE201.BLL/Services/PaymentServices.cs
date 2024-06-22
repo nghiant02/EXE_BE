@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using EXE201.DAL.Models;
 using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using Net.payOS.Types;
+using LMSystem.Repository.Helpers;
 
 namespace EXE201.BLL.Services
 {
@@ -105,9 +106,9 @@ namespace EXE201.BLL.Services
             return paymentResult;
         }
 
-        public async Task<IEnumerable<Payment>> GetPaymentsByUserIdAsync(int userId)
+        public async Task<PagedResponseDTO<PaymentHistoryDto>> GetPaymentsByUserIdAsync(int userId, PaginationParameter paginationParameter)
         {
-            return await _paymentRepository.GetPaymentHistoryByUserIdAsync(userId);
+            return await _paymentRepository.GetPaymentHistoryByUserIdAsync(userId, paginationParameter);
         }
 
         public async Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate)
