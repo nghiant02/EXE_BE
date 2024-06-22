@@ -10,6 +10,7 @@ namespace EXE201.DAL.DTOs.ColorDTOs
     {
         public int ColorId { get; set; }
         public string NewColorName { get; set; }
+        public string NewHexCode {  get; set; }
     }
 
 }

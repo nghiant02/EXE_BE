@@ -9,6 +9,7 @@ namespace EXE201.DAL.DTOs.ColorDTOs
     public class CreateColorDTO
     {
         public string ColorName { get; set; }
+        public string HexCode {  get; set; }
     }
 
 }
