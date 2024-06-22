@@ -1,4 +1,6 @@
-﻿using EXE201.DAL.Interfaces;
+﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.RentalOrderDTOs;
+using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
 using MCC.DAL.Repository.Implements;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,40 @@ namespace EXE201.DAL.Repository
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize)
+        {
+            var query = _context.RentalOrderDetails
+                .Include(x => x.Product).ThenInclude(p => p.ProductImages).ThenInclude(pi => pi.Image)
+                .Include(x => x.Order)
+                .Where(x => x.Order.UserId == userId);
+
+            var totalCount = await query.CountAsync();
+
+            var rentalOrderDetails = await query
+                .OrderByDescending(x => x.RentalStart)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new RentalOrderDetailResponseDTO
+                {
+                    ProductName = x.Product.ProductName,
+                    ProductImage = x.Product.ProductImages.FirstOrDefault() != null
+                                   ? x.Product.ProductImages.FirstOrDefault().Image.ImageUrl
+                                   : string.Empty,
+                    RentalStart = x.RentalStart,
+                    RentalEnd = x.RentalEnd,
+                    Status = x.RentalEnd < DateTime.Now ? "Expired" : "Active"
+                })
+                .ToListAsync();
+
+            return new PagedResponseDTO<RentalOrderDetailResponseDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = rentalOrderDetails
+            };
         }
     }
 }
