@@ -14,11 +14,16 @@ namespace EXE201.BLL.Services
     public class CartServices : ICartServices
     {
         private readonly ICartRepository _cartRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IRentalOrderDetailRepository _rentalOrderDetailRepository;
         private readonly IMapper _mapper;
 
-        public CartServices(ICartRepository cartRepository, IMapper mapper)
+        public CartServices(ICartRepository cartRepository, IMapper mapper, IProductRepository productRepository, 
+            IRentalOrderDetailRepository rentalOrderDetailRepository)
         {
             _cartRepository = cartRepository;
+            _productRepository = productRepository;
+            _rentalOrderDetailRepository = rentalOrderDetailRepository;
             _mapper = mapper;
         }
 
@@ -34,19 +39,87 @@ namespace EXE201.BLL.Services
             return await _cartRepository.DeleteCartById(id);
         }
 
-        public async Task<IEnumerable<Cart>> GetAllCarts()
+        public async Task<IEnumerable<ViewCartDto>> GetAllCarts()
         {
-            return await _cartRepository.GetAll();
+            var carts = await _cartRepository.GetAll();
+            var cartDto = new List<ViewCartDto>();
+            foreach (var cart in carts)
+            {
+                var product = await _productRepository.GetById(cart.Product.ProductId);
+                var rentalOder = await _rentalOrderDetailRepository.GetRentalOrderDetail(cart.Product.RentalOrderDetails.First().OrderDetailsId);
+                var viewCart = new ViewCartDto
+                {
+                    CartId = cart.CartId,
+                    UserId = cart.UserId,
+                    ProductId = cart.ProductId,
+                    ProductTitle = cart.Product.ProductTitle,
+                    Quantity = cart.Quantity,
+                    ProductPrice = cart.Product.ProductPrice,
+                    ProductImageUrl = product.ProductImage.ToList(),
+                    RentalStart = rentalOder.RentalStart,
+                    RentalEnd = rentalOder.RentalEnd
+                };
+                cartDto.Add(viewCart);
+            }
+            return cartDto;
         }
 
-        public async Task<Cart> GetCartById(int userId)
+        public async Task<ViewCartDto> GetCartById(int userId)
         {
-            return await _cartRepository.GetCartById(userId);
+            var cart = await _cartRepository.GetCartById(userId);
+            var product = await _productRepository.GetById(cart.Product.ProductId);
+            var rentalOder = await _rentalOrderDetailRepository.GetRentalOrderDetail(cart.Product.RentalOrderDetails.First().OrderDetailsId);
+            var cartDto = new ViewCartDto
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                ProductId = cart.ProductId,
+                ProductTitle = cart.Product.ProductTitle,
+                Quantity = cart.Quantity,
+                ProductPrice = cart.Product.ProductPrice,
+                ProductImageUrl = product.ProductImage.ToList(),
+                RentalStart = rentalOder.RentalStart,
+                RentalEnd = rentalOder.RentalEnd
+            };
+            return cartDto;
         }
 
-        public async Task<Cart> UpdateCart(Cart cart)
+        public async Task<ViewCartDto> UpdateCartByUserId(int userId, UpdateCartDto cart)
         {
-            return await _cartRepository.UpdateCart(cart);
+            var checkCart = await _cartRepository.GetCartById(userId);
+            if (checkCart == null)
+            {
+                throw new Exception("CartId does not exist!");
+            }
+            
+            var rentalOrder = await _rentalOrderDetailRepository.GetRentalOrderDetail(checkCart.Product.RentalOrderDetails.First().OrderDetailsId);
+            if (rentalOrder == null)
+            {
+                throw new Exception("RentalOrderDetails do not exist!");
+            }
+
+            var product = await _productRepository.GetById(checkCart.Product.ProductId);
+            checkCart.Quantity = cart.Quantity;
+            rentalOrder.RentalStart = cart.RentalStart;
+            rentalOrder.RentalEnd = cart.RentalEnd;
+            
+            var updatedCart = await _cartRepository.UpdateCart(checkCart);
+            _rentalOrderDetailRepository.Update(rentalOrder);
+            await _rentalOrderDetailRepository.SaveChangesAsync();
+            
+            var updateDto = _mapper.Map<UpdateCartDto>(updatedCart);
+            var viewCartDto = new ViewCartDto
+            {
+                CartId = updateDto.CartId,
+                UserId = checkCart.UserId,
+                ProductId = checkCart.ProductId,
+                ProductTitle = checkCart.Product.ProductTitle,
+                ProductPrice = checkCart.Product.ProductPrice,
+                ProductImageUrl = product.ProductImage.ToList(),
+                RentalStart = rentalOrder.RentalStart,
+                RentalEnd = rentalOrder.RentalEnd
+            };
+            return viewCartDto;
         }
     }
 }

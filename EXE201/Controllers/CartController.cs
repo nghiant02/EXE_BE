@@ -1,7 +1,6 @@
-﻿using EXE201.BLL.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using EXE201.BLL.Interfaces;
 using EXE201.DAL.DTOs.CartDTOs;
-using EXE201.DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -11,6 +10,7 @@ namespace EXE201.Controllers
     public class CartController : ControllerBase
     {
         private readonly ICartServices _cartService;
+
         public CartController(ICartServices cartService)
         {
             _cartService = cartService;
@@ -45,9 +45,9 @@ namespace EXE201.Controllers
         }
 
         [HttpPut("UpdateCart")]
-        public async Task<IActionResult> UpdateCart(Cart cart)
+        public async Task<IActionResult> UpdateCart(int userId, UpdateCartDto cart)
         {
-            var result = await _cartService.UpdateCart(cart);
+            var result = await _cartService.UpdateCartByUserId(userId, cart);
             return Ok(result);
         }
     }
