@@ -137,9 +137,9 @@ namespace EXE201.Controllers
         }
 
         [HttpPost("AddColorToProduct")]
-        public async Task<IActionResult> AddColorToProduct([FromQuery] int productId, [FromQuery] int colorId)
+        public async Task<IActionResult> AddColorToProduct([FromQuery] int productId, [FromQuery] int colorId, [FromQuery] string ProductColorImage)
         {
-            var response = await _productServices.AddColorToProduct(productId, colorId);
+            var response = await _productServices.AddColorToProduct(productId, colorId, ProductColorImage);
             if (response.Status == "Error")
             {
                 return BadRequest(new { Message = response.Message });
@@ -178,6 +178,27 @@ namespace EXE201.Controllers
                 return BadRequest(new { Message = response.Message });
             }
             return Ok(new { Message = response.Message });
+        }
+
+        [HttpPost("UpdateColorImage")]
+        public async Task<IActionResult> UpdateColorImageForProduct([FromBody] UpdateColorImageDTO updateColorImageDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var response = await _productServices.UpdateColorImageForProduct(
+                updateColorImageDTO.ProductId,
+                updateColorImageDTO.ColorId,
+                updateColorImageDTO.NewColorImage);
+
+            if (response.Status == "Success")
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
         }
     }
 }

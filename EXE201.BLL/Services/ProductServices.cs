@@ -85,9 +85,9 @@ namespace EXE201.BLL.Services
             return await _productRepository.GetProductSuggestions(searchTerm);
         }
 
-        public async Task<ResponeModel> AddColorToProduct(int productId, int colorId)
+        public async Task<ResponeModel> AddColorToProduct(int productId, int colorId, string ProductColorImage)
         {
-            return await _productRepository.AddColorToProduct(productId, colorId);
+            return await _productRepository.AddColorToProduct(productId, colorId, ProductColorImage);
         }
 
         public async Task<ResponeModel> DeleteColorFromProduct(int productId, int colorId)
@@ -103,6 +103,11 @@ namespace EXE201.BLL.Services
         public async Task<ResponeModel> DeleteSizeFromProduct(int productId, int sizeId)
         {
             return await _productRepository.DeleteSizeFromProduct(productId, sizeId);
+        }
+
+        public async Task<ResponeModel> UpdateColorImageForProduct(int productId, int colorId, string newColorImage)
+        {
+            return await _productRepository.UpdateColorImageForProduct(productId, colorId, newColorImage);
         }
     }
 }
