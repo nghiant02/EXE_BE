@@ -2,6 +2,7 @@
 using EXE201.BLL.Services;
 using EXE201.DAL.DTOs.PaymentDTOs;
 using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
+using LMSystem.Repository.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -40,12 +41,12 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("ViewHistoryPaymentByUserId")]
-        public async Task<IActionResult> GetPaymentsByUserId(int userId)
+        public async Task<IActionResult> GetPaymentsByUserId(int userId, [FromQuery] PaginationParameter paginationParameter)
         {
             try
             {
-                var result = await _paymentService.GetPaymentsByUserIdAsync(userId);
-                if (result == null || !result.Any())
+                var result = await _paymentService.GetPaymentsByUserIdAsync(userId, paginationParameter);
+                if (result == null || !result.Items.Any())
                 {
                     return BadRequest("No payment history found for the specified user.");
                 }
