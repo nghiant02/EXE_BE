@@ -15,16 +15,17 @@ namespace EXE201.DAL.Repository
     {
         public CartRepostiory(EXE201Context context) : base(context)
         {
-        }   
+        }
 
         public async Task<Cart> AddNewCart(Cart cart)
         {
             try
             {
                 await _context.Carts.AddAsync(cart);
-                await _context.SaveChangesAsync();  
+                await _context.SaveChangesAsync();
                 return cart;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -41,8 +42,10 @@ namespace EXE201.DAL.Repository
                     await _context.SaveChangesAsync();
                     return true;
                 }
+
                 return false;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -53,15 +56,17 @@ namespace EXE201.DAL.Repository
             try
             {
                 var checkCart = await _context.Carts
-                    .Include(x => x.User)
-                    .Include(x => x.Product)
+                    .Include(c => c.Product).ThenInclude(u => u.ProductImages)
+                    .Include(c => c.User).ThenInclude(r => r.RentalOrders).ThenInclude(rd => rd.RentalOrderDetails)
                     .ToListAsync();
-                if (checkCart != null )
+                if (checkCart != null)
                 {
                     return checkCart;
                 }
+
                 return null;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -72,16 +77,18 @@ namespace EXE201.DAL.Repository
             try
             {
                 var checkCart = await _context.Carts.Where(x => x.UserId == userId)
-                    .Include(x => x.User)
-                    .Include(x => x.Product)
+                    .Include(x => x.Product).ThenInclude(u => u.ProductImages)
+                    .Include(c => c.User).ThenInclude(r => r.RentalOrders).ThenInclude(rd => rd.RentalOrderDetails)
                     .FirstOrDefaultAsync();
 
-                if(checkCart != null)
+                if (checkCart != null)
                 {
                     return checkCart;
                 }
+
                 return null;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -91,13 +98,11 @@ namespace EXE201.DAL.Repository
         {
             try
             {
-                var checkCart = await _context.Carts.Where(x => x.CartId == cart.CartId).FirstOrDefaultAsync();
-                if( checkCart != null )
-                {
-                    return checkCart;
-                }
-                return null;
-            }catch (Exception ex)
+               _context.Carts.Update(cart);
+               await _context.SaveChangesAsync();
+               return cart;
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
