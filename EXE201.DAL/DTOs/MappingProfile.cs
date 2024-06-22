@@ -29,6 +29,7 @@ namespace EXE201.BLL.DTOs
             CreateMap<AddNewCartDTO, Cart>();
             CreateMap<AddRatingDTO, Rating>();
             CreateMap<UpdateAvatarUserDTO, User>();
+            CreateMap<ViewCartDto, Cart>();
         }
     }
 }
