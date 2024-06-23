@@ -33,6 +33,9 @@ public partial class Feedback
     [Column(TypeName = "datetime")]
     public DateTime? DateGiven { get; set; }
 
+    [StringLength(255)]
+    public string FeedbackTitle { get; set; }
+
     [ForeignKey("ProductId")]
     [InverseProperty("Feedbacks")]
     public virtual Product Product { get; set; }

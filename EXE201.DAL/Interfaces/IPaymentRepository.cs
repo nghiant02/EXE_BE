@@ -18,5 +18,9 @@ namespace EXE201.DAL.Interfaces
         Task<ResponeModel> ConfirmPayment(int paymentId);
         Task<PagedResponseDTO<PaymentHistoryDto>> GetPaymentHistoryByUserIdAsync(int userId, PaginationParameter paginationParameter);
         Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<PaymentMethod>> GetAllPaymentMethods();
+        Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName);
+        Task<PaymentMethod> UpdatePaymentMethodName(int paymentMethodId, string paymentMethodName);
+        Task<bool> DeletePaymentMethod(int paymentMethodId);
     }
 }
