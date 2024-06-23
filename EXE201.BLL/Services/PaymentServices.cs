@@ -121,6 +121,11 @@ namespace EXE201.BLL.Services
             return await _paymentRepository.GetAllPaymentMethods();
         }
 
+        public async Task<IEnumerable<Payment>> GetAllPayments()
+        {
+            return await _paymentRepository.GetAllPayments();
+        }
+
         public async Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName)
         {
             return await _paymentRepository.CreatePaymentMethod(paymentMethodName);
@@ -134,6 +139,11 @@ namespace EXE201.BLL.Services
         public async Task<bool> DeletePaymentMethod(int paymentMethodId)
         {
             return await _paymentRepository.DeletePaymentMethod(paymentMethodId);
+        }
+
+        public async Task<bool> DeletePayment(int paymentId)
+        {
+            return await _paymentRepository.DeletePayment(paymentId);
         }
     }
 }

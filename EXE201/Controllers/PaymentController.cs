@@ -77,6 +77,13 @@ namespace EXE201.Controllers
             return Ok(paymentMethods);
         }
 
+        [HttpGet("ViewAllPayments")]
+        public async Task<IActionResult> ViewAllPayments()
+        {
+            var payments = await _paymentService.GetAllPayments();
+            return Ok(payments);
+        }
+
         [HttpPost("CreatePaymentMethod")]
         public async Task<IActionResult> CreatePaymentMethod([FromQuery] string paymentMethodName)
         {
@@ -105,7 +112,19 @@ namespace EXE201.Controllers
                 return NotFound(new { Message = "Payment method not found." });
             }
 
-            return NoContent();
+            return Ok(result);
+        }
+
+        [HttpDelete("DeletePayment/{paymentId}")]
+        public async Task<IActionResult> DeletePayment(int paymentId)
+        {
+            var result = await _paymentService.DeletePayment(paymentId);
+            if (!result)
+            {
+                return NotFound(new { Message = "Payment not found." });
+            }
+
+            return Ok(result);
         }
     }
 }

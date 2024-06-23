@@ -165,6 +165,11 @@ namespace EXE201.DAL.Repository
             return await _context.PaymentMethods.ToListAsync();
         }
 
+        public async Task<IEnumerable<Payment>> GetAllPayments()
+        {
+            return await _context.Payments.ToListAsync();
+        }
+
         public async Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName)
         {
             var paymentMethod = new PaymentMethod
@@ -202,6 +207,19 @@ namespace EXE201.DAL.Repository
             }
 
             _context.PaymentMethods.Remove(paymentMethod);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeletePayment(int paymentId)
+        {
+            var payment = await _context.Payments.FindAsync(paymentId);
+            if (payment == null)
+            {
+                return false;
+            }
+
+            _context.Payments.Remove(payment);
             await _context.SaveChangesAsync();
             return true;
         }
