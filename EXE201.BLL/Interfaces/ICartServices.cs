@@ -11,7 +11,7 @@ namespace EXE201.BLL.Interfaces
     public interface ICartServices
     {
         Task<IEnumerable<ViewCartDto>> GetAllCarts();
-        Task<ViewCartDto> GetCartById(int userId);
+        Task<IEnumerable<ViewCartDto>> GetCartById(int userId);
         Task<ViewCartDto> UpdateCartByUserId(int userId, UpdateCartDto cart);
         Task<bool> DeleteCart(int id);
         Task<Cart> AddNewCart(AddNewCartDTO cart);

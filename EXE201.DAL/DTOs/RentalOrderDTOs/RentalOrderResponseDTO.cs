@@ -15,5 +15,6 @@ namespace EXE201.DAL.DTOs.RentalOrderDTOs
         public DateTime? ReturnDate { get; set; }
         public decimal? OrderTotal { get; set; }
         public int? PointsEarned { get; set; }
+        public string? ProductImage { get; set; }
     }
 }
