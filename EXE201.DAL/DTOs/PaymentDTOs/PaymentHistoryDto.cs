@@ -13,5 +13,6 @@ namespace EXE201.DAL.DTOs.PaymentDTOs
         public decimal? PaymentAmount { get; set; }
         public string PaymentContent { get; set; }
         public string PaymentMethodName { get; set; }
+        public string PaymentStatus { get; set; }
     }
 }
