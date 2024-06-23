@@ -41,8 +41,10 @@ namespace EXE201.DAL.Repository
         public async Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize)
         {
             var query = _context.RentalOrderDetails
+                
                 .Include(x => x.Product).ThenInclude(p => p.ProductImages).ThenInclude(pi => pi.Image)
                 .Include(x => x.Order)
+                .Include(t => t.Order).ThenInclude(q => q.Payments)
                 .Where(x => x.Order.UserId == userId);
 
             var totalCount = await query.CountAsync();
@@ -59,7 +61,9 @@ namespace EXE201.DAL.Repository
                                    : string.Empty,
                     RentalStart = x.RentalStart,
                     RentalEnd = x.RentalEnd,
-                    Status = x.RentalEnd < DateTime.Now ? "Expired" : "Active"
+                    Status = x.RentalEnd < DateTime.Now ? "Expired" : "Active",
+                    OrderCode = x.Order.OrderCode,
+                    PaymentTime = x.Order.Payments.First().PaymentTime
                 })
                 .ToListAsync();
 
