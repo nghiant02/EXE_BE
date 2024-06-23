@@ -16,5 +16,6 @@ namespace EXE201.DAL.Interfaces
         Task<Cart> UpdateCart(Cart cart); 
         Task<bool> DeleteCartById(int id);
         Task<Cart> AddNewCart(Cart cart);
+        Task<IEnumerable<Cart>> GetCartsByUserId(int userId);
     }
 }

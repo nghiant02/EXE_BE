@@ -12,6 +12,8 @@ namespace EXE201.DAL.DTOs.RentalOrderDTOs
         public string ProductImage { get; set; }
         public DateTime? RentalStart { get; set; }
         public DateTime? RentalEnd { get; set; }
+        public DateTime? PaymentTime { get; set; }
         public string Status { get; set; }
+        public string OrderCode { get; set; }
     }
 }
