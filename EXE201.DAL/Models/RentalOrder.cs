@@ -38,6 +38,9 @@ public partial class RentalOrder
 
     public int? PointsEarned { get; set; }
 
+    [StringLength(50)]
+    public string OrderCode { get; set; }
+
     [InverseProperty("Order")]
     public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();
 

@@ -131,6 +131,7 @@ namespace EXE201.DAL.Repository
                     PaymentTime = p.PaymentTime,
                     PaymentAmount = p.PaymentAmount,
                     PaymentContent = p.Order.RentalOrderDetails.Select(ro => ro.Product.ProductTitle).FirstOrDefault(),
+                    PaymentStatus = p.PaymentStatus,
                     PaymentMethodName = p.PaymentMethod.PaymentMethodName
                 })
                 .ToListAsync();
