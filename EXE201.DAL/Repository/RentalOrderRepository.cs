@@ -100,7 +100,7 @@ namespace EXE201.DAL.Repository
                     DueDate = o.DueDate,
                     ReturnDate = o.ReturnDate,
                     OrderTotal = o.OrderTotal,
-                    PointsEarned = o.PointsEarned
+                    PointsEarned = o.PointsEarned,
                 })
                 .AsQueryable();
 
