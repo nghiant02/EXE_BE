@@ -93,6 +93,14 @@ namespace EXE201.DAL.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<IEnumerable<Cart>> GetCartsByUserId(int userId)
+        {
+            return await _context.Carts
+                .Where(c => c.UserId == userId)
+                .Include(c => c.Product)
+                .ThenInclude(p => p.RentalOrderDetails)
+                .ToListAsync();
+        }
 
         public async Task<Cart> UpdateCart(Cart cart)
         {

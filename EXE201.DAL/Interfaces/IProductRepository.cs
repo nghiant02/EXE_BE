@@ -15,6 +15,7 @@ namespace EXE201.DAL.Interfaces
     {
         Task<IEnumerable<Product>> GetAll();
         Task<ProductDetailDTO> GetById(int id);
+        Task<IEnumerable<ProductDetailDTO>> GetProductsById(int productId);
         Task<ResponeModel> AddProduct(AddProductDTO addProduct);
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
         Task<ResponeModel> DeleteProduct(int id);

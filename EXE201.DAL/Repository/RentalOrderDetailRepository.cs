@@ -71,5 +71,19 @@ namespace EXE201.DAL.Repository
                 Items = rentalOrderDetails
             };
         }
+        
+        public async Task<RentalOrderDetail> UpdateRentalDetail(RentalOrderDetail rentalOrderDetail)
+        {
+            try
+            {
+                _context.RentalOrderDetails.Update(rentalOrderDetail);
+                await _context.SaveChangesAsync();
+                return rentalOrderDetail;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
