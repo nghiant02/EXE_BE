@@ -163,14 +163,14 @@ builder.WebHost.UseUrls($"http://*:{port}");
 
 var app = builder.Build();
 
-// //Get swagger.json follwing root directory 
-// app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
-// //Load swagger.json follwing root directory 
-// app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
-if (app.Environment.IsDevelopment()){
-    app.UseSwagger();
-    app.UseSwaggerUI();
-};
+//Get swagger.json follwing root directory 
+app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
+//Load swagger.json follwing root directory 
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
+// if (app.Environment.IsDevelopment()){
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// };
 
 app.UseCors(x => x.AllowAnyOrigin()
                  .AllowAnyHeader()
