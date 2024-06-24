@@ -24,7 +24,7 @@ namespace EXE201.DAL.Repository
         }
 
         // Create a new color
-        public async Task<ResponeModel> CreateColor(string colorName)
+        public async Task<ResponeModel> CreateColor(string colorName, string hexCode)
         {
             if (string.IsNullOrEmpty(colorName))
             {
@@ -38,7 +38,8 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "Color name already exists" };
             }
 
-            var color = new Color { ColorName = colorName };
+            var color = new Color { ColorName = colorName, HexCode = hexCode};
+
 
             _context.Colors.Add(color);
             await _context.SaveChangesAsync();
@@ -70,7 +71,7 @@ namespace EXE201.DAL.Repository
         }
 
         // Update a color by ID
-        public async Task<ResponeModel> UpdateColor(int colorId, string newColorName)
+        public async Task<ResponeModel> UpdateColor(int colorId, string newColorName, string newHexCode)
         {
             var color = await _context.Colors.FindAsync(colorId);
 
@@ -91,6 +92,7 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "Color name already exists" };
             }
 
+            color.HexCode = newHexCode;
             color.ColorName = newColorName;
             _context.Colors.Update(color);
             await _context.SaveChangesAsync();

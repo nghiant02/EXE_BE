@@ -11,8 +11,8 @@ namespace EXE201.BLL.Interfaces
     public interface IColorServices
     {
         Task<IEnumerable<Color>> GetAllColors();
-        Task<ResponeModel> CreateColor(string colorName);
+        Task<ResponeModel> CreateColor(string colorName, string hexCode);
         Task<ResponeModel> DeleteColor(int colorId);
-        Task<ResponeModel> UpdateColor(int colorId, string newColorName);
+        Task<ResponeModel> UpdateColor(int colorId, string newColorName, string newHexCode);
     }
 }

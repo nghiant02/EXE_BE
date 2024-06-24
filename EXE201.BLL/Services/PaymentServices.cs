@@ -51,7 +51,7 @@ namespace EXE201.BLL.Services
             )).ToList() ?? new List<ItemData>();
 
             // ID for BankAccount
-            const int bankAccountMethodId = 2;
+            const int bankAccountMethodId = 1;
             if (paymentDetails.PaymentMethodId == bankAccountMethodId)
             {
                 var paymentPayload = new PaymentData(
@@ -114,6 +114,36 @@ namespace EXE201.BLL.Services
         public async Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate)
         {
             return await _paymentRepository.GetProfitData(startDate, endDate);
+        }
+
+        public async Task<IEnumerable<PaymentMethod>> GetAllPaymentMethods()
+        {
+            return await _paymentRepository.GetAllPaymentMethods();
+        }
+
+        public async Task<IEnumerable<Payment>> GetAllPayments()
+        {
+            return await _paymentRepository.GetAllPayments();
+        }
+
+        public async Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName)
+        {
+            return await _paymentRepository.CreatePaymentMethod(paymentMethodName);
+        }
+
+        public async Task<PaymentMethod> UpdatePaymentMethodName(int paymentMethodId, string paymentMethodName)
+        {
+            return await _paymentRepository.UpdatePaymentMethodName(paymentMethodId, paymentMethodName);
+        }
+
+        public async Task<bool> DeletePaymentMethod(int paymentMethodId)
+        {
+            return await _paymentRepository.DeletePaymentMethod(paymentMethodId);
+        }
+
+        public async Task<bool> DeletePayment(int paymentId)
+        {
+            return await _paymentRepository.DeletePayment(paymentId);
         }
     }
 }

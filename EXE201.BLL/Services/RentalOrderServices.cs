@@ -42,9 +42,13 @@ namespace EXE201.BLL.Services
             return await _rentalOrderRepository.GetOrderStatus(orderId);
         }
 
-        public async Task<List<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId)
+        public async Task<PagedResponseDTO<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize)
         {
-            return await _rentalOrderRepository.GetRentalOrdersByUserId(userId);
+            return await _rentalOrderRepository.GetRentalOrdersByUserId(userId, PageNumber, PageSize);
+        }
+        public async Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId)
+        {
+            return await _rentalOrderRepository.GetRentalByUserId(userId);
         }
     }
 }

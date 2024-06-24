@@ -159,5 +159,69 @@ namespace EXE201.DAL.Repository
 
             return profits;
         }
+
+        public async Task<IEnumerable<PaymentMethod>> GetAllPaymentMethods()
+        {
+            return await _context.PaymentMethods.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Payment>> GetAllPayments()
+        {
+            return await _context.Payments.ToListAsync();
+        }
+
+        public async Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName)
+        {
+            var paymentMethod = new PaymentMethod
+            {
+                PaymentMethodName = paymentMethodName
+            };
+
+            _context.PaymentMethods.Add(paymentMethod);
+            await _context.SaveChangesAsync();
+            return paymentMethod;
+        }
+
+        public async Task<PaymentMethod> UpdatePaymentMethodName(int paymentMethodId, string paymentMethodName)
+        {
+            var paymentMethod = await _context.PaymentMethods.FindAsync(paymentMethodId);
+            if (paymentMethod == null)
+            {
+                return null;
+            }
+
+            paymentMethod.PaymentMethodName = paymentMethodName;
+
+            _context.PaymentMethods.Update(paymentMethod);
+            await _context.SaveChangesAsync();
+
+            return paymentMethod;
+        }
+
+        public async Task<bool> DeletePaymentMethod(int paymentMethodId)
+        {
+            var paymentMethod = await _context.PaymentMethods.FindAsync(paymentMethodId);
+            if (paymentMethod == null)
+            {
+                return false;
+            }
+
+            _context.PaymentMethods.Remove(paymentMethod);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeletePayment(int paymentId)
+        {
+            var payment = await _context.Payments.FindAsync(paymentId);
+            if (payment == null)
+            {
+                return false;
+            }
+
+            _context.Payments.Remove(payment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

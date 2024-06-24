@@ -15,6 +15,7 @@ namespace EXE201.DAL.Interfaces
     {
         Task<IEnumerable<Product>> GetAll();
         Task<ProductDetailDTO> GetById(int id);
+        Task<IEnumerable<ProductDetailDTO>> GetProductsById(int productId);
         Task<ResponeModel> AddProduct(AddProductDTO addProduct);
         Task<ResponeModel> UpdateProduct(UpdateProductDTO updateProductDTO);
         Task<ResponeModel> DeleteProduct(int id);
@@ -25,9 +26,10 @@ namespace EXE201.DAL.Interfaces
         Task<IEnumerable<ProductRecommendationDTO>> GetHighlyRatedProducts(int topN);
         Task<PagedResponseDTO<ProductListRecommendByCategoryDTO>> GetProductRecommendationsByCategory(int productId, ProductPagingRecommendByCategoryDTO filter);
         Task<IEnumerable<ProductSuggestionDTO>> GetProductSuggestions(string searchTerm);
-        Task<ResponeModel> AddColorToProduct(int productId, int colorId);
+        Task<ResponeModel> AddColorToProduct(int productId, int colorId, string ProductColorImage);
         Task<ResponeModel> DeleteColorFromProduct(int productId, int colorId);
         Task<ResponeModel> AddSizeToProduct(int productId, int sizeId);
         Task<ResponeModel> DeleteSizeFromProduct(int productId, int sizeId);
+        Task<ResponeModel> UpdateColorImageForProduct(int productId, int colorId, string newColorImage);
     }
 }

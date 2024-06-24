@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EXE201.DAL.DTOs.ColorDTOs
+namespace EXE201.DAL.DTOs.ProductDTOs
 {
-    public class UpdateColorDTO
+    public class UpdateColorImageDTO
     {
+        public int ProductId { get; set; }
         public int ColorId { get; set; }
-        public string NewColorName { get; set; }
-        public string NewHexCode {  get; set; }
+        public string NewColorImage { get; set; }
     }
 
 }

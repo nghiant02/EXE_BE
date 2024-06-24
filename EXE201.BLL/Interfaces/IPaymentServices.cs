@@ -17,5 +17,11 @@ namespace EXE201.BLL.Interfaces
         Task<ResponeModel> ConfirmPayment(int paymentId);
         Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
         Task<PagedResponseDTO<PaymentHistoryDto>> GetPaymentsByUserIdAsync(int userId, PaginationParameter paginationParameter);
+        Task<IEnumerable<PaymentMethod>> GetAllPaymentMethods();
+        Task<IEnumerable<Payment>> GetAllPayments();
+        Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName);
+        Task<PaymentMethod> UpdatePaymentMethodName(int paymentMethodId, string paymentMethodName);
+        Task<bool> DeletePaymentMethod(int paymentMethodId);
+        Task<bool> DeletePayment(int paymentId);
     }
 }

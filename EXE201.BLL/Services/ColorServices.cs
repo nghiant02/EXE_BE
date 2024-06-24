@@ -23,9 +23,9 @@ namespace EXE201.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<ResponeModel> CreateColor(string colorName)
+        public async Task<ResponeModel> CreateColor(string colorName, string hexCode)
         {
-            return await _colorRepository.CreateColor(colorName);
+            return await _colorRepository.CreateColor(colorName, hexCode);
         }
 
         public async Task<ResponeModel> DeleteColor(int colorId)
@@ -38,9 +38,9 @@ namespace EXE201.BLL.Services
             return await _colorRepository.GetAllColors();
         }
 
-        public async Task<ResponeModel> UpdateColor(int colorId, string newColorName)
+        public async Task<ResponeModel> UpdateColor(int colorId, string newColorName, string newHexCode)
         {
-            return await _colorRepository.UpdateColor(colorId, newColorName);
+            return await _colorRepository.UpdateColor(colorId, newColorName, newHexCode);
         }
     }
 }

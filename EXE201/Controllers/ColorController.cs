@@ -26,7 +26,7 @@ public class ColorController : ControllerBase
     [HttpPost("CreateColor")]
     public async Task<IActionResult> CreateColor([FromBody] CreateColorDTO request)
     {
-        var response = await _colorServices.CreateColor(request.ColorName);
+        var response = await _colorServices.CreateColor(request.ColorName, request.HexCode);
         if (response.Status == "Error")
         {
             return BadRequest(new { Message = response.Message });
@@ -48,7 +48,7 @@ public class ColorController : ControllerBase
     [HttpPut("UpdateColor")]
     public async Task<IActionResult> UpdateColor([FromBody] UpdateColorDTO request)
     {
-        var response = await _colorServices.UpdateColor(request.ColorId, request.NewColorName);
+        var response = await _colorServices.UpdateColor(request.ColorId, request.NewColorName, request.NewHexCode);
         if (response.Status == "Error")
         {
             return BadRequest(new { Message = response.Message });
