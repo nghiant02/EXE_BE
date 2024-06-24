@@ -13,6 +13,7 @@ namespace EXE201.DAL.DTOs.ProductDTOs
     {
         [Required(ErrorMessage = "Name is required!")]
         public string Name { get; set; }
+
         [Required(ErrorMessage = "Title is required!")]
         public string Title { get; set; }
 
@@ -28,8 +29,15 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         [Required(ErrorMessage = "Category is required!")]
         public int? CategoryId { get; set; }
 
-        public IEnumerable<string> ProductColor { get; set; }
+        public IEnumerable<ColorDetailDTO> ProductColors { get; set; }
 
         public IEnumerable<string> ProductSize { get; set; }
+    }
+
+    public class ColorDetailDTO
+    {
+        public string ColorName { get; set; }
+        public string HexCode { get; set; }
+        public string ColorImage { get; set; }
     }
 }

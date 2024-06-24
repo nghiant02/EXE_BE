@@ -67,9 +67,10 @@ namespace EXE201.DAL.Repository
 
         public async Task<ResponeModel> AddProduct(AddProductDTO addProduct)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Check if CategoryId exists
+                // Validate CategoryId
                 var categoryExists = await _context.Categories.AnyAsync(c => c.CategoryId == addProduct.CategoryId);
                 if (!categoryExists)
                 {
@@ -97,7 +98,7 @@ namespace EXE201.DAL.Repository
                 if (newImages.Any())
                 {
                     _context.Images.AddRange(newImages);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // Save new images to get their IDs
                     imageEntities.AddRange(newImages);
                 }
 
@@ -106,21 +107,35 @@ namespace EXE201.DAL.Repository
 
                 // Handle Product Colors
                 var colorEntities = await _context.Colors
-                    .Where(c => addProduct.ProductColor.Contains(c.ColorName))
+                    .Where(c => addProduct.ProductColors.Select(pc => pc.ColorName).Contains(c.ColorName))
                     .ToListAsync();
 
-                var newColorNames = addProduct.ProductColor.Except(colorEntities.Select(c => c.ColorName)).ToList();
-                var newColors = newColorNames.Select(name => new Color { ColorName = name }).ToList();
+                var newColors = addProduct.ProductColors
+                    .Where(pc => !colorEntities.Any(c => c.ColorName == pc.ColorName))
+                    .Select(pc => new Color
+                    {
+                        ColorName = pc.ColorName,
+                        HexCode = pc.HexCode
+                    }).ToList();
 
                 if (newColors.Any())
                 {
                     _context.Colors.AddRange(newColors);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // Save new colors to get their IDs
                     colorEntities.AddRange(newColors);
                 }
 
-                product.ProductColors = colorEntities
-                    .Select(color => new ProductColor { ColorId = color.ColorId, Product = product }).ToList();
+                product.ProductColors = addProduct.ProductColors
+                    .Select(pc =>
+                    {
+                        var color = colorEntities.First(c => c.ColorName == pc.ColorName);
+                        return new ProductColor
+                        {
+                            ColorId = color.ColorId,
+                            Product = product,
+                            ProductColorImage = pc.ColorImage
+                        };
+                    }).ToList();
 
                 // Handle Product Sizes
                 var sizeEntities = await _context.Sizes
@@ -133,7 +148,7 @@ namespace EXE201.DAL.Repository
                 if (newSizes.Any())
                 {
                     _context.Sizes.AddRange(newSizes);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // Save new sizes to get their IDs
                     sizeEntities.AddRange(newSizes);
                 }
 
@@ -143,11 +158,18 @@ namespace EXE201.DAL.Repository
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
 
+                await transaction.CommitAsync(); // Commit transaction
+
                 return new ResponeModel
-                    { Status = "Success", Message = "Added product successfully", DataObject = product };
+                {
+                    Status = "Success",
+                    Message = "Added product successfully",
+                    DataObject = product
+                };
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync(); // Rollback transaction in case of an error
                 Console.WriteLine($"Exception: {ex.Message}");
                 return new ResponeModel { Status = "Error", Message = "An error occurred while adding the product" };
             }
