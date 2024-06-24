@@ -23,6 +23,12 @@ public partial class Cart
 
     public int? Quantity { get; set; }
 
+    [Column(TypeName = "decimal(10, 2)")]
+    public decimal? DiscountedPrice { get; set; }
+
+    [Column(TypeName = "decimal(10, 2)")]
+    public decimal? TotalPrice { get; set; }
+
     [ForeignKey("ProductId")]
     [InverseProperty("Carts")]
     public virtual Product Product { get; set; }
