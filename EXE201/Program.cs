@@ -163,9 +163,9 @@ builder.WebHost.UseUrls($"http://*:{port}");
 
 var app = builder.Build();
 
-//Get swagger.json follwing root directory 
+//Get swagger.json following root directory 
 app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
-//Load swagger.json follwing root directory 
+//Load swagger.json following root directory 
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
 // if (app.Environment.IsDevelopment()){
 //     app.UseSwagger();
