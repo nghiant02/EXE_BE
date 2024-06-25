@@ -72,27 +72,17 @@ namespace EXE201.DAL.Repository
             }
         }
 
-        public async Task<Cart> GetCartById(int userId)
+        public async Task<Cart> GetCartById(int cartId)
         {
-            try
-            {
-                var checkCart = await _context.Carts.Where(x => x.UserId == userId)
-                    .Include(x => x.Product).ThenInclude(u => u.ProductImages)
-                    .Include(c => c.User).ThenInclude(r => r.RentalOrders).ThenInclude(rd => rd.RentalOrderDetails)
-                    .FirstOrDefaultAsync();
-
-                if (checkCart != null)
-                {
-                    return checkCart;
-                }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _context.Carts
+                    .Include(c => c.Product)
+                    .ThenInclude(p => p.ProductImages)
+                    .Include(c => c.User)
+                    .ThenInclude(u => u.RentalOrders)
+                    .ThenInclude(ro => ro.RentalOrderDetails)
+                    .FirstOrDefaultAsync(c => c.CartId == cartId);
         }
+
         public async Task<IEnumerable<Cart>> GetCartsByUserId(int userId)
         {
             return await _context.Carts
