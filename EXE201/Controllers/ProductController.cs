@@ -49,6 +49,18 @@ namespace EXE201.Controllers
             return Ok(response);
         }
 
+        [HttpDelete("PermanentDeleteProduct/{productId}")]
+        public async Task<IActionResult> PermanentDeleteProduct(int productId)
+        {
+            var result = await _productServices.PermanentDeleteProduct(productId);
+            if (result.Status == "Success")
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
         [HttpPost("DeleteProduct")]
         public async Task<IActionResult> DeleteProduct([FromQuery] int productId)
         {

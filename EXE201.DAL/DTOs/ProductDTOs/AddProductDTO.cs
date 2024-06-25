@@ -31,7 +31,13 @@ namespace EXE201.DAL.DTOs.ProductDTOs
 
         public IEnumerable<ColorDetailDTO> ProductColors { get; set; }
 
+        public IEnumerable<ExistingColorDetailDTO> ExistingColorIds { get; set; }
+
         public IEnumerable<string> ProductSize { get; set; }
+
+        public IEnumerable<int> ExistingSizeIds { get; set; }
+
+        public ProductDetailDTOForAddProduct ProductDetail { get; set; } 
     }
 
     public class ColorDetailDTO
@@ -39,5 +45,24 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         public string ColorName { get; set; }
         public string HexCode { get; set; }
         public string ColorImage { get; set; }
+    }
+
+    public class ExistingColorDetailDTO
+    {
+        public int ColorId { get; set; }
+        public string ColorImage { get; set; }
+    }
+
+    public class ProductDetailDTOForAddProduct
+    {
+        public string Description { get; set; }
+        public string AdditionalInformation { get; set; }
+        public string ShippingAndReturns { get; set; }
+        public string SizeChart { get; set; }
+        public string Reviews { get; set; }
+        public string Questions { get; set; }
+        public string VendorInfo { get; set; }
+        public string MoreProducts { get; set; }
+        public string ProductPolicies { get; set; }
     }
 }

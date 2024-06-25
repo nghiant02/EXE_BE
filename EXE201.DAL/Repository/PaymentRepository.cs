@@ -171,9 +171,9 @@ namespace EXE201.DAL.Repository
             return await _context.PaymentMethods.ToListAsync();
         }
 
-        public IQueryable<Payment> GetAll()
+        public async Task<IEnumerable<Payment>> GetAllPayments()
         {
-            return _context.Payments.AsQueryable();
+            return await _context.Payments.ToListAsync();
         }
 
         public async Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName)
