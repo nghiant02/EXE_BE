@@ -43,6 +43,10 @@ public partial class Payment
     [Column(TypeName = "datetime")]
     public DateTime? PaymentTime { get; set; }
 
+    [StringLength(255)]
+    [Unicode(false)]
+    public string PaymentLink { get; set; }
+
     [ForeignKey("OrderId")]
     [InverseProperty("Payments")]
     public virtual RentalOrder Order { get; set; }
