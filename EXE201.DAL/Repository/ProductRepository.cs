@@ -225,6 +225,42 @@ namespace EXE201.DAL.Repository
             }
         }
 
+        public async Task<ResponeModel> PermanentDeleteProduct(int productId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.ProductColors)
+                    .Include(p => p.ProductSizes)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductDetails)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return new ResponeModel { Status = "Error", Message = "Product not found" };
+                }
+
+                // Remove related entities
+                _context.ProductColors.RemoveRange(product.ProductColors);
+                _context.ProductSizes.RemoveRange(product.ProductSizes);
+                _context.ProductImages.RemoveRange(product.ProductImages);
+                _context.ProductDetails.RemoveRange(product.ProductDetails);
+
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return new ResponeModel { Status = "Success", Message = "Product deleted successfully" };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ResponeModel { Status = "Error", Message = "An error occurred while deleting the product" };
+            }
+        }
 
 
 

@@ -13,6 +13,7 @@ namespace EXE201.BLL.Interfaces
     public interface IProductServices
     {
         Task<ResponeModel> AddProduct(AddProductDTO addProduct);
+        Task<ResponeModel> PermanentDeleteProduct(int productId);
         Task<IEnumerable<Product>> GetAll();
         Task<ProductDetailDTO> GetById(int id);
         Task<ResponeModel> DeleteProduct(int id);
