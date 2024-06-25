@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using EXE201.DAL.Models;
 using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using LMSystem.Repository.Helpers;
+using Net.payOS.Types;
 
 namespace EXE201.BLL.Interfaces
 {
@@ -23,5 +24,6 @@ namespace EXE201.BLL.Interfaces
         Task<PaymentMethod> UpdatePaymentMethodName(int paymentMethodId, string paymentMethodName);
         Task<bool> DeletePaymentMethod(int paymentMethodId);
         Task<bool> DeletePayment(int paymentId);
+        Task<PaymentLinkInformation> CancelPaymentLink(int paymentId);
     }
 }

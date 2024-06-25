@@ -2,9 +2,9 @@
 using Net.payOS;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EXE201.BLL.Interfaces;
 
-public class PayOSPaymentService
-{
+public class PayOSPaymentService {
     private readonly PayOS _payOS;
 
     public PayOSPaymentService(string clientId, string apiKey, string checksumKey)
@@ -22,9 +22,9 @@ public class PayOSPaymentService
         return await _payOS.getPaymentLinkInformation(orderId);
     }
 
-    public async Task<PaymentLinkInformation> CancelPaymentLink(int orderId, string cancellationReason = null)
+    public async Task<PaymentLinkInformation> CancelPaymentLink(int paymentId)
     {
-        return await _payOS.cancelPaymentLink(orderId, cancellationReason);
+        return await _payOS.cancelPaymentLink(paymentId);
     }
 
     public async Task<string> ConfirmWebhook(string webhookUrl)

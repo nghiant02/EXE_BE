@@ -74,6 +74,12 @@ namespace EXE201.DAL.Repository
             return new ResponeModel { Status = "Success", Message = "Payment created successfully", DataObject = paymentWithMethod };
         }
 
+        public async Task UpdatePayment(Payment payment)
+        {
+            _context.Payments.Update(payment);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task ClearUserCart(int userId)
         {
             var cartItems = await _context.Carts
@@ -165,9 +171,9 @@ namespace EXE201.DAL.Repository
             return await _context.PaymentMethods.ToListAsync();
         }
 
-        public async Task<IEnumerable<Payment>> GetAllPayments()
+        public IQueryable<Payment> GetAll()
         {
-            return await _context.Payments.ToListAsync();
+            return _context.Payments.AsQueryable();
         }
 
         public async Task<PaymentMethod> CreatePaymentMethod(string paymentMethodName)
