@@ -4,14 +4,6 @@ using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
 using EXE201.DAL.Models;
-using LMSystem.Repository.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace EXE201.BLL.Services
 {
     public class ProductServices : IProductServices
