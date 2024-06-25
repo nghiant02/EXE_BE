@@ -92,7 +92,6 @@ namespace EXE201.BLL.Services
                     CartId = c.CartId,
                     UserId = c.UserId ?? 0,
                     ProductId = c.ProductId ?? 0,
-                    ColorName = (List<ProductColor>)c.Product.ProductColors,
                     Quantity = c.Quantity ?? 0,
                     Product = new ProductResponseDTO
                     {

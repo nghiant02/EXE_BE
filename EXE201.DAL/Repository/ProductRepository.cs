@@ -107,7 +107,7 @@ namespace EXE201.DAL.Repository
 
                 // Handle Product Colors
                 var colorEntities = await _context.Colors
-                    .Where(c => addProduct.ProductColors.Select(pc => pc.ColorName).Contains(c.ColorName))
+                    .Where(c => addProduct.ExistingColorIds.Select(ec => ec.ColorId).Contains(c.ColorId) || addProduct.ProductColors.Select(pc => pc.ColorName).Contains(c.ColorName))
                     .ToListAsync();
 
                 var newColors = addProduct.ProductColors
@@ -125,21 +125,30 @@ namespace EXE201.DAL.Repository
                     colorEntities.AddRange(newColors);
                 }
 
-                product.ProductColors = addProduct.ProductColors
-                    .Select(pc =>
+                foreach (var pc in addProduct.ProductColors)
+                {
+                    var color = colorEntities.First(c => c.ColorName == pc.ColorName);
+                    product.ProductColors.Add(new ProductColor
                     {
-                        var color = colorEntities.First(c => c.ColorName == pc.ColorName);
-                        return new ProductColor
-                        {
-                            ColorId = color.ColorId,
-                            Product = product,
-                            ProductColorImage = pc.ColorImage
-                        };
-                    }).ToList();
+                        ColorId = color.ColorId,
+                        Product = product,
+                        ProductColorImage = pc.ColorImage
+                    });
+                }
+
+                foreach (var existingColor in addProduct.ExistingColorIds)
+                {
+                    product.ProductColors.Add(new ProductColor
+                    {
+                        ColorId = existingColor.ColorId,
+                        Product = product,
+                        ProductColorImage = existingColor.ColorImage
+                    });
+                }
 
                 // Handle Product Sizes
                 var sizeEntities = await _context.Sizes
-                    .Where(s => addProduct.ProductSize.Contains(s.SizeName))
+                    .Where(s => addProduct.ExistingSizeIds.Contains(s.SizeId) || addProduct.ProductSize.Contains(s.SizeName))
                     .ToListAsync();
 
                 var newSizeNames = addProduct.ProductSize.Except(sizeEntities.Select(s => s.SizeName)).ToList();
@@ -152,8 +161,49 @@ namespace EXE201.DAL.Repository
                     sizeEntities.AddRange(newSizes);
                 }
 
-                product.ProductSizes = sizeEntities
-                    .Select(size => new ProductSize { SizeId = size.SizeId, Product = product }).ToList();
+                var addedSizeIds = new HashSet<int>(); // Track added size IDs
+
+                foreach (var size in sizeEntities)
+                {
+                    if (!addedSizeIds.Contains(size.SizeId))
+                    {
+                        product.ProductSizes.Add(new ProductSize { SizeId = size.SizeId, Product = product });
+                        addedSizeIds.Add(size.SizeId);
+                    }
+                }
+
+                foreach (var sizeId in addProduct.ExistingSizeIds)
+                {
+                    if (!addedSizeIds.Contains(sizeId))
+                    {
+                        product.ProductSizes.Add(new ProductSize
+                        {
+                            SizeId = sizeId,
+                            Product = product
+                        });
+                        addedSizeIds.Add(sizeId);
+                    }
+                }
+
+                // Handle Product Detail
+                if (addProduct.ProductDetail != null)
+                {
+                    var productDetail = new ProductDetail
+                    {
+                        Description = addProduct.ProductDetail.Description,
+                        AdditionalInformation = addProduct.ProductDetail.AdditionalInformation,
+                        ShippingAndReturns = addProduct.ProductDetail.ShippingAndReturns,
+                        SizeChart = addProduct.ProductDetail.SizeChart,
+                        Reviews = addProduct.ProductDetail.Reviews,
+                        Questions = addProduct.ProductDetail.Questions,
+                        VendorInfo = addProduct.ProductDetail.VendorInfo,
+                        MoreProducts = addProduct.ProductDetail.MoreProducts,
+                        ProductPolicies = addProduct.ProductDetail.ProductPolicies,
+                        Product = product
+                    };
+
+                    product.ProductDetails = new List<ProductDetail> { productDetail };
+                }
 
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
@@ -174,6 +224,9 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "An error occurred while adding the product" };
             }
         }
+
+
+
 
 
         public async Task<ResponeModel> DeleteProduct(int id)
