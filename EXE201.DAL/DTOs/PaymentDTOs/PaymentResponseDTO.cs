@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EXE201.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,10 +28,6 @@ namespace EXE201.DAL.DTOs.PaymentDTOs
         public int CartId { get; set; }
         public int UserId { get; set; }
         public int ProductId { get; set; }
-        public string ColorName { get; set; }
-        public string SizeName { get; set; }
-        public DateTime? RentalStart { get; set; }
-        public DateTime? RentalEnd { get; set; }
         public int Quantity { get; set; }
         public ProductResponseDTO Product { get; set; }
     }

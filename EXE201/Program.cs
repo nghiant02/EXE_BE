@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Microsoft.Data.Edm;
+using Microsoft.AspNet.OData.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,7 +71,7 @@ builder.Services.AddScoped<IColorServices, ColorServices>();
 builder.Services.AddScoped<ISizeServices, SizeServices>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IMessageService, MessageService>();
-//builder.Services.AddScoped<PayOSPaymentService>();
+//builder.Services.AddScoped<IPayOSPaymentService, PayOSPaymentService>();
 
 
 
@@ -158,6 +160,7 @@ builder.Services.AddSwaggerGen(c =>
 
     c.AddSecurityRequirement(securityRequirement);
 });
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8081";
 builder.WebHost.UseUrls($"http://*:{port}");
 
@@ -189,3 +192,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+IEdmModel GetEdmModel()
+{
+    var odataBuilder = new ODataConventionModelBuilder();
+    odataBuilder.EntitySet<Payment>("Payments");
+    return (IEdmModel)odataBuilder.GetEdmModel();
+}
