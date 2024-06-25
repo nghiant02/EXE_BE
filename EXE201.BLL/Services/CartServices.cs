@@ -46,9 +46,9 @@ namespace EXE201.BLL.Services
             foreach (var cart in carts)
             {
                 var product = await _productRepository.GetById(cart.Product.ProductId);
-                var rentalOder =
-                    await _rentalOrderDetailRepository.GetRentalOrderDetail(cart.Product.RentalOrderDetails.First()
-                        .OrderDetailsId);
+                var rentalOrderDetail = cart.Product.RentalOrderDetails.FirstOrDefault();
+                var rentalOrder = rentalOrderDetail != null ? await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId) : null;
+
                 var viewCart = new ViewCartDto
                 {
                     CartId = cart.CartId,
@@ -58,8 +58,8 @@ namespace EXE201.BLL.Services
                     Quantity = cart.Quantity,
                     ProductPrice = cart.Product.ProductPrice,
                     ProductImageUrl = product.ProductImage.ToList(),
-                    RentalStart = rentalOder.RentalStart,
-                    RentalEnd = rentalOder.RentalEnd
+                    RentalStart = rentalOrder?.RentalStart,
+                    RentalEnd = rentalOrder?.RentalEnd
                 };
                 cartDto.Add(viewCart);
             }
@@ -75,23 +75,25 @@ namespace EXE201.BLL.Services
             foreach (var cart in carts)
             {
                 var product = await _productRepository.GetById(cart.Product.ProductId);
-                var rentalOder =
-                    await _rentalOrderDetailRepository.GetRentalOrderDetail(cart.Product.RentalOrderDetails.First()
-                        .OrderDetailsId);
-                var cartDto = new ViewCartDto
+                var rentalOrderDetail = cart.Product.RentalOrderDetails.FirstOrDefault();
+                if (rentalOrderDetail != null)
                 {
-                    CartId = cart.CartId,
-                    UserId = cart.UserId,
-                    ProductId = cart.ProductId,
-                    ProductTitle = cart.Product.ProductTitle,
-                    Quantity = cart.Quantity,
-                    ProductPrice = cart.Product.ProductPrice,
-                    ProductImageUrl = product.ProductImage.ToList(),
-                    RentalStart = rentalOder.RentalStart,
-                    RentalEnd = rentalOder.RentalEnd
-                };
+                    var rentalOrder = await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId);
+                    var cartDto = new ViewCartDto
+                    {
+                        CartId = cart.CartId,
+                        UserId = cart.UserId,
+                        ProductId = cart.ProductId,
+                        ProductTitle = cart.Product.ProductTitle,
+                        Quantity = cart.Quantity,
+                        ProductPrice = cart.Product.ProductPrice,
+                        ProductImageUrl = product.ProductImage.ToList(),
+                        RentalStart = rentalOrder.RentalStart,
+                        RentalEnd = rentalOrder.RentalEnd
+                    };
 
-                cartDtoList.Add(cartDto);
+                    cartDtoList.Add(cartDto);
+                }
             }
 
             return cartDtoList;
@@ -99,15 +101,18 @@ namespace EXE201.BLL.Services
 
         public async Task<ViewCartDto> UpdateCartByUserId(int userId, UpdateCartDto cart)
         {
-            var checkCart = await _cartRepository.GetCartById(userId);
+            var checkCart = await _cartRepository.GetCartById(cart.CartId);
             if (checkCart == null)
             {
                 throw new Exception("CartId does not exist!");
             }
 
-            var rentalOrder =
-                await _rentalOrderDetailRepository.GetRentalOrderDetail(checkCart.Product.RentalOrderDetails.First()
-                    .OrderDetailsId);
+            if (checkCart.UserId != userId)
+            {
+                throw new Exception("UserId does not match the Cart's UserId!");
+            }
+
+            var rentalOrder = await _rentalOrderDetailRepository.GetRentalOrderDetail(checkCart.Product.RentalOrderDetails.First().OrderDetailsId);
             if (rentalOrder == null)
             {
                 throw new Exception("RentalOrderDetails do not exist!");
@@ -118,14 +123,14 @@ namespace EXE201.BLL.Services
             {
                 throw new Exception("Product does not exist!");
             }
-            
+
             checkCart.Quantity = cart.Quantity;
             rentalOrder.RentalStart = cart.RentalStart;
             rentalOrder.RentalEnd = cart.RentalEnd;
-            
+
             var updatedCart = await _cartRepository.UpdateCart(checkCart);
             var updatedRentalOrder = await _rentalOrderDetailRepository.UpdateRentalDetail(rentalOrder);
-            
+
             var productPrice = product.ProductPrice ?? 0;
             var totalPrice = productPrice * updatedCart.Quantity;
             var viewCartDto = new ViewCartDto
