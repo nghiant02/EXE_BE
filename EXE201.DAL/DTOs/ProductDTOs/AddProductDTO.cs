@@ -29,11 +29,11 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         [Required(ErrorMessage = "Category is required!")]
         public int? CategoryId { get; set; }
 
-        public IEnumerable<ColorDetailDTO> ProductColors { get; set; }
+        //public IEnumerable<ColorDetailDTO> ProductColors { get; set; }
 
         public IEnumerable<ExistingColorDetailDTO> ExistingColorIds { get; set; }
 
-        public IEnumerable<string> ProductSize { get; set; }
+        //public IEnumerable<string> ProductSize { get; set; }
 
         public IEnumerable<int> ExistingSizeIds { get; set; }
 
@@ -45,6 +45,14 @@ namespace EXE201.DAL.DTOs.ProductDTOs
         public string ColorName { get; set; }
         public string HexCode { get; set; }
         public string ColorImage { get; set; }
+    }
+
+    public class ExistingSizeDetailDTO
+    {
+        public int ColorId { get; set; }
+        public string ColorImage { get; set; }
+        public string ColorName { get; set; }
+        public string HexCode { get; set; }
     }
 
     public class ExistingColorDetailDTO
