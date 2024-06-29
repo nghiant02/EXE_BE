@@ -105,7 +105,8 @@ namespace EXE201.DAL.Repository
                 product.ProductImages = imageEntities
                     .Select(img => new ProductImage { ImageId = img.ImageId, Product = product }).ToList();
 
-                // Handle Product Colors
+                // Commented out: Handle Product Colors
+                /*
                 var colorEntities = await _context.Colors
                     .Where(c => addProduct.ExistingColorIds.Select(ec => ec.ColorId).Contains(c.ColorId) || addProduct.ProductColors.Select(pc => pc.ColorName).Contains(c.ColorName))
                     .ToListAsync();
@@ -135,18 +136,25 @@ namespace EXE201.DAL.Repository
                         ProductColorImage = pc.ColorImage
                     });
                 }
+                */
 
                 foreach (var existingColor in addProduct.ExistingColorIds)
                 {
-                    product.ProductColors.Add(new ProductColor
+                    var color = await _context.Colors.FindAsync(existingColor.ColorId);
+                    if (color != null)
                     {
-                        ColorId = existingColor.ColorId,
-                        Product = product,
-                        ProductColorImage = existingColor.ColorImage
-                    });
+                        product.ProductColors.Add(new ProductColor
+                        {
+                            ColorId = existingColor.ColorId,
+                            Product = product,
+                            ProductColorImage = existingColor.ColorImage,
+                            Color = color
+                        });
+                    }
                 }
 
-                // Handle Product Sizes
+                // Commented out: Handle Product Sizes
+                /*
                 var sizeEntities = await _context.Sizes
                     .Where(s => addProduct.ExistingSizeIds.Contains(s.SizeId) || addProduct.ProductSize.Contains(s.SizeName))
                     .ToListAsync();
@@ -171,17 +179,19 @@ namespace EXE201.DAL.Repository
                         addedSizeIds.Add(size.SizeId);
                     }
                 }
+                */
 
                 foreach (var sizeId in addProduct.ExistingSizeIds)
                 {
-                    if (!addedSizeIds.Contains(sizeId))
+                    var size = await _context.Sizes.FindAsync(sizeId);
+                    if (size != null)
                     {
                         product.ProductSizes.Add(new ProductSize
                         {
                             SizeId = sizeId,
-                            Product = product
+                            Product = product,
+                            Size = size
                         });
-                        addedSizeIds.Add(sizeId);
                     }
                 }
 
