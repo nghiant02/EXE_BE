@@ -8,8 +8,8 @@
     public double? MaxPrice { get; set; }
     public string? SortBy { get; set; } 
     public bool Sort { get; set; } // true for descending, false for ascending
-    public required int PageNumber { get; set; } = 1;
-    public required int PageSize { get; set; } = 10;
+    public required int PageNumber { get; set; }
+    public required int PageSize { get; set; }
 }
 
 public class ProductPagingRecommendByCategoryDTO
