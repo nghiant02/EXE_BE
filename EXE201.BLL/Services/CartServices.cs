@@ -29,8 +29,12 @@ namespace EXE201.BLL.Services
 
         public async Task<Cart> AddNewCart(AddNewCartDTO cart)
         {
+            
             var mapCart = _mapper.Map<Cart>(cart);
+            var colorId = mapCart.Product.ProductColors.First();
+            colorId.ProductColorId == cart.ProductIdColor;
             await _cartRepository.AddNewCart(mapCart);
+            
             return mapCart;
         }
 
