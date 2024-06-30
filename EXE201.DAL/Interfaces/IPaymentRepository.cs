@@ -24,5 +24,6 @@ namespace EXE201.DAL.Interfaces
         Task<PaymentMethod> UpdatePaymentMethodName(int paymentMethodId, string paymentMethodName);
         Task<bool> DeletePaymentMethod(int paymentMethodId);
         Task<bool> DeletePayment(int paymentId);
+        Task UpdatePayment(Payment payment);
     }
 }

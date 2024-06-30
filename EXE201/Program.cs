@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Microsoft.Data.Edm;
+using Microsoft.AspNet.OData.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,7 +71,7 @@ builder.Services.AddScoped<IColorServices, ColorServices>();
 builder.Services.AddScoped<ISizeServices, SizeServices>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IMessageService, MessageService>();
-//builder.Services.AddScoped<PayOSPaymentService>();
+//builder.Services.AddScoped<IPayOSPaymentService, PayOSPaymentService>();
 
 
 
@@ -114,8 +116,8 @@ builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("Email
 builder.Services.AddDbContext<EXE201Context>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDbContext<EXE201Context>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<EXE201Context>(options =>
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -158,19 +160,22 @@ builder.Services.AddSwaggerGen(c =>
 
     c.AddSecurityRequirement(securityRequirement);
 });
-// var port = Environment.GetEnvironmentVariable("PORT") ?? "8081";
-// builder.WebHost.UseUrls($"http://*:{port}");
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8081";
+builder.WebHost.UseUrls($"http://*:{port}");
 
 var app = builder.Build();
 
-// //Get swagger.json following root directory 
-// app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
-// //Load swagger.json following root directory 
-// app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
-if (app.Environment.IsDevelopment()){
-    app.UseSwagger();
-    app.UseSwaggerUI();
-};
+//Get swagger.json following root directory 
+app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
+//Load swagger.json following root directory 
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
+    
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// };
 
 app.UseCors(x => x.AllowAnyOrigin()
                  .AllowAnyHeader()
@@ -189,3 +194,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+IEdmModel GetEdmModel()
+{
+    var odataBuilder = new ODataConventionModelBuilder();
+    odataBuilder.EntitySet<Payment>("Payments");
+    return (IEdmModel)odataBuilder.GetEdmModel();
+}

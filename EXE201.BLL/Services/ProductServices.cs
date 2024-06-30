@@ -101,5 +101,10 @@ namespace EXE201.BLL.Services
         {
             return await _productRepository.UpdateColorImageForProduct(productId, colorId, newColorImage);
         }
+
+        public async Task<ResponeModel> PermanentDeleteProduct(int productId)
+        {
+            return await _productRepository.PermanentDeleteProduct(productId);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace EXE201.Controllers
     {
         private readonly IPaymentServices _paymentService;
 
+
         public PaymentController(IPaymentServices paymentService)
         {
             _paymentService = paymentService;
@@ -123,6 +124,18 @@ namespace EXE201.Controllers
             {
                 return NotFound(new { Message = "Payment not found." });
             }
+
+            return Ok(result);
+        }
+
+        [HttpDelete("CancelPayment/{paymentId}")]
+        public async Task<IActionResult> CancelPayment(int paymentId)
+        {
+            var result = await _paymentService.CancelPaymentLink(paymentId);
+            //if (!result)
+            //{
+            //    return NotFound(new { Message = "Payment not found." });
+            //}
 
             return Ok(result);
         }

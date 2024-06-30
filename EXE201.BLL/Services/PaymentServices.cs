@@ -12,6 +12,7 @@ using EXE201.DAL.Models;
 using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using Net.payOS.Types;
 using LMSystem.Repository.Helpers;
+using Net.payOS;
 
 namespace EXE201.BLL.Services
 {
@@ -41,30 +42,36 @@ namespace EXE201.BLL.Services
             }
 
             var paymentData = paymentResult.DataObject as Payment;
-            var paymentLink = (string)null;
+            var paymentLink = paymentData.PaymentLink; // Initialize with existing link
 
-            // Fetch the user's cart items
-            var cartItems = paymentData.User?.Carts?.Select(c => new ItemData(
-                name: c.Product.ProductName,
-                quantity: c.Quantity ?? 1,
-                price: (int)(c.Product.ProductPrice ?? 0)
-            )).ToList() ?? new List<ItemData>();
-
-            // ID for BankAccount
-            const int bankAccountMethodId = 1;
-            if (paymentDetails.PaymentMethodId == bankAccountMethodId)
+            // Check if payment link already exists
+            if (string.IsNullOrEmpty(paymentLink))
             {
-                var paymentPayload = new PaymentData(
-                    orderCode: paymentData.PaymentId,
-                    amount: (int)(paymentData.PaymentAmount ?? 0),
-                    description: "Thanh toán đơn hàng",
-                    items: cartItems,  // Use cart items here
-                    cancelUrl: "https://voguary.id.vn/cart",
-                    returnUrl: "https://voguary.id.vn/orderTracking"
-                );
+                var cartItems = paymentData.User?.Carts?.Select(c => new ItemData(
+                    name: c.Product.ProductName,
+                    quantity: c.Quantity ?? 1,
+                    price: (int)(c.Product.ProductPrice ?? 0)
+                )).ToList() ?? new List<ItemData>();
 
-                var createPaymentResult = await _payOSPaymentService.CreatePaymentLink(paymentPayload);
-                paymentLink = createPaymentResult.checkoutUrl;
+                const int bankAccountMethodId = 1;
+                if (paymentDetails.PaymentMethodId == bankAccountMethodId)
+                {
+                    var paymentPayload = new PaymentData(
+                        orderCode: paymentData.PaymentId,
+                        amount: (int)(paymentData.PaymentAmount ?? 0),
+                        description: "Thanh toán đơn hàng",
+                        items: cartItems,
+                        cancelUrl: "https://voguary.id.vn/cart",
+                        returnUrl: "https://voguary.id.vn/orderTracking"
+                    );
+
+                    var createPaymentResult = await _payOSPaymentService.CreatePaymentLink(paymentPayload);
+                    paymentLink = createPaymentResult.checkoutUrl;
+
+                    // Update payment with new link
+                    paymentData.PaymentLink = paymentLink;
+                    await _paymentRepository.UpdatePayment(paymentData);
+                }
             }
 
             var paymentResponse = new PaymentResponseDTO
@@ -98,6 +105,7 @@ namespace EXE201.BLL.Services
 
             return new ResponeModel { Status = "Success", Message = "Payment created successfully", DataObject = paymentResponse };
         }
+
 
 
         public async Task<ResponeModel> ConfirmPayment(int paymentId)
@@ -144,6 +152,11 @@ namespace EXE201.BLL.Services
         public async Task<bool> DeletePayment(int paymentId)
         {
             return await _paymentRepository.DeletePayment(paymentId);
+        }
+
+        public async Task<PaymentLinkInformation> CancelPaymentLink(int paymentId)
+        {
+            return await _payOSPaymentService.CancelPaymentLink(paymentId);
         }
     }
 }
