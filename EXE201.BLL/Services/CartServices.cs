@@ -32,7 +32,7 @@ namespace EXE201.BLL.Services
             
             var mapCart = _mapper.Map<Cart>(cart);
             var colorId = mapCart.Product.ProductColors.First();
-            colorId.ProductColorId == cart.ProductIdColor;
+            // colorId.ProductColorId == cart.ProductIdColor;
             await _cartRepository.AddNewCart(mapCart);
             
             return mapCart;
