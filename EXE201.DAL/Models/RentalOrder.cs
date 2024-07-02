@@ -21,15 +21,6 @@ public partial class RentalOrder
     [StringLength(15)]
     public string OrderStatus { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? DatePlaced { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? DueDate { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? ReturnDate { get; set; }
-
     [StringLength(255)]
     public string ReturnReason { get; set; }
 
@@ -40,6 +31,9 @@ public partial class RentalOrder
 
     [StringLength(50)]
     public string OrderCode { get; set; }
+
+    [Column("PaymentID")]
+    public int? PaymentId { get; set; }
 
     [InverseProperty("Order")]
     public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();

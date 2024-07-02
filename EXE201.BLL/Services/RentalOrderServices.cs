@@ -22,33 +22,33 @@ namespace EXE201.BLL.Services
             _rentalOrderRepository = rentalOrderRepository;
             _mapper = mapper;
         }
-        public async Task<ResponeModel> CancelOrderAsync(int orderId)
-        {
-            return await _rentalOrderRepository.CancelOrderAsync(orderId);
-        }
+        //public async Task<ResponeModel> CancelOrderAsync(int orderId)
+        //{
+        //    return await _rentalOrderRepository.CancelOrderAsync(orderId);
+        //}
 
-        public async Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason)
-        {
-            return await _rentalOrderRepository.ReturnOrderAsync(orderId, returnReason);
-        }
+        //public async Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason)
+        //{
+        //    return await _rentalOrderRepository.ReturnOrderAsync(orderId, returnReason);
+        //}
 
-        public async Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem)
-        {
-            return await _rentalOrderRepository.ReturnItem(returnItem);
-        }
+        //public async Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem)
+        //{
+        //    return await _rentalOrderRepository.ReturnItem(returnItem);
+        //}
 
-        public async Task<OrderStatusDTO> GetOrderStatus(int orderId)
-        {
-            return await _rentalOrderRepository.GetOrderStatus(orderId);
-        }
+        //public async Task<OrderStatusDTO> GetOrderStatus(int orderId)
+        //{
+        //    return await _rentalOrderRepository.GetOrderStatus(orderId);
+        //}
 
-        public async Task<PagedResponseDTO<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize)
-        {
-            return await _rentalOrderRepository.GetRentalOrdersByUserId(userId, PageNumber, PageSize);
-        }
-        public async Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId)
-        {
-            return await _rentalOrderRepository.GetRentalByUserId(userId);
-        }
+        //public async Task<PagedResponseDTO<RentalOrderResponseDTO>> GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize)
+        //{
+        //    return await _rentalOrderRepository.GetRentalOrdersByUserId(userId, PageNumber, PageSize);
+        //}
+        //public async Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId)
+        //{
+        //    return await _rentalOrderRepository.GetRentalByUserId(userId);
+        //}
     }
 }

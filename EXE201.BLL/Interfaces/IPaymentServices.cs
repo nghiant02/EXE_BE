@@ -16,7 +16,7 @@ namespace EXE201.BLL.Interfaces
     {
         Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails);
         Task<ResponeModel> ConfirmPayment(int paymentId);
-        Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
+        //Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
         Task<PagedResponseDTO<PaymentHistoryDto>> GetPaymentsByUserIdAsync(int userId, PaginationParameter paginationParameter);
         Task<IEnumerable<PaymentMethod>> GetAllPaymentMethods();
         Task<IEnumerable<Payment>> GetAllPayments();
