@@ -5,26 +5,34 @@ namespace EXE201.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class InventoryController : Controller
     {
         private readonly IInventoryServices _inventoryService;
+
         public InventoryController(IInventoryServices inventoryServices)
         {
             _inventoryService = inventoryServices;
         }
+
         [HttpGet("GetInventories")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int inventoryId, int pageNumber, int pageSize)
         {
             try
             {
-                var result = await _inventoryService.GetInventories();
+                var result = await _inventoryService.GetInventories(inventoryId, pageNumber, pageSize);
                 return Ok(result);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
 
+        [HttpDelete("DeleteInventory")]
+        public async Task<IActionResult> Delete(int inventoryId)
+        {
+            var result = await _inventoryService.DeleteInventory(inventoryId);
+            return Ok(result);
         }
     }
 }

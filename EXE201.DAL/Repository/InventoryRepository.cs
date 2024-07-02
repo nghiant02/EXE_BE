@@ -17,20 +17,40 @@ namespace EXE201.DAL.Repository
         {
         }
 
-        public async Task<IEnumerable<Inventory>> inventories()
+        public async Task<(int, int, IEnumerable<Inventory>)> Inventories(int inventoryId, int pageNumber, int pageSize)
         {
             try
             {
-                var check = await _context.Inventories.Include(x => x.Product)
-                    .ThenInclude(p => p.Category)
-                    .OrderByDescending(x => x.InventoryId)
+                var totalRecord = await _context.Inventories.Where(x => x.InventoryId == inventoryId).CountAsync();
+                var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+                var inventories = await _context.Inventories
+                    .Where(x => x.InventoryId == inventoryId)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
                     .ToListAsync();
-                if (check != null)
+                return (totalRecord, totalPage, inventories);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteInventory(int inventoryId)
+        {
+            try
+            {
+                var inventory = await _context.Inventories.FindAsync(inventoryId);
+                if (inventory == null)
                 {
-                    return check;
+                    return false;
                 }
-                return null;
-            }catch (Exception ex)
+
+                _context.Inventories.Remove(inventory);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
