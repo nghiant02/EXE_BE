@@ -28,6 +28,15 @@ public partial class RentalOrderDetail
     [Column(TypeName = "datetime")]
     public DateTime? RentalEnd { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? DueDate { get; set; }
+
+    [StringLength(50)]
+    public string RentalOrderDetailsColor { get; set; }
+
+    [StringLength(50)]
+    public string RentalOrderDetailsSize { get; set; }
+
     [ForeignKey("OrderId")]
     [InverseProperty("RentalOrderDetails")]
     public virtual RentalOrder Order { get; set; }

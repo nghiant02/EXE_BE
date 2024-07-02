@@ -20,6 +20,10 @@ public partial class Inventory
 
     public int? QuantityAvailable { get; set; }
 
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Status { get; set; }
+
     [ForeignKey("ProductId")]
     [InverseProperty("Inventories")]
     public virtual Product Product { get; set; }

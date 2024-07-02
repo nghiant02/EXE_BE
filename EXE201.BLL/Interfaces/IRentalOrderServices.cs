@@ -11,14 +11,12 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IRentalOrderServices
     {
-        Task<ResponeModel> CancelOrderAsync(int orderId);
-        Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason);
-        Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem);
-        Task<OrderStatusDTO> GetOrderStatus(int orderId);
-
-        Task<PagedResponseDTO<RentalOrderResponseDTO>>
-            GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize);
-
-        Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId);
+        //Task<ResponeModel> CancelOrderAsync(int orderId);
+        //Task<ResponeModel> ReturnOrderAsync(int orderId, string returnReason);
+        //Task<ResponeModel> ReturnItem(ReturnItemDTO returnItem);
+        //Task<OrderStatusDTO> GetOrderStatus(int orderId);
+        //Task<PagedResponseDTO<RentalOrderResponseDTO>>
+        //GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize);
+        //Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId);
     }
 }
