@@ -250,5 +250,12 @@ namespace EXE201.DAL.Repository
             _context.Tokens.Update(token);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<int> GetTotalUsersByRole(string roleName)
+        {
+            return await _context.Users
+                .Where(u => u.Roles.Any(r => r.RoleName == roleName))
+                .CountAsync();
+        }
     }
 }

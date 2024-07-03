@@ -27,6 +27,9 @@ namespace EXE201.DAL.Interfaces
         Dictionary<string, decimal> GetMonthlyRevenue2024();
         Dictionary<DateTime, decimal> GetRevenueLast7Days();
         Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrders(int pageNumber, int pageSize);
+        Task<int> GetTotalReturnedOrders();
+
+        Task<int> GetTotalCompletedRentalOrders();
 
         Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status, int pageNumber,
             int pageSize);

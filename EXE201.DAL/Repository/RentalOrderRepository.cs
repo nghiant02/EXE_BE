@@ -270,5 +270,18 @@ namespace EXE201.DAL.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<int> GetTotalReturnedOrders()
+        {
+            return await _context.RentalOrders
+                .Where(ro => ro.OrderStatus == "Đã hủy")
+                .CountAsync();
+        }
+
+        public async Task<int> GetTotalCompletedRentalOrders()
+        {
+            return await _context.RentalOrders
+                .CountAsync(ro => ro.OrderStatus == "Đã hoàn thành");
+        }
     }
 }
