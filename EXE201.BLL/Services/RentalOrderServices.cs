@@ -79,6 +79,20 @@ namespace EXE201.BLL.Services
             return rentalOrders;
         }
 
+        public async Task<PagingResponse> GetReturnOrders(int pageNumber, int pageSize)
+        {
+            var listReturnOrder = await _rentalOrderRepository.ReturnOrders(pageNumber, pageSize);
+            var returnOrders = new PagingResponse
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecord = listReturnOrder.Item1,
+                TotalPage = listReturnOrder.Item2,
+                Data = listReturnOrder.Item3
+            };
+            return returnOrders;
+        }
+
         public async Task<RentalOrder> UpdateOrderStatus(int orderId, string status)
         {
             var validStatuses = new List<string> { "Chờ xác nhận", "Chờ giao hàng", "Đang vận chuyển", "Đã hoàn thành", "Đã hủy" };

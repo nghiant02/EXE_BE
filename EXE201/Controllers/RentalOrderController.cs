@@ -20,10 +20,10 @@ namespace EXE201.Controllers
             _rentalOrderDetailServices = rentalOrderDetailServices;
         }
 
-        [HttpGet("GetRentalOrderDetail")]
-        public async Task<IActionResult> GetRentalOrderDetail(int orderId)
+        [HttpGet("GetRentalOrderDetailByOrderId")]
+        public async Task<IActionResult> GetRentalOrderDetail(int userId)
         {
-            var result = await _rentalOrderDetailServices.GetRentalOrderDetailById(orderId);
+            var result = await _rentalOrderDetailServices.GetRentalOrderDetailByUserId(userId);
             return Ok(result);
         }
 
@@ -33,14 +33,21 @@ namespace EXE201.Controllers
             var result = await _rentalOrderServices.GetRentalOrders(pageNumber, pageSize);
             return Ok(result);
         }
+
         [HttpGet("GetRentalOrdersByStatus")]
         public async Task<IActionResult> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize)
         {
             var result = await _rentalOrderServices.GetRentalOrdersByStatus(status, pageNumber, pageSize);
             return Ok(result);
         }
-        
-        
+
+        [HttpGet("GetReturnOrders")]
+        public async Task<IActionResult> GetReturnOrders(int pageNumber, int pageSize)
+        {
+            var result = await _rentalOrderServices.GetReturnOrders(pageNumber, pageSize);
+            return Ok(result);
+        }
+
 
         //[HttpPost("CancelOrder")]
         //public async Task<IActionResult> CancelOrder([FromQuery] int orderId)

@@ -12,6 +12,8 @@ namespace EXE201.BLL.Interfaces
     public interface IRentalOrderDetailServices
     {
         Task<RentalOrderDetail> GetRentalOrderDetailById(int id);
+        Task<IEnumerable<ViewRentalOrderDetail>> GetRentalOrderDetailByUserId(int id);
         Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize);
+        
     }
 }

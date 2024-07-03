@@ -18,7 +18,8 @@ namespace EXE201.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public RentalOrderDetailServices(IUserRepository userRepository, IRentalOrderDetailRepository rentalOrderDetailRepository, IMapper mapper)
+        public RentalOrderDetailServices(IUserRepository userRepository,
+            IRentalOrderDetailRepository rentalOrderDetailRepository, IMapper mapper)
         {
             _rentalOrderDetailRepository = rentalOrderDetailRepository;
             _userRepository = userRepository;
@@ -34,6 +35,7 @@ namespace EXE201.BLL.Services
                 {
                     throw new ArgumentException($"OrderId {id} is does not exist");
                 }
+
                 return checkOrderId;
             }
             catch (Exception ex)
@@ -42,7 +44,20 @@ namespace EXE201.BLL.Services
             }
         }
 
-        public async Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize)
+        public async Task<IEnumerable<ViewRentalOrderDetail>> GetRentalOrderDetailByUserId(int id)
+        {
+            var checkOrderId = await _rentalOrderDetailRepository.GetRentalOrderDetailByUserId(id);
+            if (checkOrderId == null)
+            {
+                throw new ArgumentException($"OrderId {id} is does not exist");
+            }
+
+            return checkOrderId;
+        }
+
+
+        public async Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId,
+            int pageNumber, int pageSize)
         {
             return await _rentalOrderDetailRepository.GetPagedRentalOrderDetailsByUserId(userId, pageNumber, pageSize);
         }
