@@ -20,7 +20,6 @@ namespace EXE201.BLL.Interfaces
 
         Task<int> GetTotalReturnedOrders();
         Task<int> GetTotalCompletedRentalOrders();
-
         Task<List<CategoryOrderCountDTO>> GetMostOrderedProductCategory();
         Task<IEnumerable<ProductStockDTO>> GetTotalItemsInStockForEachProduct();
     }
