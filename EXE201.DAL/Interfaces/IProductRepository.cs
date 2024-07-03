@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.DashboardDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Models;
 using LMSystem.Repository.Helpers;
@@ -32,5 +33,8 @@ namespace EXE201.DAL.Interfaces
         Task<ResponeModel> AddSizeToProduct(int productId, int sizeId);
         Task<ResponeModel> DeleteSizeFromProduct(int productId, int sizeId);
         Task<ResponeModel> UpdateColorImageForProduct(int productId, int colorId, string newColorImage);
+        Task<int> GetTotalItemsInStock();
+        Task<List<CategoryOrderCountDTO>> GetMostOrderedProductCategory();
+        Task<IEnumerable<ProductStockDTO>> GetTotalItemsInStockForEachProduct();
     }
 }

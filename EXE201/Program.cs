@@ -72,6 +72,7 @@ builder.Services.AddScoped<ISizeServices, SizeServices>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 //builder.Services.AddScoped<IPayOSPaymentService, PayOSPaymentService>();
+builder.Services.AddScoped<IDashboardServices, DashboardServices>();
 
 
 

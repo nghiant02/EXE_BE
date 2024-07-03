@@ -1,4 +1,5 @@
 using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.DashboardDTOs;
 using EXE201.DAL.DTOs.FeedbackDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.Interfaces;
@@ -923,6 +924,44 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel
                     { Status = "Error", Message = "An error occurred while updating the color image" };
             }
+        }
+
+        public async Task<int> GetTotalItemsInStock()
+        {
+            return (int)await _context.Inventories.SumAsync(i => i.QuantityAvailable);
+        }
+
+        public async Task<List<CategoryOrderCountDTO>> GetMostOrderedProductCategory()
+        {
+            var categoryCounts = await _context.Products
+                .Include(p => p.Category)
+                .Select(p => new { p.Category.CategoryName, Count = p.RentalOrderDetails.Count() })
+                .ToListAsync();
+
+            var mostOrderedCategories = categoryCounts
+                .GroupBy(pc => pc.CategoryName)
+                .Select(g => new CategoryOrderCountDTO
+                {
+                    CategoryName = g.Key,
+                    OrderCount = g.Sum(pc => pc.Count)
+                })
+                .OrderByDescending(g => g.OrderCount)
+                .ToList();
+
+            return mostOrderedCategories;
+        }
+
+        public async Task<IEnumerable<ProductStockDTO>> GetTotalItemsInStockForEachProduct()
+        {
+            return await _context.Products
+                .Include(p => p.Inventories)
+                .Select(p => new ProductStockDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    TotalItemsInStock = (int)p.Inventories.Sum(i => i.QuantityAvailable)
+                })
+                .ToListAsync();
         }
     }
 }
