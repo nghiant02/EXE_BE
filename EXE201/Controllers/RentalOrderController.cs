@@ -152,7 +152,7 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetAllRentalOrders")]
-        public async Task<ActionResult<IEnumerable<RentalOrder>>> GetAllRentalOrders()
+        public async Task<ActionResult> GetAllRentalOrders()
         {
             var rentalOrders = await _rentalOrderServices.GetAllRentalOrdersAsync();
             return Ok(rentalOrders);
