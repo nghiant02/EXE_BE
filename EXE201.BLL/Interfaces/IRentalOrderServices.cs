@@ -1,6 +1,7 @@
 ﻿using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.RentalOrderDTOs;
+using EXE201.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace EXE201.BLL.Interfaces
         //Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId);
         Task<PagingResponse> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize);
         Task<PagingResponse> GetRentalOrders(int pageNumber, int pageSize);
+        Task<RentalOrder> UpdateOrderStatus(int orderId, string status);
     }
 }

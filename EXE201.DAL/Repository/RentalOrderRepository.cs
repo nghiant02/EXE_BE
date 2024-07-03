@@ -270,5 +270,21 @@ namespace EXE201.DAL.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<RentalOrder> UpdateOrderStatus(int orderId, string status)
+        {
+            var order = await _context.RentalOrders.FindAsync(orderId);
+            if (order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            order.OrderStatus = status;
+            _context.RentalOrders.Update(order);
+            await _context.SaveChangesAsync();
+
+            return order;
+        }
+
     }
 }
