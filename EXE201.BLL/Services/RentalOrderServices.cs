@@ -89,5 +89,10 @@ namespace EXE201.BLL.Services
 
             return await _rentalOrderRepository.UpdateOrderStatus(orderId, status);
         }
+
+        public async Task<IEnumerable<RentalOrder>> GetAllRentalOrdersAsync()
+        {
+            return await _rentalOrderRepository.GetAllRentalOrdersAsync();
+        }
     }
 }

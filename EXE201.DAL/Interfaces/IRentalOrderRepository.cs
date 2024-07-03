@@ -31,5 +31,6 @@ namespace EXE201.DAL.Interfaces
         Task<int> GetTotalCompletedRentalOrders();
         Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status, int pageNumber, int pageSize);
         Task<RentalOrder> UpdateOrderStatus(int orderId, string status);
+        Task<IEnumerable<RentalOrder>> GetAllRentalOrdersAsync();
     }
 }

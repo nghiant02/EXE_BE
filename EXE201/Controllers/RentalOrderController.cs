@@ -1,6 +1,7 @@
 ﻿using EXE201.BLL.Interfaces;
 using EXE201.BLL.Services;
 using EXE201.DAL.DTOs.ProductDTOs;
+using EXE201.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EXE201.Controllers
@@ -148,6 +149,13 @@ namespace EXE201.Controllers
             {
                 return BadRequest(new { Message = ex.Message });
             }
+        }
+
+        [HttpGet("GetAllRentalOrders")]
+        public async Task<ActionResult<IEnumerable<RentalOrder>>> GetAllRentalOrders()
+        {
+            var rentalOrders = await _rentalOrderServices.GetAllRentalOrdersAsync();
+            return Ok(rentalOrders);
         }
     }
 }

@@ -298,5 +298,10 @@ namespace EXE201.DAL.Repository
 
             return order;
         }
+
+        public async Task<IEnumerable<RentalOrder>> GetAllRentalOrdersAsync()
+        {
+            return await _dbSet.ToListAsync();
+        }
     }
 }
