@@ -1,4 +1,4 @@
-using EXE201.BLL.DTOs;
+﻿using EXE201.BLL.DTOs;
 using EXE201.BLL.Interfaces;
 using EXE201.BLL.Services;
 using EXE201.DAL.Interfaces;
@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.Data.Edm;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.OpenApi.Any;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,6 +130,20 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Voguary API", Version = "v1" });
 
+    // Add enum descriptions
+    c.MapType<OrderStatus>(() => new OpenApiSchema
+    {
+        Type = "integer",
+        Enum = new List<IOpenApiAny>
+        {
+            new OpenApiInteger((int)OrderStatus.ChoXacNhan),
+            new OpenApiInteger((int)OrderStatus.ChoGiaoHang),
+            new OpenApiInteger((int)OrderStatus.DangVanChuyen),
+            new OpenApiInteger((int)OrderStatus.DaHoanThanh),
+            new OpenApiInteger((int)OrderStatus.DaHuy)
+        }
+    });
+
     // Add JWT Authentication
     var securityScheme = new OpenApiSecurityScheme
     {
@@ -168,12 +184,12 @@ var app = builder.Build();
 app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
 //Load swagger.json following root directory 
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/v1/swagger.json", "Voguary API V1"); c.RoutePrefix = string.Empty; });
-    
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// };
+
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//};
 
 app.UseCors(x => x.AllowAnyOrigin()
                  .AllowAnyHeader()

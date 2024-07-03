@@ -125,5 +125,29 @@ namespace EXE201.Controllers
 
             return Ok(rentalOrderDetails);
         }
+
+        [HttpPut("UpdateOrderStatus")]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, OrderStatus status)
+        {
+            try
+            {
+                string statusString = status switch
+                {
+                    OrderStatus.ChoXacNhan => "Chờ xác nhận",
+                    OrderStatus.ChoGiaoHang => "Chờ giao hàng",
+                    OrderStatus.DangVanChuyen => "Đang vận chuyển",
+                    OrderStatus.DaHoanThanh => "Đã hoàn thành",
+                    OrderStatus.DaHuy => "Đã hủy",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                var updatedOrder = await _rentalOrderServices.UpdateOrderStatus(orderId, statusString);
+                return Ok(updatedOrder);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.RentalOrderDTOs;
 using EXE201.DAL.Interfaces;
+using EXE201.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,17 @@ namespace EXE201.BLL.Services
                 Data = listRentalOrder.Item3
             };
             return rentalOrders;
+        }
+
+        public async Task<RentalOrder> UpdateOrderStatus(int orderId, string status)
+        {
+            var validStatuses = new List<string> { "Chờ xác nhận", "Chờ giao hàng", "Đang vận chuyển", "Đã hoàn thành", "Đã hủy" };
+            if (!validStatuses.Contains(status))
+            {
+                throw new Exception("Invalid status");
+            }
+
+            return await _rentalOrderRepository.UpdateOrderStatus(orderId, status);
         }
     }
 }

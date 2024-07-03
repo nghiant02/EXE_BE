@@ -27,15 +27,13 @@ namespace EXE201.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<Cart> AddNewCart(AddNewCartDTO cart)
+        public async Task<Cart> AddNewCart(AddNewCartDTO cartDTO)
         {
-            
-            var mapCart = _mapper.Map<Cart>(cart);
-            var colorId = mapCart.Product.ProductColors.First();
-            // colorId.ProductColorId == cart.ProductIdColor;
-            await _cartRepository.AddNewCart(mapCart);
-            
-            return mapCart;
+            var cartEntity = _mapper.Map<Cart>(cartDTO);
+
+            await _cartRepository.AddNewCart(cartEntity);
+
+            return cartEntity;
         }
 
         public async Task<bool> DeleteCart(int id)
