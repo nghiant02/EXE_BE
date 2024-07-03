@@ -116,9 +116,6 @@ builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("Email
 builder.Services.AddDbContext<EXE201Context>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//builder.Services.AddDbContext<EXE201Context>(options =>
-//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

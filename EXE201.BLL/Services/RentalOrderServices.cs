@@ -50,5 +50,32 @@ namespace EXE201.BLL.Services
         //{
         //    return await _rentalOrderRepository.GetRentalByUserId(userId);
         //}
+        public async Task<PagingResponse> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize)
+        {
+            var listRentalOrder = await _rentalOrderRepository.RentalOrdersByStatus(status, pageNumber, pageSize);
+            var rentalOrders = new PagingResponse
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecord = listRentalOrder.Item1,
+                TotalPage = listRentalOrder.Item2,
+                Data = listRentalOrder.Item3
+            };
+            return rentalOrders;
+        }
+        
+        public async Task<PagingResponse> GetRentalOrders(int pageNumber, int pageSize)
+        {
+            var listRentalOrder = await _rentalOrderRepository.RentalOrders(pageNumber, pageSize);
+            var rentalOrders = new PagingResponse
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecord = listRentalOrder.Item1,
+                TotalPage = listRentalOrder.Item2,
+                Data = listRentalOrder.Item3
+            };
+            return rentalOrders;
+        }
     }
 }
