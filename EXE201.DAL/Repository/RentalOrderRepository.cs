@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.DashboardDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.RentalOrderDTOs;
 using EXE201.DAL.Interfaces;
@@ -142,6 +143,127 @@ namespace EXE201.DAL.Repository
                 _context.RentalOrders.Update(rentalOrder);
                 await _context.SaveChangesAsync();
                 return rentalOrder;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public decimal GetTotalRevenueAllTime()
+        {
+            return _context.RentalOrders
+                .Where(ro => ro.OrderStatus == "Đã hoàn thành")
+                .Sum(ro => ro.OrderTotal ?? 0);
+        }
+
+        public Dictionary<string, decimal> GetMonthlyRevenue2024()
+        {
+            var result = _context.RentalOrders
+                .Where(ro => ro.OrderStatus == "Đã hoàn thành" && ro.Payments.Any(p => p.PaymentTime.Value.Year == 2024))
+                .GroupBy(ro => new { ro.Payments.FirstOrDefault().PaymentTime.Value.Year, ro.Payments.FirstOrDefault().PaymentTime.Value.Month })
+                .Select(g => new
+                {
+                    Month = $"{g.Key.Month}/{g.Key.Year}",
+                    Revenue = g.Sum(ro => ro.OrderTotal ?? 0)
+                })
+                .ToDictionary(x => x.Month, x => x.Revenue);
+
+            return result;
+        }
+
+        public Dictionary<DateTime, decimal> GetRevenueLast7Days()
+        {
+            var fromDate = DateTime.UtcNow.Date.AddDays(-7);
+            var result = _context.RentalOrders
+                .Where(ro => ro.OrderStatus == "Đã hoàn thành" && ro.Payments.Any(p => p.PaymentTime >= fromDate))
+                .GroupBy(ro => ro.Payments.FirstOrDefault().PaymentTime.Value.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Revenue = g.Sum(ro => ro.OrderTotal ?? 0)
+                })
+                .ToDictionary(x => x.Date, x => x.Revenue);
+
+            return result;
+        }
+
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status, int pageNumber, int pageSize)
+        {
+            try
+            {
+                var totalRecord = await _context.RentalOrders.Where(x => x.OrderStatus == status).CountAsync();
+                var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
+                var rentalOrders = await _context.RentalOrders
+                    .Where(x => x.OrderStatus == status)
+                    .Include(d => d.RentalOrderDetails).ThenInclude(p => p.Product)
+                    .Include(u => u.User)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                var viewRentalOrders = new List<ViewRentalOrderDto>();
+                foreach (var rentalOrder in rentalOrders)
+                {
+
+                    var viewRentalOrderResponseDto =  new ViewRentalOrderDto()
+                    {
+                        OrderId = rentalOrder.OrderId,
+                        OrderStatus = rentalOrder.OrderStatus,
+                        DatePlaced = rentalOrder.RentalOrderDetails.First().RentalStart,
+                        DueDate = rentalOrder.RentalOrderDetails.First().DueDate,
+                        ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
+                        MoneyReturned = rentalOrder.OrderTotal,
+                        ProductName = rentalOrder.RentalOrderDetails.First().Product.ProductName,
+                        Username = rentalOrder.User.UserName
+                    };
+                    
+                    viewRentalOrders.Add(viewRentalOrderResponseDto);
+                }  
+
+               
+                return (totalRecord, totalPage, viewRentalOrders);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrders(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var totalRecord = await _context.RentalOrders.CountAsync();
+                var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
+                var rentalOrders = await _context.RentalOrders
+                    .Include(d => d.RentalOrderDetails).ThenInclude(p => p.Product)
+                    .Include(u => u.User)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                var viewRentalOrders = new List<ViewRentalOrderDto>();
+                foreach (var rentalOrder in rentalOrders)
+                {
+
+                    var viewRentalOrderResponseDto =  new ViewRentalOrderDto()
+                    {
+                        OrderId = rentalOrder.OrderId,
+                        OrderStatus = rentalOrder.OrderStatus,
+                        DatePlaced = rentalOrder.RentalOrderDetails.First().RentalStart,
+                        DueDate = rentalOrder.RentalOrderDetails.First().DueDate,
+                        ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
+                        MoneyReturned = rentalOrder.OrderTotal,
+                        ProductName = rentalOrder.RentalOrderDetails.First().Product.ProductName,
+                        Username = rentalOrder.User.UserName
+                    };
+                    
+                    viewRentalOrders.Add(viewRentalOrderResponseDto);
+                }  
+
+               
+                return (totalRecord, totalPage, viewRentalOrders);
             }
             catch (Exception ex)
             {
