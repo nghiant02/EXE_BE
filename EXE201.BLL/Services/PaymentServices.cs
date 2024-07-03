@@ -13,6 +13,7 @@ using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using Net.payOS.Types;
 using LMSystem.Repository.Helpers;
 using Net.payOS;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace EXE201.BLL.Services
 {
@@ -32,6 +33,7 @@ namespace EXE201.BLL.Services
                 "e0130d2b3f563e10138c4ac0ca00ed32242cf6cbcfdbafd737b51391a28ea3ea"
             );
         }
+        private static Random random = new Random();
 
         public async Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails)
         {
@@ -43,6 +45,9 @@ namespace EXE201.BLL.Services
 
             var paymentData = paymentResult.DataObject as Payment;
             var paymentLink = paymentData.PaymentLink; // Initialize with existing link
+
+            // Generate a random 5-character numeric ID
+            var randomPaymentId = GenerateRandomNumericId();
 
             // Check if payment link already exists
             if (string.IsNullOrEmpty(paymentLink))
@@ -57,7 +62,7 @@ namespace EXE201.BLL.Services
                 if (paymentDetails.PaymentMethodId == bankAccountMethodId)
                 {
                     var paymentPayload = new PaymentData(
-                        orderCode: paymentData.PaymentId,
+                        orderCode: long.Parse(randomPaymentId),  // Convert the generated random ID to long
                         amount: (int)(paymentData.PaymentAmount ?? 0),
                         description: "Thanh toán đơn hàng",
                         items: cartItems,
@@ -104,6 +109,14 @@ namespace EXE201.BLL.Services
             };
 
             return new ResponeModel { Status = "Success", Message = "Payment created successfully", DataObject = paymentResponse };
+        }
+
+        // Generate a random 5-character numeric ID
+        public static string GenerateRandomNumericId(int length = 5)
+        {
+            const string chars = "0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
 
