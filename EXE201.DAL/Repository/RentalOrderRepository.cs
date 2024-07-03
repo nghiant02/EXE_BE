@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.DashboardDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.RentalOrderDTOs;
 using EXE201.DAL.Interfaces;
@@ -147,6 +148,44 @@ namespace EXE201.DAL.Repository
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public decimal GetTotalRevenueAllTime()
+        {
+            return _context.RentalOrders
+                .Where(ro => ro.OrderStatus == "Đã hoàn thành")
+                .Sum(ro => ro.OrderTotal ?? 0);
+        }
+
+        public Dictionary<string, decimal> GetMonthlyRevenue2024()
+        {
+            var result = _context.RentalOrders
+                .Where(ro => ro.OrderStatus == "Đã hoàn thành" && ro.Payments.Any(p => p.PaymentTime.Value.Year == 2024))
+                .GroupBy(ro => new { ro.Payments.FirstOrDefault().PaymentTime.Value.Year, ro.Payments.FirstOrDefault().PaymentTime.Value.Month })
+                .Select(g => new
+                {
+                    Month = $"{g.Key.Month}/{g.Key.Year}",
+                    Revenue = g.Sum(ro => ro.OrderTotal ?? 0)
+                })
+                .ToDictionary(x => x.Month, x => x.Revenue);
+
+            return result;
+        }
+
+        public Dictionary<DateTime, decimal> GetRevenueLast7Days()
+        {
+            var fromDate = DateTime.UtcNow.Date.AddDays(-7);
+            var result = _context.RentalOrders
+                .Where(ro => ro.OrderStatus == "Đã hoàn thành" && ro.Payments.Any(p => p.PaymentTime >= fromDate))
+                .GroupBy(ro => ro.Payments.FirstOrDefault().PaymentTime.Value.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Revenue = g.Sum(ro => ro.OrderTotal ?? 0)
+                })
+                .ToDictionary(x => x.Date, x => x.Revenue);
+
+            return result;
         }
     }
 }

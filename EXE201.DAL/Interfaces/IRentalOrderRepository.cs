@@ -23,5 +23,8 @@ namespace EXE201.DAL.Interfaces
 
         //Task<RentalOrderResponseDTO> GetRentalByUserId(int userId);
         //Task<RentalOrder> UpdateRental(RentalOrder rentalOrder);
+        decimal GetTotalRevenueAllTime();
+        Dictionary<string, decimal> GetMonthlyRevenue2024();
+        Dictionary<DateTime, decimal> GetRevenueLast7Days();
     }
 }
