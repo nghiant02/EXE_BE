@@ -10,7 +10,7 @@ namespace EXE201.DAL.DTOs.CartDTOs
     {
         public int UserId { get; set; }
         public int ProductId { get; set; }
-        public int ProductIdColor { get; set; }
+        public int ProductColorId { get; set; }
         public int ProductImageId { get; set; }
         public int ProductSizeId { get; set; }
         public DateTime? RentalStart { get; set; }
