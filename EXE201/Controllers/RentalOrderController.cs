@@ -9,11 +9,11 @@ namespace EXE201.Controllers
     [ApiController]
     public class RentalOrderController : Controller
     {
-
         private readonly IRentalOrderServices _rentalOrderServices;
         private readonly IRentalOrderDetailServices _rentalOrderDetailServices;
 
-        public RentalOrderController(IRentalOrderServices rentalOrderServices, IRentalOrderDetailServices rentalOrderDetailServices)
+        public RentalOrderController(IRentalOrderServices rentalOrderServices,
+            IRentalOrderDetailServices rentalOrderDetailServices)
         {
             _rentalOrderServices = rentalOrderServices;
             _rentalOrderDetailServices = rentalOrderDetailServices;
@@ -25,6 +25,21 @@ namespace EXE201.Controllers
             var result = await _rentalOrderDetailServices.GetRentalOrderDetailById(orderId);
             return Ok(result);
         }
+
+        [HttpGet("GetRentalOrder")]
+        public async Task<IActionResult> GetRentalOrders(int pageNumber, int pageSize)
+        {
+            var result = await _rentalOrderServices.GetRentalOrders(pageNumber, pageSize);
+            return Ok(result);
+        }
+        [HttpGet("GetRentalOrdersByStatus")]
+        public async Task<IActionResult> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize)
+        {
+            var result = await _rentalOrderServices.GetRentalOrdersByStatus(status, pageNumber, pageSize);
+            return Ok(result);
+        }
+        
+        
 
         //[HttpPost("CancelOrder")]
         //public async Task<IActionResult> CancelOrder([FromQuery] int orderId)
@@ -69,7 +84,7 @@ namespace EXE201.Controllers
         //    }
         //    return Ok(orderStatus);
         //}
-        
+
         //[HttpGet("GetRentalOrderByUserId")]
         //public async Task<IActionResult> GetRentalOrderByUserId([FromQuery] int userId)
         //{
@@ -97,9 +112,11 @@ namespace EXE201.Controllers
         //}
 
         [HttpGet("GetPagedRentalOrderDetailsByUserId")]
-        public async Task<IActionResult> GetPagedRentalOrderDetailsByUserId([FromQuery] int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> GetPagedRentalOrderDetailsByUserId([FromQuery] int userId,
+            [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
         {
-            var rentalOrderDetails = await _rentalOrderDetailServices.GetPagedRentalOrderDetailsByUserId(userId, pageNumber, pageSize);
+            var rentalOrderDetails =
+                await _rentalOrderDetailServices.GetPagedRentalOrderDetailsByUserId(userId, pageNumber, pageSize);
 
             if (rentalOrderDetails == null)
             {

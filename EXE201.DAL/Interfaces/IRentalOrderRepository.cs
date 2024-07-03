@@ -23,5 +23,9 @@ namespace EXE201.DAL.Interfaces
 
         //Task<RentalOrderResponseDTO> GetRentalByUserId(int userId);
         //Task<RentalOrder> UpdateRental(RentalOrder rentalOrder);
+        Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrders(int pageNumber, int pageSize);
+
+        Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status, int pageNumber,
+            int pageSize);
     }
 }
