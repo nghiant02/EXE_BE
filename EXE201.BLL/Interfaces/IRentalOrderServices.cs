@@ -21,6 +21,7 @@ namespace EXE201.BLL.Interfaces
         //Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId);
         Task<PagingResponse> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize);
         Task<PagingResponse> GetRentalOrders(int pageNumber, int pageSize);
+        Task<PagingResponse> GetReturnOrders(int pageNumber, int pageSize);
         Task<RentalOrder> UpdateOrderStatus(int orderId, string status);
         Task<IEnumerable<RentalOrder>> GetAllRentalOrdersAsync();
     }

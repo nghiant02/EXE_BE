@@ -135,7 +135,7 @@ namespace EXE201.DAL.Repository
         //        }).FirstOrDefaultAsync();
         //    return rentalOrder;
         //}
-        
+
         public async Task<RentalOrder> UpdateRental(RentalOrder rentalOrder)
         {
             try
@@ -160,8 +160,13 @@ namespace EXE201.DAL.Repository
         public Dictionary<string, decimal> GetMonthlyRevenue2024()
         {
             var result = _context.RentalOrders
-                .Where(ro => ro.OrderStatus == "Đã hoàn thành" && ro.Payments.Any(p => p.PaymentTime.Value.Year == 2024))
-                .GroupBy(ro => new { ro.Payments.FirstOrDefault().PaymentTime.Value.Year, ro.Payments.FirstOrDefault().PaymentTime.Value.Month })
+                .Where(ro =>
+                    ro.OrderStatus == "Đã hoàn thành" && ro.Payments.Any(p => p.PaymentTime.Value.Year == 2024))
+                .GroupBy(ro => new
+                {
+                    ro.Payments.FirstOrDefault().PaymentTime.Value.Year,
+                    ro.Payments.FirstOrDefault().PaymentTime.Value.Month
+                })
                 .Select(g => new
                 {
                     Month = $"{g.Key.Month}/{g.Key.Year}",
@@ -188,7 +193,8 @@ namespace EXE201.DAL.Repository
             return result;
         }
 
-        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status, int pageNumber, int pageSize)
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status,
+            int pageNumber, int pageSize)
         {
             try
             {
@@ -205,8 +211,7 @@ namespace EXE201.DAL.Repository
                 var viewRentalOrders = new List<ViewRentalOrderDto>();
                 foreach (var rentalOrder in rentalOrders)
                 {
-
-                    var viewRentalOrderResponseDto =  new ViewRentalOrderDto()
+                    var viewRentalOrderResponseDto = new ViewRentalOrderDto()
                     {
                         OrderId = rentalOrder.OrderId,
                         OrderStatus = rentalOrder.OrderStatus,
@@ -215,13 +220,14 @@ namespace EXE201.DAL.Repository
                         ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
                         MoneyReturned = rentalOrder.OrderTotal,
                         ProductName = rentalOrder.RentalOrderDetails.First().Product.ProductName,
-                        Username = rentalOrder.User.UserName
+                        Username = rentalOrder.User.UserName,
+                        ReturnReason = rentalOrder.ReturnReason
                     };
-                    
-                    viewRentalOrders.Add(viewRentalOrderResponseDto);
-                }  
 
-               
+                    viewRentalOrders.Add(viewRentalOrderResponseDto);
+                }
+
+
                 return (totalRecord, totalPage, viewRentalOrders);
             }
             catch (Exception ex)
@@ -229,7 +235,7 @@ namespace EXE201.DAL.Repository
                 throw new Exception(ex.Message);
             }
         }
-        
+
         public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrders(int pageNumber, int pageSize)
         {
             try
@@ -246,8 +252,7 @@ namespace EXE201.DAL.Repository
                 var viewRentalOrders = new List<ViewRentalOrderDto>();
                 foreach (var rentalOrder in rentalOrders)
                 {
-
-                    var viewRentalOrderResponseDto =  new ViewRentalOrderDto()
+                    var viewRentalOrderResponseDto = new ViewRentalOrderDto()
                     {
                         OrderId = rentalOrder.OrderId,
                         OrderStatus = rentalOrder.OrderStatus,
@@ -256,13 +261,13 @@ namespace EXE201.DAL.Repository
                         ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
                         MoneyReturned = rentalOrder.OrderTotal,
                         ProductName = rentalOrder.RentalOrderDetails.First().Product.ProductName,
-                        Username = rentalOrder.User.UserName
+                        Username = rentalOrder.User.UserName,
+                        ReturnReason = rentalOrder.ReturnReason
                     };
-                    
-                    viewRentalOrders.Add(viewRentalOrderResponseDto);
-                }  
 
-               
+                    viewRentalOrders.Add(viewRentalOrderResponseDto);
+                }
+
                 return (totalRecord, totalPage, viewRentalOrders);
             }
             catch (Exception ex)
@@ -271,6 +276,43 @@ namespace EXE201.DAL.Repository
             }
         }
 
+        public async Task<(int, int, IEnumerable<ViewReturnOrderDto>)> ReturnOrders(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var totalRecord = await _context.RentalOrders.CountAsync();
+                var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
+                var rentalOrders = await _context.RentalOrders
+                    .Include(d => d.RentalOrderDetails).ThenInclude(p => p.Product)
+                    .Include(u => u.User)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                var viewRentalOrders = new List<ViewReturnOrderDto>();
+                foreach (var rentalOrder in rentalOrders)
+                {
+                    var viewRentalOrderResponseDto = new ViewReturnOrderDto()
+                    {
+                        OrderId = rentalOrder.OrderId,
+                        DatePlaced = rentalOrder.RentalOrderDetails.First().RentalStart,
+                        DueDate = rentalOrder.RentalOrderDetails.First().DueDate,
+                        ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
+                        Username = rentalOrder.User.UserName,
+                        ReturnReason = rentalOrder.ReturnReason
+                    };
+
+                    viewRentalOrders.Add(viewRentalOrderResponseDto);
+                }
+
+                return (totalRecord, totalPage, viewRentalOrders);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
         public async Task<int> GetTotalReturnedOrders()
         {
             return await _context.RentalOrders
