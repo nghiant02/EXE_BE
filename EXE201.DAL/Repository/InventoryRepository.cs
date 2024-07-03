@@ -8,33 +8,55 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EXE201.DAL.DTOs;
 
 namespace EXE201.DAL.Repository
 {
     public class InventoryRepository : GenericRepository<Inventory>, IInventoryRepository
     {
-        public InventoryRepository(EXE201Context context) : base(context)
+        private readonly IProductRepository _productRepository;
+        public InventoryRepository(EXE201Context context, IProductRepository productRepository) : base(context)
         {
+            _productRepository = productRepository;
         }
 
-        public async Task<(int, int, IEnumerable<Inventory>)> Inventories(int inventoryId, int pageNumber, int pageSize)
+        public async Task<(int, int, IEnumerable<ViewInventoryDto>)> Inventories(int pageNumber, int pageSize)
         {
             try
             {
-                var totalRecord = await _context.Inventories.Where(x => x.InventoryId == inventoryId).CountAsync();
+                var totalRecord = await _context.Inventories.CountAsync();
                 var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
                 var inventories = await _context.Inventories
-                    .Where(x => x.InventoryId == inventoryId)
+                    .Include(p => p.Product).ThenInclude(c => c.Category)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                return (totalRecord, totalPage, inventories);
+                var listInventories = new List<ViewInventoryDto>();
+                foreach (var inventory in inventories)
+                {
+                    var products = await _productRepository.GetProductsById(inventory.Product.ProductId);
+                    var viewInventoryDto =  new ViewInventoryDto
+                    {
+                        InventoryId = inventory.InventoryId,
+                        ProductName = inventory.Product.ProductName,
+                        ProductImage = products.First().ProductImage.First(),
+                        QuantityAvailable = inventory.QuantityAvailable,
+                        CategoryName = inventory.Product.Category.CategoryName,
+                        Status = inventory.Status
+                    };
+                    listInventories.Add(viewInventoryDto);
+                }  
+
+               
+                return (totalRecord, totalPage, listInventories);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<bool> DeleteInventory(int inventoryId)
         {

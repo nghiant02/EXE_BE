@@ -15,11 +15,11 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetInventories")]
-        public async Task<IActionResult> Get(int inventoryId, int pageNumber, int pageSize)
+        public async Task<IActionResult> Get(int pageNumber, int pageSize)
         {
             try
             {
-                var result = await _inventoryService.GetInventories(inventoryId, pageNumber, pageSize);
+                var result = await _inventoryService.GetInventories( pageNumber, pageSize);
                 return Ok(result);
             }
             catch (Exception ex)

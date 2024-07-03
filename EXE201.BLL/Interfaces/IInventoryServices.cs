@@ -10,7 +10,7 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IInventoryServices
     {
-        Task<PagingResponse> GetInventories(int inventoryId, int pageNumber, int pageSize);
+        Task<PagingResponse> GetInventories(int pageNumber, int pageSize);
         Task<bool> DeleteInventory(int inventoryId);
     }
 }

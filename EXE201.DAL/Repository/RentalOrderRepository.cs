@@ -148,5 +148,88 @@ namespace EXE201.DAL.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status, int pageNumber, int pageSize)
+        {
+            try
+            {
+                var totalRecord = await _context.RentalOrders.Where(x => x.OrderStatus == status).CountAsync();
+                var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
+                var rentalOrders = await _context.RentalOrders
+                    .Where(x => x.OrderStatus == status)
+                    .Include(d => d.RentalOrderDetails).ThenInclude(p => p.Product)
+                    .Include(u => u.User)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                var viewRentalOrders = new List<ViewRentalOrderDto>();
+                foreach (var rentalOrder in rentalOrders)
+                {
+
+                    var viewRentalOrderResponseDto =  new ViewRentalOrderDto()
+                    {
+                        OrderId = rentalOrder.OrderId,
+                        OrderStatus = rentalOrder.OrderStatus,
+                        DatePlaced = rentalOrder.RentalOrderDetails.First().RentalStart,
+                        DueDate = rentalOrder.RentalOrderDetails.First().DueDate,
+                        ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
+                        MoneyReturned = rentalOrder.OrderTotal,
+                        ProductName = rentalOrder.RentalOrderDetails.First().Product.ProductName,
+                        Username = rentalOrder.User.UserName
+                    };
+                    
+                    viewRentalOrders.Add(viewRentalOrderResponseDto);
+                }  
+
+               
+                return (totalRecord, totalPage, viewRentalOrders);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrders(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var totalRecord = await _context.RentalOrders.CountAsync();
+                var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
+                var rentalOrders = await _context.RentalOrders
+                    .Include(d => d.RentalOrderDetails).ThenInclude(p => p.Product)
+                    .Include(u => u.User)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                var viewRentalOrders = new List<ViewRentalOrderDto>();
+                foreach (var rentalOrder in rentalOrders)
+                {
+
+                    var viewRentalOrderResponseDto =  new ViewRentalOrderDto()
+                    {
+                        OrderId = rentalOrder.OrderId,
+                        OrderStatus = rentalOrder.OrderStatus,
+                        DatePlaced = rentalOrder.RentalOrderDetails.First().RentalStart,
+                        DueDate = rentalOrder.RentalOrderDetails.First().DueDate,
+                        ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
+                        MoneyReturned = rentalOrder.OrderTotal,
+                        ProductName = rentalOrder.RentalOrderDetails.First().Product.ProductName,
+                        Username = rentalOrder.User.UserName
+                    };
+                    
+                    viewRentalOrders.Add(viewRentalOrderResponseDto);
+                }  
+
+               
+                return (totalRecord, totalPage, viewRentalOrders);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

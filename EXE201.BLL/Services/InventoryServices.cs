@@ -22,9 +22,9 @@ namespace EXE201.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<PagingResponse> GetInventories(int inventoryId, int pageNumber, int pageSize)
+        public async Task<PagingResponse> GetInventories(int pageNumber, int pageSize)
         {
-            var listInventories = await _inventoryRepository.Inventories(inventoryId, pageNumber, pageSize);
+            var listInventories = await _inventoryRepository.Inventories(pageNumber, pageSize);
             var inventoriesPaging = new PagingResponse
             {
                 PageNumber = pageNumber,
