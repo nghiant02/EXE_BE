@@ -7,7 +7,9 @@ public class ViewRentalOrderDetail
     public int? ProductQuantity { get; set; }
     public DateTime? RentalStart { get; set; }
     public DateTime? RentalEnd { get; set; }
+    public decimal? OrderTotal { get; set; }
     public string? PaymentType { get; set; }
+    public DateTime? PaymentTime { get; set; }
     public string? Status { get; set; }
 
     public string? OrderCode { get; set; }
@@ -16,4 +18,5 @@ public class ViewRentalOrderDetail
     public string? Username { get; set; }
     public string? Address { get; set; }
     public string? Phone { get; set; }
+    public string? Email { get; set; }
 }
