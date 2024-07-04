@@ -1,5 +1,6 @@
 ﻿using EXE201.DAL.DTOs;
 using EXE201.DAL.DTOs.DashboardDTOs;
+using EXE201.DAL.DTOs.OrderDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.RentalOrderDTOs;
 using EXE201.DAL.Interfaces;
@@ -354,5 +355,31 @@ namespace EXE201.DAL.Repository
         {
             return await _dbSet.ToListAsync();
         }
+
+        public async Task<(int, int, IEnumerable<RentalOrderDto>)> GetRentalOrdersByUserIdAsync(int userId, int pageNumber, int pageSize)
+        {
+            var query = _context.RentalOrders
+                .Where(ro => ro.UserId == userId)
+                .Include(ro => ro.Payments)
+                .OrderBy(ro => ro.OrderId);
+
+            var totalRecord = await query.CountAsync();
+            var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
+            var rentalOrders = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(ro => new RentalOrderDto
+                {
+                    OrderCode = ro.OrderCode,
+                    OrderTotal = ro.OrderTotal ?? 0,
+                    PaymentTime = ro.Payments.Select(p => p.PaymentTime).FirstOrDefault() ?? DateTime.MinValue,
+                    OrderStatus = ro.OrderStatus
+                })
+                .ToListAsync();
+
+            return (totalRecord, totalPage, rentalOrders);
+        }
+
     }
 }

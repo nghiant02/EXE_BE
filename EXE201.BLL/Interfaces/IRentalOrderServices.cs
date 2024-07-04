@@ -24,5 +24,6 @@ namespace EXE201.BLL.Interfaces
         Task<PagingResponse> GetReturnOrders(int pageNumber, int pageSize);
         Task<RentalOrder> UpdateOrderStatus(int orderId, string status);
         Task<IEnumerable<RentalOrder>> GetAllRentalOrdersAsync();
+        Task<PagingResponse> GetRentalOrdersByUserIdAsync(int userId, int pageNumber, int pageSize);
     }
 }

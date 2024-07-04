@@ -164,5 +164,13 @@ namespace EXE201.Controllers
             var rentalOrders = await _rentalOrderServices.GetAllRentalOrdersAsync();
             return Ok(rentalOrders);
         }
+
+        [HttpGet("GetRentalOrdersByUserId")]
+        public async Task<IActionResult> GetRentalOrdersByUserId(int userId, int pageNumber, int pageSize)
+        {
+            var result = await _rentalOrderServices.GetRentalOrdersByUserIdAsync(userId, pageNumber, pageSize);
+            return Ok(result);
+        }
+
     }
 }
