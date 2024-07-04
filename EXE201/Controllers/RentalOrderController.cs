@@ -35,7 +35,7 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetRentalOrdersByStatus")]
-        public async Task<IActionResult> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize)
+        public async Task<IActionResult> GetRentalOrdersByStatus(OrderStatus? status, int pageNumber, int pageSize)
         {
             var result = await _rentalOrderServices.GetRentalOrdersByStatus(status, pageNumber, pageSize);
             return Ok(result);

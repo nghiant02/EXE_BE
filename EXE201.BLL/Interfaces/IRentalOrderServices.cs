@@ -19,7 +19,7 @@ namespace EXE201.BLL.Interfaces
         //Task<PagedResponseDTO<RentalOrderResponseDTO>>
         //GetRentalOrdersByUserId(int userId, int PageNumber, int PageSize);
         //Task<RentalOrderResponseDTO> GetRentalOrderByUserId(int userId);
-        Task<PagingResponse> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize);
+        Task<PagingResponse> GetRentalOrdersByStatus(OrderStatus? status, int pageNumber, int pageSize);
         Task<PagingResponse> GetRentalOrders(int pageNumber, int pageSize);
         Task<PagingResponse> GetReturnOrders(int pageNumber, int pageSize);
         Task<RentalOrder> UpdateOrderStatus(int orderId, string status);

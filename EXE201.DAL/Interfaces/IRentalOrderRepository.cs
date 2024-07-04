@@ -29,7 +29,7 @@ namespace EXE201.DAL.Interfaces
         Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrders(int pageNumber, int pageSize);
         Task<int> GetTotalReturnedOrders();
         Task<int> GetTotalCompletedRentalOrders();
-        Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status, int pageNumber, int pageSize);
+        Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(OrderStatus? status, int pageNumber, int pageSize);
         Task<RentalOrder> UpdateOrderStatus(int orderId, string status);
         Task<IEnumerable<RentalOrder>> GetAllRentalOrdersAsync();
         Task<(int, int, IEnumerable<ViewReturnOrderDto>)> ReturnOrders(int pageNumber, int pageSize);

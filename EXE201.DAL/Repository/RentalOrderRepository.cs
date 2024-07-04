@@ -193,40 +193,49 @@ namespace EXE201.DAL.Repository
             return result;
         }
 
-        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(string status,
-            int pageNumber, int pageSize)
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDto>)> RentalOrdersByStatus(OrderStatus? status, int pageNumber, int pageSize)
         {
             try
             {
-                var totalRecord = await _context.RentalOrders.Where(x => x.OrderStatus == status).CountAsync();
+                IQueryable<RentalOrder> query = _context.RentalOrders
+                    .Include(d => d.RentalOrderDetails).ThenInclude(p => p.Product)
+                    .Include(u => u.User);
+
+                if (status.HasValue)
+                {
+                    string statusString = status switch
+                    {
+                        OrderStatus.ChoXacNhan => "Chờ xác nhận",
+                        OrderStatus.ChoGiaoHang => "Chờ giao hàng",
+                        OrderStatus.DangVanChuyen => "Đang vận chuyển",
+                        OrderStatus.DaHoanThanh => "Đã hoàn thành",
+                        OrderStatus.DaHuy => "Đã hủy",
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+
+                    query = query.Where(x => x.OrderStatus == statusString);
+                }
+
+                var totalRecord = await query.CountAsync();
                 var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
 
-                var rentalOrders = await _context.RentalOrders
-                    .Where(x => x.OrderStatus == status)
-                    .Include(d => d.RentalOrderDetails).ThenInclude(p => p.Product)
-                    .Include(u => u.User)
+                var rentalOrders = await query
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                var viewRentalOrders = new List<ViewRentalOrderDto>();
-                foreach (var rentalOrder in rentalOrders)
+
+                var viewRentalOrders = rentalOrders.Select(rentalOrder => new ViewRentalOrderDto
                 {
-                    var viewRentalOrderResponseDto = new ViewRentalOrderDto()
-                    {
-                        OrderId = rentalOrder.OrderId,
-                        OrderStatus = rentalOrder.OrderStatus,
-                        DatePlaced = rentalOrder.RentalOrderDetails.First().RentalStart,
-                        DueDate = rentalOrder.RentalOrderDetails.First().DueDate,
-                        ReturnDate = rentalOrder.RentalOrderDetails.First().RentalEnd,
-                        MoneyReturned = rentalOrder.OrderTotal,
-                        ProductName = rentalOrder.RentalOrderDetails.First().Product.ProductName,
-                        Username = rentalOrder.User.UserName,
-                        ReturnReason = rentalOrder.ReturnReason
-                    };
-
-                    viewRentalOrders.Add(viewRentalOrderResponseDto);
-                }
-
+                    OrderId = rentalOrder.OrderId,
+                    OrderStatus = rentalOrder.OrderStatus,
+                    DatePlaced = rentalOrder.RentalOrderDetails.FirstOrDefault()?.RentalStart,
+                    DueDate = rentalOrder.RentalOrderDetails.FirstOrDefault()?.DueDate,
+                    ReturnDate = rentalOrder.RentalOrderDetails.FirstOrDefault()?.RentalEnd,
+                    MoneyReturned = rentalOrder.OrderTotal,
+                    ProductName = rentalOrder.RentalOrderDetails.FirstOrDefault()?.Product.ProductName,
+                    Username = rentalOrder.User.UserName,
+                    ReturnReason = rentalOrder.ReturnReason
+                }).ToList();
 
                 return (totalRecord, totalPage, viewRentalOrders);
             }
