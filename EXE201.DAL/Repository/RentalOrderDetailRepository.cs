@@ -75,6 +75,7 @@ namespace EXE201.DAL.Repository
 
                 var listOrderDetails = rentalOrderDetails.Select(rentalOrder => new ViewRentalOrderDetail
                 {
+                    OrderId = rentalOrder.OrderDetailsId,
                     ProductImage = rentalOrder.Product.ProductImages.FirstOrDefault()?.Image.ImageUrl,
                     ProductName = rentalOrder.Product.ProductName,
                     ProductQuantity = rentalOrder.Quantity,

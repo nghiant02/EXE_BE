@@ -2,6 +2,7 @@ namespace EXE201.DAL.DTOs.RentalOrderDTOs;
 
 public class ViewRentalOrderDetail
 {
+    public int OrderId { get; set; }
     public string? ProductName { get; set; }
     public string? ProductImage { get; set; }
     public int? ProductQuantity { get; set; }
