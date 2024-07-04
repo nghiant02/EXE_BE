@@ -44,18 +44,17 @@ namespace EXE201.BLL.Services
             }
         }
 
-        public async Task<PagingResponse> GetRentalOrderByStaff(int pageNumber, int pageSize)
+        public async Task<PagingResponse> GetRentalOrderByStaff(int pageNumber, int pageSize, OrderStatus? status = null)
         {
-            var listInventoriesRentalOrderByStaff = await _rentalOrderDetailRepository.GetRentalOrderByStaff(pageNumber, pageSize);
-            var rentalOrders = new PagingResponse
+            var result = await _rentalOrderDetailRepository.GetRentalOrderByStaff(pageNumber, pageSize, status);
+            return new PagingResponse
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                TotalRecord = listInventoriesRentalOrderByStaff.Item1,
-                TotalPage = listInventoriesRentalOrderByStaff.Item2,
-                Data = listInventoriesRentalOrderByStaff.Item3
+                TotalRecord = result.Item1,
+                TotalPage = result.Item2,
+                Data = result.Item3
             };
-            return rentalOrders;
         }
 
         public Task<IEnumerable<ViewRentalOrderDetail>> GetRentalOrderDetailByUserId(int id)

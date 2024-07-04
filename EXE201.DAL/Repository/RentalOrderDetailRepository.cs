@@ -40,47 +40,56 @@ namespace EXE201.DAL.Repository
             }
         }
 
-        public async Task<(int, int, IEnumerable<ViewRentalOrderDetail>)> GetRentalOrderByStaff(int pageNumber,
-            int pageSize)
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDetail>)> GetRentalOrderByStaff(int pageNumber, int pageSize, OrderStatus? status = null)
         {
             try
             {
-                var totalRecord = await _context.RentalOrders.CountAsync();
+                IQueryable<RentalOrderDetail> query = _context.RentalOrderDetails
+                    .Include(x => x.Order).ThenInclude(x => x.User).ThenInclude(payment => payment.Payments)
+                    .Include(x => x.Product).ThenInclude(i => i.ProductImages).ThenInclude(productImage => productImage.Image)
+                    .Include(rentalOrderDetail => rentalOrderDetail.Order)
+                    .ThenInclude(rentalOrder => rentalOrder.Payments).ThenInclude(payment => payment.PaymentMethod);
+
+                if (status.HasValue)
+                {
+                    string statusString = status switch
+                    {
+                        OrderStatus.ChoXacNhan => "Chờ xác nhận",
+                        OrderStatus.ChoGiaoHang => "Chờ giao hàng",
+                        OrderStatus.DangVanChuyen => "Đang vận chuyển",
+                        OrderStatus.DaHoanThanh => "Đã hoàn thành",
+                        OrderStatus.DaHuy => "Đã hủy",
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+
+                    query = query.Where(x => x.Order.OrderStatus == statusString);
+                }
+
+                var totalRecord = await query.CountAsync();
                 var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
 
-                var check = await _context.RentalOrderDetails
-                    .Include(x => x.Order).ThenInclude(x => x.User).ThenInclude(payment => payment.Payments)
-                    .Include(x => x.Product).ThenInclude(i => i.ProductImages)
-                    .ThenInclude(productImage => productImage.Image)
-                    .Include(rentalOrderDetail => rentalOrderDetail.Order)
-                    .ThenInclude(rentalOrder => rentalOrder.Payments).ThenInclude(payment => payment.PaymentMethod)
+                var rentalOrderDetails = await query
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 
-                var listOrderDetails = new List<ViewRentalOrderDetail>();
-                foreach (var rentalOrder in check)
+                var listOrderDetails = rentalOrderDetails.Select(rentalOrder => new ViewRentalOrderDetail
                 {
-                    var viewOrderDetail = new ViewRentalOrderDetail
-                    {
-                        ProductImage = rentalOrder.Product.ProductImages.First().Image.ImageUrl,
-                        ProductName = rentalOrder.Product.ProductName,
-                        ProductQuantity = rentalOrder.Quantity,
-                        RentalStart = rentalOrder.RentalStart,
-                        RentalEnd = rentalOrder.RentalEnd,
-                        Status = rentalOrder.Order.OrderStatus,
-                        OrderCode = rentalOrder.Order.OrderCode,
-                        Username = rentalOrder.Order.User.UserName,
-                        Address = rentalOrder.Order.User.Address,
-                        Phone = rentalOrder.Order.User.Phone,
-                        PaymentType = rentalOrder.Order.Payments.First().PaymentMethod.PaymentMethodName,
-                        PaymentTime = rentalOrder.Order.Payments.First().PaymentTime,
-                        OrderTotal = rentalOrder.Order.OrderTotal,
-                        Email = rentalOrder.Order.User.Email
-                    };
-
-                    listOrderDetails.Add(viewOrderDetail);
-                }
+                    ProductImage = rentalOrder.Product.ProductImages.FirstOrDefault()?.Image.ImageUrl,
+                    ProductName = rentalOrder.Product.ProductName,
+                    ProductQuantity = rentalOrder.Quantity,
+                    RentalStart = rentalOrder.RentalStart,
+                    RentalEnd = rentalOrder.RentalEnd,
+                    Status = rentalOrder.Order.OrderStatus,
+                    OrderCode = rentalOrder.Order.OrderCode,
+                    Username = rentalOrder.Order.User.UserName,
+                    Address = rentalOrder.Order.User.Address,
+                    Phone = rentalOrder.Order.User.Phone,
+                    PaymentType = rentalOrder.Order.Payments.FirstOrDefault()?.PaymentMethod.PaymentMethodName,
+                    PaymentTime = rentalOrder.Order.Payments.FirstOrDefault()?.PaymentTime,
+                    OrderTotal = rentalOrder.Order.OrderTotal,
+                    Email = rentalOrder.Order.User.Email
+                }).ToList();
 
                 return (totalRecord, totalPage, listOrderDetails);
             }
@@ -89,7 +98,6 @@ namespace EXE201.DAL.Repository
                 throw new Exception(ex.Message);
             }
         }
-
 
         public async Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId,
             int pageNumber, int pageSize)

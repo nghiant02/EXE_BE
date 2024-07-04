@@ -21,9 +21,9 @@ namespace EXE201.Controllers
         }
 
         [HttpGet("GetRentalOrderDetailByStaff")]
-        public async Task<IActionResult> GetRentalOrderDetail(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetRentalOrderDetail(int pageNumber, int pageSize, OrderStatus? status = null)
         {
-            var result = await _rentalOrderDetailServices.GetRentalOrderByStaff(pageNumber, pageSize);
+            var result = await _rentalOrderDetailServices.GetRentalOrderByStaff(pageNumber, pageSize, status);
             return Ok(result);
         }
 
