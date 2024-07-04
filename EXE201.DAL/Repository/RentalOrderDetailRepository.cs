@@ -40,22 +40,23 @@ namespace EXE201.DAL.Repository
             }
         }
 
-        public async Task<IEnumerable<ViewRentalOrderDetail>> GetRentalOrderDetailByUserId(int id)
+        public async Task<(int, int, IEnumerable<ViewRentalOrderDetail>)> GetRentalOrderByStaff(int pageNumber,
+            int pageSize)
         {
             try
             {
-                var check = await _context.RentalOrderDetails.Where(x => x.Order.UserId == id)
+                var totalRecord = await _context.RentalOrders.CountAsync();
+                var totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+
+                var check = await _context.RentalOrderDetails
                     .Include(x => x.Order).ThenInclude(x => x.User).ThenInclude(payment => payment.Payments)
                     .Include(x => x.Product).ThenInclude(i => i.ProductImages)
                     .ThenInclude(productImage => productImage.Image)
                     .Include(rentalOrderDetail => rentalOrderDetail.Order)
                     .ThenInclude(rentalOrder => rentalOrder.Payments).ThenInclude(payment => payment.PaymentMethod)
-                    .OrderByDescending(x => x.RentalStart)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
                     .ToListAsync();
-                if (check == null)
-                {
-                    throw new Exception($"No rental order detail found for Order ID {id}");
-                }
 
                 var listOrderDetails = new List<ViewRentalOrderDetail>();
                 foreach (var rentalOrder in check)
@@ -72,13 +73,16 @@ namespace EXE201.DAL.Repository
                         Username = rentalOrder.Order.User.UserName,
                         Address = rentalOrder.Order.User.Address,
                         Phone = rentalOrder.Order.User.Phone,
-                        PaymentType = rentalOrder.Order.Payments.First().PaymentMethod.PaymentMethodName
+                        PaymentType = rentalOrder.Order.Payments.First().PaymentMethod.PaymentMethodName,
+                        PaymentTime = rentalOrder.Order.Payments.First().PaymentTime,
+                        OrderTotal = rentalOrder.Order.OrderTotal,
+                        Email = rentalOrder.Order.User.Email
                     };
 
                     listOrderDetails.Add(viewOrderDetail);
                 }
 
-                return listOrderDetails;
+                return (totalRecord, totalPage, listOrderDetails);
             }
             catch (Exception ex)
             {

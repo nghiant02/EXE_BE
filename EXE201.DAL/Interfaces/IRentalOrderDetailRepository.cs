@@ -14,7 +14,10 @@ namespace EXE201.DAL.Interfaces
     {
         Task<RentalOrderDetail> UpdateRentalDetail(RentalOrderDetail rentalOrderDetail);
         Task<RentalOrderDetail> GetRentalOrderDetail(int id);
-        Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize);
-        Task<IEnumerable<ViewRentalOrderDetail>> GetRentalOrderDetailByUserId(int id);
+
+        Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId,
+            int pageNumber, int pageSize);
+
+        Task<(int, int, IEnumerable<ViewRentalOrderDetail>)> GetRentalOrderByStaff(int pageNumber, int pageSize);
     }
 }

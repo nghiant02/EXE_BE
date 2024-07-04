@@ -44,15 +44,23 @@ namespace EXE201.BLL.Services
             }
         }
 
-        public async Task<IEnumerable<ViewRentalOrderDetail>> GetRentalOrderDetailByUserId(int id)
+        public async Task<PagingResponse> GetRentalOrderByStaff(int pageNumber, int pageSize)
         {
-            var checkOrderId = await _rentalOrderDetailRepository.GetRentalOrderDetailByUserId(id);
-            if (checkOrderId == null)
+            var listInventoriesRentalOrderByStaff = await _rentalOrderDetailRepository.GetRentalOrderByStaff(pageNumber, pageSize);
+            var rentalOrders = new PagingResponse
             {
-                throw new ArgumentException($"OrderId {id} is does not exist");
-            }
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecord = listInventoriesRentalOrderByStaff.Item1,
+                TotalPage = listInventoriesRentalOrderByStaff.Item2,
+                Data = listInventoriesRentalOrderByStaff.Item3
+            };
+            return rentalOrders;
+        }
 
-            return checkOrderId;
+        public Task<IEnumerable<ViewRentalOrderDetail>> GetRentalOrderDetailByUserId(int id)
+        {
+            throw new NotImplementedException();
         }
 
 
