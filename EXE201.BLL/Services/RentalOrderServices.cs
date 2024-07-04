@@ -51,7 +51,8 @@ namespace EXE201.BLL.Services
         //{
         //    return await _rentalOrderRepository.GetRentalByUserId(userId);
         //}
-        public async Task<PagingResponse> GetRentalOrdersByStatus(string status, int pageNumber, int pageSize)
+
+        public async Task<PagingResponse> GetRentalOrdersByStatus(OrderStatus? status, int pageNumber, int pageSize)
         {
             var listRentalOrder = await _rentalOrderRepository.RentalOrdersByStatus(status, pageNumber, pageSize);
             var rentalOrders = new PagingResponse
@@ -64,7 +65,7 @@ namespace EXE201.BLL.Services
             };
             return rentalOrders;
         }
-        
+
         public async Task<PagingResponse> GetRentalOrders(int pageNumber, int pageSize)
         {
             var listRentalOrder = await _rentalOrderRepository.RentalOrders(pageNumber, pageSize);
