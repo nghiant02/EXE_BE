@@ -1,4 +1,5 @@
 ﻿using EXE201.DAL.DTOs;
+using EXE201.DAL.DTOs.OrderDTOs;
 using EXE201.DAL.DTOs.ProductDTOs;
 using EXE201.DAL.DTOs.RentalOrderDTOs;
 using EXE201.DAL.Models;
@@ -33,5 +34,6 @@ namespace EXE201.DAL.Interfaces
         Task<RentalOrder> UpdateOrderStatus(int orderId, string status);
         Task<IEnumerable<RentalOrder>> GetAllRentalOrdersAsync();
         Task<(int, int, IEnumerable<ViewReturnOrderDto>)> ReturnOrders(int pageNumber, int pageSize);
+        Task<(int, int, IEnumerable<RentalOrderDto>)> GetRentalOrdersByUserIdAsync(int userId, int pageNumber, int pageSize);
     }
 }
