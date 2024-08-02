@@ -29,5 +29,6 @@ namespace EXE201.DAL.Interfaces
         Task<Payment> UpdatePaymentStatus(int paymentId, PaymentStatus paymentStatus);
         Task<Payment> GetPaymentById(int paymentId);
         Task<ResponeModel> GetPaymentForUser(int paymentId);
+        Task<Payment> GetMostRecentPaymentForUser(int userId);
     }
 }

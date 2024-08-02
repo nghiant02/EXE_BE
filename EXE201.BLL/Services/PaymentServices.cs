@@ -185,11 +185,25 @@ namespace EXE201.BLL.Services
 
         public async Task<ResponeModel> HandleSuccessfulPaymentAsync(int orderCode, string userId, string returnUrl)
         {
+            // Convert userId to an integer
+            int parsedUserId = int.Parse(userId);
+
+            // Get the most recent payment for the user
+            var mostRecentPayment = await _paymentRepository.GetMostRecentPaymentForUser(parsedUserId);
+
+            if (mostRecentPayment == null)
+            {
+                return new ResponeModel { Status = "Error", Message = "No recent payment found" };
+            }
+
+            // Use the paymentId from the most recent payment
+            int paymentId = mostRecentPayment.PaymentId;
+
             // Update payment status to Success
-            await UpdatePaymentStatus(orderCode, PaymentStatus.Completed);
+            await UpdatePaymentStatus(paymentId, PaymentStatus.Completed);
 
             // Get the user's carts
-            var userCarts = await _cartRepository.GetCartsByUserId(int.Parse(userId));
+            var userCarts = await _cartRepository.GetCartsByUserId(parsedUserId);
 
             if (userCarts == null || !userCarts.Any())
             {
@@ -207,11 +221,11 @@ namespace EXE201.BLL.Services
             // Create a new rental order
             var rentalOrder = new RentalOrder
             {
-                UserId = int.Parse(userId),
+                UserId = parsedUserId,
                 OrderStatus = "Chờ xác nhận",
                 OrderTotal = orderTotal,
                 OrderCode = orderCode.ToString(),
-                PaymentId = orderCode // Assuming the orderCode is the payment ID
+                PaymentId = paymentId // Use the PaymentId from the most recent payment
             };
 
             // Add rental order to the database
@@ -219,13 +233,8 @@ namespace EXE201.BLL.Services
             await _rentalOrderRepository.SaveChangesAsync(); // Save to generate OrderId
 
             // Update the Payment table with the new OrderId
-            var payment = await _paymentRepository.GetPaymentById(orderCode);
-            if (payment != null)
-            {
-                payment.OrderId = rentalOrder.OrderId;
-                await _paymentRepository.UpdatePayment(payment);
-                await _paymentRepository.SaveChangesAsync();
-            }
+            mostRecentPayment.OrderId = rentalOrder.OrderId;
+            await _paymentRepository.UpdatePayment(mostRecentPayment);
 
             // Add rental order details and update inventory
             foreach (var cart in userCarts)
@@ -233,7 +242,7 @@ namespace EXE201.BLL.Services
                 if (cart == null || cart.ProductId == null || cart.Quantity == null)
                 {
                     continue; // Skip any cart items with null Product or Quantity
-                }
+                } 
 
                 // Add rental order detail
                 var rentalOrderDetail = new RentalOrderDetail
@@ -256,7 +265,6 @@ namespace EXE201.BLL.Services
                 else
                 {
                     // Log or handle the case where inventory is not found
-                    // Depending on the requirement, you can continue processing the remaining items
                     Console.WriteLine($"Warning: Inventory not found for Product ID: {cart.ProductId}");
                     continue; // Continue processing other cart items
                 }
@@ -272,7 +280,8 @@ namespace EXE201.BLL.Services
             return new ResponeModel { Status = "Success", Message = "Payment processed and rental order created successfully" };
         }
 
-        
+
+
 
 
         public async Task<PaymentResponseDTO> UpdatePaymentUrls(int paymentId, string returnUrl, string cancelUrl)
