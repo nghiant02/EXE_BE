@@ -361,7 +361,7 @@ namespace EXE201.DAL.Repository
             var query = _context.RentalOrders
                 .Where(ro => ro.UserId == userId)
                 .Include(ro => ro.Payments)
-                .Include(ro => ro.User)
+                .Include(ro => ro.RentalOrderDetails).ThenInclude(rod => rod.Product)
                 .OrderBy(ro => ro.OrderId);
 
             var totalRecord = await query.CountAsync();
@@ -379,13 +379,17 @@ namespace EXE201.DAL.Repository
                     FullName = ro.User.FullName,
                     Phone = ro.User.Phone,
                     Address = ro.User.Address,
-                    PaymentMethod = ro.Payments.Select(p => p.PaymentMethod.PaymentMethodName).FirstOrDefault(),
+                    PaymentMethod = ro.Payments.Select(p => p.PaymentMethod.ToString()).FirstOrDefault() ?? string.Empty,
+                    Email = ro.User.Email,
+                    ProductName = ro.RentalOrderDetails.FirstOrDefault().Product.ProductName ?? string.Empty,
+                    ProductImage = ro.RentalOrderDetails.FirstOrDefault().Product.ProductImages.FirstOrDefault().Image.ImageUrl ?? string.Empty,
+                    ProductQuantity = ro.RentalOrderDetails.FirstOrDefault().Quantity ?? 0,
+                    RentalStart = ro.RentalOrderDetails.FirstOrDefault().RentalStart ?? DateTime.MinValue,
+                    RentalEnd = ro.RentalOrderDetails.FirstOrDefault().RentalEnd ?? DateTime.MinValue
                 })
                 .ToListAsync();
 
             return (totalRecord, totalPage, rentalOrders);
         }
-
-
     }
 }
