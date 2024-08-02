@@ -74,8 +74,8 @@ namespace EXE201.BLL.Services
                         amount: (int)(paymentData.PaymentAmount ?? 0),
                         description: "Thanh toán đơn hàng",
                         items: cartItems,
-                        cancelUrl: $"https://voguary.id.vn/Checkout?handler=PaymentCallback&success=false&paymentId={paymentData.PaymentId}",
-                        returnUrl: $"https://voguary.id.vn/Checkout?handler=PaymentCallback&success=true&paymentId={paymentData.PaymentId}"
+                        cancelUrl: $"https://voguary.id.vn/cart?handler=PaymentCallback&success=false&paymentId={paymentData.PaymentId}",
+                        returnUrl: $"https://voguary.id.vn/orderTracking?handler=PaymentCallback&success=true&paymentId={paymentData.PaymentId}"
                     );
 
                     var createPaymentResult = await _payOSPaymentService.CreatePaymentLink(paymentPayload);
@@ -91,7 +91,7 @@ namespace EXE201.BLL.Services
             var rentalOrder = new RentalOrder
             {
                 UserId = userId,
-                OrderStatus = "Pending", // Set the initial status as "Pending"
+                OrderStatus = "Chờ Xác nhận", // Set the initial status as "Pending"
                 OrderTotal = paymentData.PaymentAmount,
                 OrderCode = randomPaymentId, // Use the random ID as the order code
                 PaymentId = paymentData.PaymentId // Set the PaymentId in RentalOrder
@@ -238,6 +238,11 @@ namespace EXE201.BLL.Services
         public async Task<PaymentLinkInformation> CancelPaymentLink(int paymentId)
         {
             return await _payOSPaymentService.CancelPaymentLink(paymentId);
+        }
+
+        public async Task<PaymentLinkInformation> GetPaymentLinkInformation(int orderId)
+        {
+            return await _payOSPaymentService.GetPaymentLinkInformation(orderId);
         }
     }
 
