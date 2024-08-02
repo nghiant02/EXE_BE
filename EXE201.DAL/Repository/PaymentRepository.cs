@@ -311,5 +311,14 @@ namespace EXE201.DAL.Repository
             };
         }
 
+
+        public async Task<Payment> GetMostRecentPaymentForUser(int userId)
+        {
+            return await _context.Payments
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.PaymentTime)
+                .FirstOrDefaultAsync();
+        }
+
     }
 }
