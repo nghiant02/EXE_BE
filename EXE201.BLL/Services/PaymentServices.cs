@@ -14,18 +14,26 @@ using Net.payOS.Types;
 using LMSystem.Repository.Helpers;
 using Net.payOS;
 using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+using EXE201.DAL.Repository;
 
 namespace EXE201.BLL.Services
 {
     public class PaymentServices : IPaymentServices
     {
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IInventoryRepository _inventoryRepository;
+        private readonly IRentalOrderRepository _rentalOrderRepository;
+        private readonly IRentalOrderDetailRepository _rentalOrderDetailRepository;
+        private readonly ICartRepository _cartRepository;
         private readonly IMapper _mapper;
         private readonly PayOSPaymentService _payOSPaymentService;
 
-        public PaymentServices(IPaymentRepository paymentRepository, IMapper mapper)
+        public PaymentServices(IPaymentRepository paymentRepository, IRentalOrderRepository rentalOrderRepository, IRentalOrderDetailRepository rentalOrderDetailRepository, ICartRepository cartRepository, IMapper mapper)
         {
             _paymentRepository = paymentRepository;
+            _rentalOrderRepository = rentalOrderRepository;
+            _rentalOrderDetailRepository = rentalOrderDetailRepository;
+            _cartRepository = cartRepository;
             _mapper = mapper;
             _payOSPaymentService = new PayOSPaymentService(
                 "53e19b3d-c859-4415-b259-da5f00c609a7",
@@ -66,8 +74,8 @@ namespace EXE201.BLL.Services
                         amount: (int)(paymentData.PaymentAmount ?? 0),
                         description: "Thanh toán đơn hàng",
                         items: cartItems,
-                        cancelUrl: "https://voguary.id.vn/cart",
-                        returnUrl: "https://voguary.id.vn/orderTracking"
+                        cancelUrl: $"https://voguary.id.vn/Checkout?handler=PaymentCallback&success=false&paymentId={paymentData.PaymentId}",
+                        returnUrl: $"https://voguary.id.vn/Checkout?handler=PaymentCallback&success=true&paymentId={paymentData.PaymentId}"
                     );
 
                     var createPaymentResult = await _payOSPaymentService.CreatePaymentLink(paymentPayload);
@@ -79,10 +87,44 @@ namespace EXE201.BLL.Services
                 }
             }
 
+            // Create a new rental order
+            var rentalOrder = new RentalOrder
+            {
+                UserId = userId,
+                OrderStatus = "Pending", // Set the initial status as "Pending"
+                OrderTotal = paymentData.PaymentAmount,
+                OrderCode = randomPaymentId, // Use the random ID as the order code
+                PaymentId = paymentData.PaymentId // Set the PaymentId in RentalOrder
+            };
+
+            await _rentalOrderRepository.AddAsync(rentalOrder);
+            await _rentalOrderRepository.SaveChangesAsync();
+
+            // Update the Payment to reference the new RentalOrder's ID
+            paymentData.OrderId = rentalOrder.OrderId;
+            await _paymentRepository.UpdatePayment(paymentData);
+
+            // Add rental order details for each cart item
+            foreach (var cartItem in paymentData.User.Carts)
+            {
+                var rentalOrderDetail = new RentalOrderDetail
+                {
+                    OrderId = rentalOrder.OrderId,
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity,
+                    RentalStart = DateTime.UtcNow, // Assuming rental starts immediately
+                    RentalEnd = DateTime.UtcNow.AddDays(7) // Example: rental ends in 7 days
+                };
+                await _rentalOrderDetailRepository.AddAsync(rentalOrderDetail);
+            }
+
+            // Save changes to rental order details
+            await _rentalOrderDetailRepository.SaveChangesAsync();
+
             var paymentResponse = new PaymentResponseDTO
             {
                 PaymentId = paymentData.PaymentId,
-                OrderId = paymentData.OrderId,
+                OrderId = rentalOrder.OrderId, // Set the OrderId to the new rental order
                 UserId = paymentData.UserId ?? 0,
                 PaymentAmount = paymentData.PaymentAmount,
                 PaymentMethodName = paymentData.PaymentMethod?.PaymentMethodName,
@@ -111,6 +153,39 @@ namespace EXE201.BLL.Services
             return new ResponeModel { Status = "Success", Message = "Payment created successfully", DataObject = paymentResponse };
         }
 
+
+        public async Task UpdatePaymentStatusAndClearCartAsync(int paymentId, string status)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(paymentId);
+            if (payment != null)
+            {
+                payment.PaymentStatus = status;
+                await _paymentRepository.SaveChangesAsync();
+
+                if (status == "Completed")
+                {
+                    var userCarts = await _cartRepository.GetCartsByUserId((int)payment.UserId);
+                    foreach (var cart in userCarts)
+                    {
+                        // Update inventory for each product in the cart
+                        var inventory = await _inventoryRepository.GetInventoryByProductId((int)cart.ProductId);
+                        if (inventory != null)
+                        {
+                            inventory.QuantityAvailable -= cart.Quantity ?? 0; // Subtract the purchased quantity
+                            await _inventoryRepository.UpdateAsync(inventory);
+                        }
+
+                        // Delete the cart item after updating inventory
+                        await _cartRepository.DeleteCartById(cart.CartId);
+                    }
+
+                    // Save all changes to the inventory
+                    await _inventoryRepository.SaveChangesAsync();
+                }
+            }
+        }
+
+
         // Generate a random 5-character numeric ID
         public static string GenerateRandomNumericId(int length = 5)
         {
@@ -118,8 +193,6 @@ namespace EXE201.BLL.Services
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-
-
 
         public async Task<ResponeModel> ConfirmPayment(int paymentId)
         {
@@ -131,11 +204,6 @@ namespace EXE201.BLL.Services
         {
             return await _paymentRepository.GetPaymentHistoryByUserIdAsync(userId, paginationParameter);
         }
-
-        //public async Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate)
-        //{
-        //    return await _paymentRepository.GetProfitData(startDate, endDate);
-        //}
 
         public async Task<IEnumerable<PaymentMethod>> GetAllPaymentMethods()
         {
@@ -172,4 +240,5 @@ namespace EXE201.BLL.Services
             return await _payOSPaymentService.CancelPaymentLink(paymentId);
         }
     }
+
 }

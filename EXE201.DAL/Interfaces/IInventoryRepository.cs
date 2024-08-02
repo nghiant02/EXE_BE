@@ -13,5 +13,7 @@ namespace EXE201.DAL.Interfaces
     {
         Task<(int, int, IEnumerable<ViewInventoryDto>)> Inventories(int pageNumber, int pageSize);
         Task<bool> DeleteInventory(int inventoryId);
+        Task<Inventory> GetInventoryByProductId(int productId);
+        Task UpdateAsync(Inventory inventory);
     }
 }
