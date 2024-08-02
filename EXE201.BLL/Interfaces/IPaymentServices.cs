@@ -14,7 +14,8 @@ namespace EXE201.BLL.Interfaces
 {
     public interface IPaymentServices
     {
-        Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails);
+        Task<ResponeModel> GetPaymentForUser(int paymentId);
+        Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails, string successUrl, string cancelUrl, int orderCode);
         Task<ResponeModel> ConfirmPayment(int paymentId);
         //Task<IEnumerable<ProfitDTO>> GetProfitData(DateTime startDate, DateTime endDate);
         Task<PagedResponseDTO<PaymentHistoryDto>> GetPaymentsByUserIdAsync(int userId, PaginationParameter paginationParameter);
@@ -25,9 +26,11 @@ namespace EXE201.BLL.Interfaces
         Task<bool> DeletePaymentMethod(int paymentMethodId);
         Task<bool> DeletePayment(int paymentId);
         Task<PaymentLinkInformation> CancelPaymentLink(int paymentId);
-        Task UpdatePaymentStatusAndClearCartAsync(int paymentId, string status);
+        //Task UpdatePaymentStatusAndClearCartAsync(int paymentId, string status);
         Task<PaymentLinkInformation> GetPaymentLinkInformation(int orderId);
-
+        Task<Payment> UpdatePaymentStatus(int paymentId, PaymentStatus paymentStatus);
+        Task<ResponeModel> HandleSuccessfulPaymentAsync(int orderCode, string userId, string returnUrl);
+        Task<PaymentResponseDTO> UpdatePaymentUrls(int orderCode, string returnUrl, string cancelUrl);
     }
 
 }

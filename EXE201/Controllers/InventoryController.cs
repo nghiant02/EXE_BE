@@ -28,6 +28,20 @@ namespace EXE201.Controllers
             }
         }
 
+        [HttpGet("GetInventoryByProductId")]
+        public async Task<IActionResult> GetInventoryByProductId(int productId)
+        {
+            try
+            {
+                var result = await _inventoryService.GetInventoryByProductId(productId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("DeleteInventory")]
         public async Task<IActionResult> Delete(int inventoryId)
         {

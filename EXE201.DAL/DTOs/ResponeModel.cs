@@ -18,5 +18,8 @@ namespace EXE201.DAL.DTOs
         [JsonIgnore]
         public Task<string>? ConfirmEmailToken { get; set; }
         public object DataObject { get; set; } = null;
+
+        public object AdditionalData { get; set; } // Add this property
+
     }
 }

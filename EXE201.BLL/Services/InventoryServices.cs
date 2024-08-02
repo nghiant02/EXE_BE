@@ -40,5 +40,10 @@ namespace EXE201.BLL.Services
         {
              return await _inventoryRepository.DeleteInventory(inventoryId);
         }
+
+        public async Task<Inventory> GetInventoryByProductId(int productId)
+        {
+            return await _inventoryRepository.GetInventoryByProductId(productId);
+        }
     }
 }

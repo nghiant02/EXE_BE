@@ -12,5 +12,7 @@ namespace EXE201.BLL.Interfaces
     {
         Task<PagingResponse> GetInventories(int pageNumber, int pageSize);
         Task<bool> DeleteInventory(int inventoryId);
+
+        Task<Inventory> GetInventoryByProductId(int productId);
     }
 }
