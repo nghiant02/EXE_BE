@@ -10,7 +10,6 @@ namespace EXE201.DAL.DTOs.PaymentDTOs
     public class PaymentResponseDTO
     {
         public int PaymentId { get; set; }
-        public int? OrderId { get; set; }
         public int UserId { get; set; }
         public decimal? PaymentAmount { get; set; }
         public string PaymentMethodName { get; set; }
@@ -20,8 +19,11 @@ namespace EXE201.DAL.DTOs.PaymentDTOs
         public string Address { get; set; }
         public DateTime PaymentTime { get; set; }
         public string PaymentLink { get; set; }
+        public string ReturnUrl { get; set; }
+        public string CancelUrl { get; set; }
         public List<CartResponseDTO> Carts { get; set; }
     }
+
 
     public class CartResponseDTO
     {
