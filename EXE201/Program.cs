@@ -38,7 +38,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IRentalOrderRepository, RentalOrderRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IRentalOrderDetailRepository, RentalOrderDetailRepository>();
-builder.Services.AddScoped<ICartRepository, CartRepostiory>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IFeedbacksRepository, FeedbackRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository >();
