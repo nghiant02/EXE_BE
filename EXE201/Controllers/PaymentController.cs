@@ -78,6 +78,13 @@ namespace EXE201.Controllers
             return Ok(paymentMethods);
         }
 
+        [HttpGet("GetPaymentLinkInformation")]
+        public async Task<IActionResult> GetPaymentLinkInformation(int orderId)
+        {
+            var paymentMethods = await _paymentService.GetPaymentLinkInformation(orderId);
+            return Ok(paymentMethods);
+        }
+
         [HttpGet("ViewAllPayments")]
         public async Task<IActionResult> ViewAllPayments()
         {

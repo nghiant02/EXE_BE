@@ -26,6 +26,8 @@ namespace EXE201.BLL.Interfaces
         Task<bool> DeletePayment(int paymentId);
         Task<PaymentLinkInformation> CancelPaymentLink(int paymentId);
         Task UpdatePaymentStatusAndClearCartAsync(int paymentId, string status);
+        Task<PaymentLinkInformation> GetPaymentLinkInformation(int orderId);
+
     }
 
 }
