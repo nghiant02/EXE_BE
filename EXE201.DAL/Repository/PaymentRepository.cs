@@ -71,7 +71,7 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "Payment retrieval failed after creation" };
             }
 
-            return new ResponeModel { Status = "Success", Message = "Payment created successfully", DataObject = paymentWithMethod };
+            return new ResponeModel { Status = "Completed", Message = "Payment created successfully", DataObject = paymentWithMethod };
         }
 
         public async Task UpdatePayment(Payment payment)

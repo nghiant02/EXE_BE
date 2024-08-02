@@ -139,5 +139,26 @@ namespace EXE201.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("PaymentCallback")]
+        public async Task<IActionResult> PaymentCallback(bool success, int paymentId)
+        {
+            // Update the payment status based on the callback result
+            var status = success ? "Success" : "Failed";
+            await _paymentService.UpdatePaymentStatusAndClearCartAsync(paymentId, status);
+
+            if (success)
+            {
+                // Redirect to order tracking or a success page
+                return Redirect("https://voguary.id.vn/orderTracking"); // Replace with your order tracking page URL
+            }
+            else
+            {
+                // Redirect to a failure page or retry payment
+                return Redirect("https://voguary.id.vn/cart"); // Replace with your payment failure page URL
+            }
+        }
+
+
     }
 }
