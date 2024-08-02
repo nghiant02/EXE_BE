@@ -49,7 +49,7 @@ namespace EXE201.DAL.Repository
                 FullName = paymentDetails.FullName ?? user.FullName,
                 Phone = paymentDetails.Phone ?? user.Phone,
                 Address = paymentDetails.Address ?? user.Address,
-                PaymentStatus = "Pending",
+                PaymentStatus = "Completed",
                 PaymentTime = DateTime.UtcNow,
                 PaymentMethodId = paymentDetails.PaymentMethodId
             };

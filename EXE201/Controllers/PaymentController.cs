@@ -151,7 +151,7 @@ namespace EXE201.Controllers
         public async Task<IActionResult> PaymentCallback(bool success, int paymentId)
         {
             // Update the payment status based on the callback result
-            var status = success ? "Success" : "Failed";
+            var status = success ? "Completed" : "Failed";
             await _paymentService.UpdatePaymentStatusAndClearCartAsync(paymentId, status);
 
             if (success)
