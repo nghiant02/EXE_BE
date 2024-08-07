@@ -36,5 +36,6 @@ namespace EXE201.DAL.Interfaces
         Task<int> GetTotalItemsInStock();
         Task<List<CategoryOrderCountDTO>> GetMostOrderedProductCategory();
         Task<IEnumerable<ProductStockDTO>> GetTotalItemsInStockForEachProduct();
+        Task<Product?> GetProductByUserId(int userId);
     }
 }

@@ -66,6 +66,13 @@ namespace EXE201.DAL.Repository
                 .ToListAsync();
         }
 
+        public async Task<Product?> GetProductByUserId(int userId)
+        {
+            return await _context.Products
+                .Where(p => p.Ratings.First().UserId == userId).FirstOrDefaultAsync();
+        }
+
+
         public async Task<ResponeModel> AddProduct(AddProductDTO addProduct)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -272,8 +279,6 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "An error occurred while deleting the product" };
             }
         }
-
-
 
 
         public async Task<ResponeModel> DeleteProduct(int id)

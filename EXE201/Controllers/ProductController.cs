@@ -37,6 +37,17 @@ namespace EXE201.Controllers
             }
             return Ok(response);
         }
+        
+        [HttpGet("GetProductByUSerId")]
+        public async Task<IActionResult> GetProductByUserId([FromQuery] int userId)
+        {
+            var response = await _productServices.GetById(userId);
+            if (response.ProductStatus == "Error")
+            {
+                return Conflict(response);
+            }
+            return Ok(response);
+        }
 
         [HttpPost("AddProduct")]
         public async Task<IActionResult> AddProduct([FromBody] AddProductDTO addProductDTO)

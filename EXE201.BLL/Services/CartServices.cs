@@ -29,10 +29,11 @@ namespace EXE201.BLL.Services
 
         public async Task<Cart> AddNewCart(AddNewCartDTO cartDTO)
         {
+            var rental= await _rentalOrderDetailRepository.GetRentalOrderDetailByUserId(cartDTO.UserId);
+            rental.RentalStart = cartDTO.RentalStart;
+            rental.RentalEnd = cartDTO.RentalEnd;
             var cartEntity = _mapper.Map<Cart>(cartDTO);
-
             await _cartRepository.AddNewCart(cartEntity);
-
             return cartEntity;
         }
 
@@ -49,7 +50,9 @@ namespace EXE201.BLL.Services
             {
                 var product = await _productRepository.GetById(cart.Product.ProductId);
                 var rentalOrderDetail = cart.Product.RentalOrderDetails.FirstOrDefault();
-                var rentalOrder = rentalOrderDetail != null ? await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId) : null;
+                var rentalOrder = rentalOrderDetail != null
+                    ? await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId)
+                    : null;
 
                 var viewCart = new ViewCartDto
                 {
@@ -80,7 +83,8 @@ namespace EXE201.BLL.Services
                 var rentalOrderDetail = cart.Product.RentalOrderDetails.FirstOrDefault();
                 if (rentalOrderDetail != null)
                 {
-                    var rentalOrder = await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId);
+                    var rentalOrder =
+                        await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId);
                     var cartDto = new ViewCartDto
                     {
                         CartId = cart.CartId,
@@ -114,7 +118,9 @@ namespace EXE201.BLL.Services
                 throw new Exception("UserId does not match the Cart's UserId!");
             }
 
-            var rentalOrder = await _rentalOrderDetailRepository.GetRentalOrderDetail(checkCart.Product.RentalOrderDetails.First().OrderDetailsId);
+            var rentalOrder =
+                await _rentalOrderDetailRepository.GetRentalOrderDetail(checkCart.Product.RentalOrderDetails.First()
+                    .OrderDetailsId);
             if (rentalOrder == null)
             {
                 throw new Exception("RentalOrderDetails do not exist!");
