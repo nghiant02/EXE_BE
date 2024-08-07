@@ -21,7 +21,7 @@ namespace EXE201.DAL.Repository
         {
             try
             {
-                await _context.Carts.AddAsync(cart);
+                _context.Carts.Add(cart);
                 await _context.SaveChangesAsync();
                 return cart;
             }

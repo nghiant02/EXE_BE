@@ -39,6 +39,28 @@ namespace EXE201.DAL.Repository
                 throw new Exception(ex.Message);
             }
         }
+        
+        public async Task<RentalOrderDetail> GetRentalOrderDetailByUserId(int id)
+        {
+            try
+            {
+                var check = await _context.RentalOrderDetails.Where(x => x.Order.UserId == id)
+                    .Include(x => x.Order).ThenInclude(x => x.User)
+                    .Include(x => x.Product)
+                    .OrderByDescending(x => x.RentalStart)
+                    .FirstOrDefaultAsync();
+                if (check != null)
+                {
+                    return check;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public async Task<(int, int, IEnumerable<ViewRentalOrderDetail>)> GetRentalOrderByStaff(int pageNumber, int pageSize, OrderStatus? status = null)
         {

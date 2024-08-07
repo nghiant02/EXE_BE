@@ -13,6 +13,7 @@ namespace EXE201.DAL.Interfaces
     public interface IRentalOrderDetailRepository : IGenericRepository<RentalOrderDetail>
     {
         Task<RentalOrderDetail> UpdateRentalDetail(RentalOrderDetail rentalOrderDetail);
+        Task<RentalOrderDetail> GetRentalOrderDetailByUserId(int id);
         Task<RentalOrderDetail> GetRentalOrderDetail(int id);
         Task<PagedResponseDTO<RentalOrderDetailResponseDTO>> GetPagedRentalOrderDetailsByUserId(int userId, int pageNumber, int pageSize);
         Task<(int, int, IEnumerable<ViewRentalOrderDetail>)> GetRentalOrderByStaff(int pageNumber, int pageSize, OrderStatus? status = null);
