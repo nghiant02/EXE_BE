@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EXE201.DAL.DTOs.PaymentDTOs.EXE201.DAL.DTOs.PaymentDTOs;
 using LMSystem.Repository.Helpers;
+using Net.payOS.Types;
 
 namespace EXE201.DAL.Interfaces
 {
@@ -25,5 +26,9 @@ namespace EXE201.DAL.Interfaces
         Task<bool> DeletePaymentMethod(int paymentMethodId);
         Task<bool> DeletePayment(int paymentId);
         Task UpdatePayment(Payment payment);
+        Task<Payment> UpdatePaymentStatus(int paymentId, PaymentStatus paymentStatus);
+        Task<Payment> GetPaymentById(int paymentId);
+        Task<ResponeModel> GetPaymentForUser(int paymentId);
+        Task<Payment> GetMostRecentPaymentForUser(int userId);
     }
 }

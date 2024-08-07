@@ -14,6 +14,8 @@ namespace EXE201.DAL.DTOs.PaymentDTOs
             public string? Phone { get; set; }
             public string? Address { get; set; }
             public int PaymentMethodId { get; set; }
+
+            public string? ReturnUrl { get; set; }
         }
     }
 }

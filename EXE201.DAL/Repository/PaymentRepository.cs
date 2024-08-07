@@ -22,6 +22,9 @@ namespace EXE201.DAL.Repository
         {
             _context = context;
         }
+
+
+
         public async Task<ResponeModel> AddPaymentForUser(int userId, AddPaymentDTO paymentDetails)
         {
             var user = await _context.Users.FindAsync(userId);
@@ -71,7 +74,7 @@ namespace EXE201.DAL.Repository
                 return new ResponeModel { Status = "Error", Message = "Payment retrieval failed after creation" };
             }
 
-            return new ResponeModel { Status = "Success", Message = "Payment created successfully", DataObject = paymentWithMethod };
+            return new ResponeModel { Status = "Completed", Message = "Payment created successfully", DataObject = paymentWithMethod };
         }
 
         public async Task UpdatePayment(Payment payment)
@@ -229,5 +232,93 @@ namespace EXE201.DAL.Repository
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<Payment> UpdatePaymentStatus(int paymentId, PaymentStatus paymentStatus)
+        {
+            var payment = await _context.Payments.FirstOrDefaultAsync(x => x.PaymentId == paymentId);
+            if (payment == null) return payment;
+
+            // Convert enum to string
+            payment.PaymentStatus = paymentStatus.ToString();
+
+            await _context.SaveChangesAsync();
+            return payment;
+        }
+
+        public async Task<Payment> GetPaymentById(int paymentId)
+        {
+            // Fetch the payment by its ID, including related entities like PaymentMethod and User
+            var payment = await _context.Payments
+                .Include(p => p.PaymentMethod)  // Include the payment method details
+                .Include(p => p.User)           // Include the user details
+                .ThenInclude(u => u.Carts)      // Include the user's carts if needed
+                .ThenInclude(c => c.Product)    // Include product details in the cart
+                .FirstOrDefaultAsync(p => p.PaymentId == paymentId);
+
+            return payment;
+        }
+
+
+        public async Task<ResponeModel> GetPaymentForUser(int paymentId)
+        {
+            // Fetch the payment details using the paymentId
+            var payment = await _context.Payments
+                .Include(p => p.PaymentMethod) // Include the PaymentMethod details
+                .Include(p => p.User) // Include the User details
+                .Include(p => p.User.Carts) // Include the Carts associated with the user
+                .ThenInclude(c => c.Product) // Include Product details for each Cart item
+                .FirstOrDefaultAsync(p => p.PaymentId == paymentId); // Filter by paymentId
+
+            if (payment == null)
+            {
+                return new ResponeModel { Status = "Error", Message = "Payment not found" };
+            }
+
+            // Create and return the response with the payment details
+            var paymentResponse = new PaymentResponseDTO
+            {
+                PaymentId = payment.PaymentId,
+                UserId = payment.UserId ?? 0,
+                PaymentAmount = payment.PaymentAmount,
+                PaymentMethodName = payment.PaymentMethod?.PaymentMethodName,
+                PaymentStatus = payment.PaymentStatus,
+                FullName = payment.FullName,
+                Phone = payment.Phone,
+                Address = payment.Address,
+                PaymentTime = payment.PaymentTime ?? DateTime.UtcNow,
+                PaymentLink = payment.PaymentLink,
+                Carts = payment.User?.Carts?.Select(c => new CartResponseDTO
+                {
+                    CartId = c.CartId,
+                    UserId = c.UserId ?? 0,
+                    ProductId = c.ProductId ?? 0,
+                    Quantity = c.Quantity ?? 0,
+                    Product = new ProductResponseDTO
+                    {
+                        ProductId = c.Product.ProductId,
+                        ProductName = c.Product.ProductName,
+                        ProductPrice = (decimal)(c.Product.ProductPrice ?? 0),
+                        CategoryId = (int)c.Product.CategoryId
+                    }
+                }).ToList()
+            };
+
+            return new ResponeModel
+            {
+                Status = "Success",
+                Message = "Payment details retrieved successfully",
+                DataObject = paymentResponse
+            };
+        }
+
+
+        public async Task<Payment> GetMostRecentPaymentForUser(int userId)
+        {
+            return await _context.Payments
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.PaymentTime)
+                .FirstOrDefaultAsync();
+        }
+
     }
 }

@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace EXE201.DAL.Repository
 {
-    public class CartRepostiory : GenericRepository<Cart>, ICartRepository
+    public class CartRepository : GenericRepository<Cart>, ICartRepository
     {
-        public CartRepostiory(EXE201Context context) : base(context)
+        public CartRepository(EXE201Context context) : base(context)
         {
         }
 
@@ -88,7 +88,10 @@ namespace EXE201.DAL.Repository
             return await _context.Carts
                 .Where(c => c.UserId == userId)
                 .Include(c => c.Product)
-                .ThenInclude(p => p.RentalOrderDetails)
+                .ThenInclude(p => p.ProductImages)  // Include related product images
+                .Include(c => c.User)
+                .ThenInclude(u => u.RentalOrders)
+                .ThenInclude(ro => ro.RentalOrderDetails)  // Include related rental order details
                 .ToListAsync();
         }
 
@@ -96,9 +99,9 @@ namespace EXE201.DAL.Repository
         {
             try
             {
-               _context.Carts.Update(cart);
-               await _context.SaveChangesAsync();
-               return cart;
+                _context.Carts.Update(cart);
+                await _context.SaveChangesAsync();
+                return cart;
             }
             catch (Exception ex)
             {

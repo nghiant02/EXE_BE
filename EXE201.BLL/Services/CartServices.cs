@@ -16,14 +16,16 @@ namespace EXE201.BLL.Services
         private readonly ICartRepository _cartRepository;
         private readonly IProductRepository _productRepository;
         private readonly IRentalOrderDetailRepository _rentalOrderDetailRepository;
+        private readonly IRentalOrderRepository _rentalOrderRepository;
         private readonly IMapper _mapper;
 
         public CartServices(ICartRepository cartRepository, IMapper mapper, IProductRepository productRepository,
-            IRentalOrderDetailRepository rentalOrderDetailRepository)
+            IRentalOrderDetailRepository rentalOrderDetailRepository, IRentalOrderRepository rentalOrderRepository)
         {
             _cartRepository = cartRepository;
             _productRepository = productRepository;
             _rentalOrderDetailRepository = rentalOrderDetailRepository;
+            _rentalOrderRepository = rentalOrderRepository;
             _mapper = mapper;
         }
 
@@ -81,10 +83,13 @@ namespace EXE201.BLL.Services
             {
                 var product = await _productRepository.GetById(cart.Product.ProductId);
                 var rentalOrderDetail = cart.Product.RentalOrderDetails.FirstOrDefault();
-                if (rentalOrderDetail != null)
-                {
-                    var rentalOrder =
-                        await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId);
+                var rentalOrder = rentalOrderDetail != null
+                    ? await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId)
+                    : null;
+                // if (rentalOrderDetail != null)
+                // {
+                //     var rentalOrder =
+                //         await _rentalOrderDetailRepository.GetRentalOrderDetail(rentalOrderDetail.OrderDetailsId);
                     var cartDto = new ViewCartDto
                     {
                         CartId = cart.CartId,
@@ -94,12 +99,12 @@ namespace EXE201.BLL.Services
                         Quantity = cart.Quantity,
                         ProductPrice = cart.Product.ProductPrice,
                         ProductImageUrl = product.ProductImage.ToList(),
-                        RentalStart = rentalOrder.RentalStart,
-                        RentalEnd = rentalOrder.RentalEnd
+                        RentalStart = rentalOrder?.RentalStart,
+                        RentalEnd = rentalOrder?.RentalEnd
                     };
 
                     cartDtoList.Add(cartDto);
-                }
+                // }
             }
 
             return cartDtoList;

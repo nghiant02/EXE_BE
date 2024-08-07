@@ -15,6 +15,7 @@ namespace EXE201.DAL.Repository
     public class InventoryRepository : GenericRepository<Inventory>, IInventoryRepository
     {
         private readonly IProductRepository _productRepository;
+
         public InventoryRepository(EXE201Context context, IProductRepository productRepository) : base(context)
         {
             _productRepository = productRepository;
@@ -36,7 +37,7 @@ namespace EXE201.DAL.Repository
                 foreach (var inventory in inventories)
                 {
                     var products = await _productRepository.GetProductsById(inventory.Product.ProductId);
-                    var viewInventoryDto =  new ViewInventoryDto
+                    var viewInventoryDto = new ViewInventoryDto
                     {
                         InventoryId = inventory.InventoryId,
                         ProductName = inventory.Product.ProductName,
@@ -46,9 +47,8 @@ namespace EXE201.DAL.Repository
                         Status = inventory.Status
                     };
                     listInventories.Add(viewInventoryDto);
-                }  
+                }
 
-               
                 return (totalRecord, totalPage, listInventories);
             }
             catch (Exception ex)
@@ -57,6 +57,17 @@ namespace EXE201.DAL.Repository
             }
         }
 
+        public async Task<Inventory> GetInventoryByProductId(int productId)
+        {
+            return await _context.Inventories
+                .FirstOrDefaultAsync(i => i.ProductId == productId);
+        }
+
+        public async Task UpdateAsync(Inventory inventory)
+        {
+            _context.Inventories.Update(inventory);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task<bool> DeleteInventory(int inventoryId)
         {
@@ -78,4 +89,5 @@ namespace EXE201.DAL.Repository
             }
         }
     }
+
 }
